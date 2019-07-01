@@ -1,2 +1,2 @@
 # test
-forth test
+forth test...
