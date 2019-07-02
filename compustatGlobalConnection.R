@@ -1,3 +1,6 @@
+#This script gets the markit and optionm data
+#NB remember to save the data as archived once you download and start making results
+
 library(RPostgres)
 library(ggplot2)
 library(dplyr)
