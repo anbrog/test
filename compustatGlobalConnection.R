@@ -5,7 +5,10 @@ wrds <- dbConnect(Postgres(),
                   host='wrds-pgdata.wharton.upenn.edu',
                   port=9737,
                   dbname='wrds',
-                  sslmode='require')
+                  sslmode='require',
+                  user = 'anbr',
+                  password = 'Hvilkenkode1'
+                  )
 
 res <- dbSendQuery(wrds, "select * from comp.company")
 #nb the n=10 limits to 10 rows, to test. Delete this later when SQL correct
@@ -158,3 +161,154 @@ qplot(as.Date(data$date,'%Y-%m-%d'),data$dji,xlab="date",ylab="dji",type='l',col
 subdata <- subset(data, data$conm == "Composite DAX Index")
 subdata <- subdata[order(subdata$datadate),]
 plot(as.Date(subdata$datadate,'%Y-%m-%d'),subdata$prccd,xlab="date",ylab="ret_tot",type='l',col='red')
+
+
+## Try seeing what CDS data there is
+#Determine the datasets within a given library:
+res <- dbSendQuery(wrds, "select distinct table_name
+                   from information_schema.columns
+                   where table_schema='markit'
+                   order by table_name")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+#Determine the variables (column headers) within a given dataset:
+res <- dbSendQuery(wrds, "select column_name
+                   from information_schema.columns
+                   where table_schema='markit'
+                   and table_name='itraxxeucomps'
+                   order by column_name")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+res <- dbSendQuery(wrds, "select column_name
+                   from information_schema.columns
+                   where table_schema='markit'
+                   and table_name='chars'
+                   order by column_name")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+#THIS IS A FANTASTIC DATABASE! SEE IF SPREAD CHANGES! :D
+res <- dbSendQuery(wrds, "select * from markit.cds2019")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+# this dataset has jurisdiction which covers European countries too. So you can pair ticker/cusip/shortname/lei with a country! And sector too!
+# THIS IS GREAT!
+res <- dbSendQuery(wrds, "select * from markit.redent")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+# many many names... >1000. Also on countries??? Fin and industrial
+res <- dbSendQuery(wrds, "select * from markit.itraxxeucomps")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+#same here. maaybe?
+res <- dbSendQuery(wrds, "select * from markit.itraxxeuconst")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+#maybe these two next, but no countries.
+res <- dbSendQuery(wrds, "select * from markit.cdxcomps")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+res <- dbSendQuery(wrds, "select * from markit.cdxconst
+                   where region = 'Europe' ")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+
+
+
+res <- dbSendQuery(wrds, "select distinct isdatt_name from markit.isdatt")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+res <- dbSendQuery(wrds, "select distinct indexid from markit.itraxxeucomps")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+res <- dbSendQuery(wrds, "select distinct shortname from markit.itraxxeuconst")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+res <- dbSendQuery(wrds, "select distinct jurisdiction from markit.redent")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+#weird! why does and not work when on next line??
+# can use entity_cusip too
+res <- dbSendQuery(wrds, "select distinct shortname from markit.redent
+                   where jurisdiction = 'Denmark' and markitsector = 'Financials'")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+
+
+## Try seeing what options data there is
+#Determine the datasets within a given library:
+res <- dbSendQuery(wrds, "select distinct table_name
+                   from information_schema.columns
+                   where table_schema='optionm'
+                   order by table_name")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+#Determine the variables (column headers) within a given dataset:
+res <- dbSendQuery(wrds, "select column_name
+                   from information_schema.columns
+                   where table_schema='optionm'
+                   and table_name='country'
+                   order by column_name")
+data <- dbFetch(res, n=-1)
+dbClearResult(res)
+data
+
+# this is maybe useful? Histvol too. What does opprcd mean? option pr
+res <- dbSendQuery(wrds, "select * from optionm.opprcd2017")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+# maybe useful. has decription...
+res <- dbSendQuery(wrds, "select * from optionm.option")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+# maybe useful. has isin link w securityid isser too .optionnames too
+# issuer good for type of firm
+res <- dbSendQuery(wrds, "select * from optionm.optionmeurnames")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+# This has country!
+res <- dbSendQuery(wrds, "select * from optionm.security")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
+
+# This has issuer!
+res <- dbSendQuery(wrds, "select * from optionm.security_name")
+data <- dbFetch(res, n=10)
+dbClearResult(res)
+data
