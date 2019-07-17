@@ -1,6 +1,10 @@
 #This script gets the markit and optionm data
 #NB remember to save the data as archived once you download and start making results
 
+#COOL! On COMPUSTAT global can check all kinds of real effects. Investment etc after buffers.
+#COOL! There is much more data on compustat than you immediately think!
+#check the d_bank dataset. Such like comp.bank_afnd1 and bank_funda
+
 library(RPostgres)
 library(ggplot2)
 library(dplyr)
@@ -12,6 +16,20 @@ wrds <- dbConnect(Postgres(),
                   user = 'anbr',
                   password = 'Hvilkenkode1'
                   )
+
+# This seems to be main datapull. Save somewhere
+res <- dbSendQuery(wrds, "select a.gvkeyx, a.prccd, a.datadate, 
+                   b.indexgeo, b.indexval, b.indextype, b.indexid, b.spii, b.conm
+                   from comp.g_idx_daily a join comp.g_idx_index b
+                   on a.gvkeyx = b.gvkeyx
+                   where a.datadate between '2019-06-01'
+                   and '2019-12-30'")
+data <- dbFetch(res, n = -1)
+dbClearResult(res)
+data
+fil <- tempfile("compustat", fileext = ".rds")
+saveRDS(data,fil)
+write.csv(data, "/data/compustat.csv")
 
 res <- dbSendQuery(wrds, "select * from comp.company")
 #nb the n=10 limits to 10 rows, to test. Delete this later when SQL correct
@@ -153,6 +171,7 @@ res <- dbSendQuery(wrds, "select a.gvkeyx, a.prccd, a.datadate,
 data <- dbFetch(res, n = -1)
 dbClearResult(res)
 data
+
 
 #test of display of data using potentially ggplot2
 res <- dbSendQuery(wrds,"SELECT date,dji FROM djones.djdaily")
