@@ -4,6 +4,13 @@
 #then create results. First main and then robustness and variations
 #then print results ie make tables and figures
 
+#NB Need to get a year more data for norway!
+#NB Need to get longer dataseries for market!!
+#NB Made inner join between country days in market days
+
+#ASK JDN
+#geo return looks off?
+
 #start needed libraries
 library(RPostgres)
 library(ggplot2)
@@ -17,6 +24,7 @@ library(dplyr) #part of tidyverse used eg for filtering nad pipe (?)
 library(tibble)
 library(EventStudy)
 library(zoo)
+library(tsibble)
 
 # Initiate functions
 getData <- function () {
@@ -94,27 +102,36 @@ makeData <- function() {
   return(results)
 }
 list <- makeData()
-#split list into the two datasets
+
+#split list into the datasets
 compustat <- as_tibble(list[[1]])
 events <- list[[2]]
-events$country <- as_factor(events$country)
-#rename countries to match rest ie into 3 char names
-events$country <- recode(events$country,
-       "Bulgaria" = "BGR",
-       "Czech Republic" = "CZE",
-       "Denmark" = "DNK",
-       "Ireland" = "IRL",
-       "Lithuania" = "LTU",
-       "Norway" = "NOR",
-       "Slovakia" = "SVK",
-       "Sweden" = "SWE",
-       "United Kingdom" = "GBR",
-       )
+eventreturns <- list[[3]]
+mkt <-  list[[4]]
 
-#filter out any country which we don't have events for
-compustat_filterd  <- 
-  filter(compustat,
-         indexgeo %in% events$country)
+
+#not used atm
+##filter out any country which we don't have events for
+#compustat_filterd  <- 
+#  filter(compustat,
+#         indexgeo %in% events$country)
+#
+#old
+#events$country <- as_factor(events$country)
+#rename countries to match rest ie into 3 char names
+#events$country <- recode(events$country,
+#       "Bulgaria" = "BGR",
+#       "Czech Republic" = "CZE",
+#       "Denmark" = "DNK",
+#       "Ireland" = "IRL",
+#       "Lithuania" = "LTU",
+#       "Norway" = "NOR",
+#       "Slovakia" = "SVK",
+#       "Sweden" = "SWE",
+#       "United Kingdom" = "GBR",
+#       )
+#
+
 
 #old version
 #delete next time I read this
@@ -132,22 +149,109 @@ compustat_filterd  <-
 #      )
 
 
-# Test data
-unique(data_compustat$indexgeo)
-# Ie I get 63 different countries
-
-# Do analysis
-# plot average event study
-# NB can also plot individuals using arPlot
-getSP500ExampleFiles()
-ls()
-checkFiles()
+#not used atm
+#EventSTudy::aarPlot(ResultParserObj, cumSum = F, group = NULL, window = NULL,
+#
+#ciStatistics = NULL, p = 0.95, ciType = "band", xlab = "",
+#
+#ylab = "Averaged Abnormal Returns", facet = T, ncol = 4)
+#
 
 
 
+#Try and redo old results. ie make my own event study
+plot(eventreturns)
+plot(mkt)
+#plot(compustat)
+#tmp <- zoo(compustat$indexgeo,compustat$datadate)
+#plot(tmp)
 
-EventSTudy::aarPlot(ResultParserObj, cumSum = F, group = NULL, window = NULL,
-        ciStatistics = NULL, p = 0.95, ciType = "band", xlab = "",
-        ylab = "Averaged Abnormal Returns", facet = T, ncol = 4)
+# put into event-time together with market
+# estimate betas
+# calculate expected return ie beta*market (cumulative)
+# do for loop over all events
+#eventreturns <- as_tibble(eventreturns)
+#eventreturns <- zoo(eventreturns)
+#event window to record nb just take all?
+L_pre_record = 100
+L_post_record = 100 #NB eventwindow is 1 longer than this
+par(mfrow=c(4,5))
+beta <- vector(length = length(events$when))
+abnret_out <- matrix(data = NA, nrow = (L_pre_record + L_post_record + 1), ncol =  (length(events$when) + 1) )
+abnret_out[,1] = ((0:(L_pre_record + L_post_record)) - L_pre_record)
+for (i in 1:length(events$when)) {
+  if (i == 9 | i == 12) next
+  #get right date and country
+  date <- events$when[i]
+  country <- events$name[i]
+  print(i)
+  print(date)
+  print(country)
+  
+  #get correct return-series
+  returns <- eventreturns[,country]
+  returnsEventTime = time(returns) - date
+  mktEventTime = time(mkt) - date
+
+  #make new data format and join in terms of event time
+  tbl1 <- tibble(eventTime = returnsEventTime, ret_i = coredata(returns))
+  tbl2 <- tibble(eventTime = mktEventTime, ret_m = coredata(mkt))
+  data <- full_join(tbl1,tbl2, by = "eventTime")
+  
+  #estimate beta
+  #parameters
+  #start with standard for wrds event study
+  estimation_window = 365 #change to a year later ie 252 #nb this is actual days #wrds uses 100
+  #nb should I intruduce a gap between estimation and event date?
+  #use like mackinlay without gap
+  data_estimation = filter(data,(data$eventTime %in% -rev(c(1:(estimation_window + 1)))), )
+  tmp <- lm(data_estimation$ret_i ~ data_estimation$ret_m)
+  beta[i] <- tmp$coefficients[2]
+  
+  #get abnormal return
+  #do for up to a year before even though this doesnt really make sense
+  return_abnormal = data$ret_i - beta[i] * data$ret_m
+  
+  #plot
+  #test <- zoo(return_abnormal,data$eventTime + date)
+  #test2 <- coredata(test) %>% tibble(ret = .) %>% filter(!is.na(.))
+  #test2 <- test2 + 1
+  #test2 <- cumprod(test2)
+  #test3 <- coredata(test) %>% tibble(ret = .) %>% filter(!is.na(.))
+  #test3 <- cumsum(test3)
+  #test <- test[!is.na(coredata(test))]
+  #plot(test)
+  #plot((1:length(test2$ret)),test2$ret,xlab = "time",ylab = "ret")
+  #ggplot(test2, aes((1:length(test2$ret)), test2$ret)) + geom_point() + theme_classic() +
+  #  xlab("time") + ylab("return") + scale_y_log10()
+  #ggplot(test3, aes((1:length(test3$ret)), test3$ret)) + geom_point() + theme_classic() +
+  #  xlab("time") + ylab("return")
+  ##why is geo return and arith return so different
+  ##geo looks weird
+  #plot(test[-(1:7000)])
+  
+  #plot around event
+  L_pre = 5
+  L_post = 10 #NB eventwindow is 1 longer than this
+  abnret = tibble(ret = return_abnormal,eventTime = data$eventTime) %>%
+    filter(data$eventTime %in% ((0:(L_pre + L_post)) - L_pre))
+  #plot(abnret$eventTime,abnret$ret,xlab = "event time",ylab = "ret")
+  #! NB This is not cum returns!
+  plot(abnret$eventTime,cumprod(abnret$ret + 1),xlab = "event time",ylab = "ret",main = country)
+  
+  #output
+  eventDates_out = ((0:(L_pre_record + L_post_record)) - L_pre_record)
+  for (j in 1:length(eventDates_out) ) {
+    eventTime_j = eventDates_out[j]
+    abnret_out[j,(i + 1)] = tibble(ret = return_abnormal,eventTime = data$eventTime) %>% 
+      filter(data$eventTime == eventTime_j) %>% select(.,ret) %>% as.numeric(.)
+  }
+}
 
 
+#Calculate mean and do inference
+#NB this doesnt seem to work
+data <- as.tibble(t(abnret_out))
+means <- rowMeans(abnret_out, na.rm = TRUE)
+#means <- summarise(data, funs(mean))
+plot((1:length(means)),means)
