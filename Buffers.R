@@ -175,6 +175,9 @@ plot(mkt)
 #event window to record nb just take all?
 L_pre_record = 100
 L_post_record = 100 #NB eventwindow is 1 longer than this
+#clear plot window to make sure just the next are recorded
+dev.off()
+#set so views 20 graphs
 par(mfrow=c(4,5))
 beta <- vector(length = length(events$when))
 abnret_out <- matrix(data = NA, nrow = (L_pre_record + L_post_record + 1), ncol =  (length(events$when) + 1) )
@@ -247,11 +250,18 @@ for (i in 1:length(events$when)) {
       filter(data$eventTime == eventTime_j) %>% select(.,ret) %>% as.numeric(.)
   }
 }
+#save graphs
+dev.copy(pdf,"output/eventPlots_first.pdf")
+dev.off()
 
 
 #Calculate mean and do inference
 #NB this doesnt seem to work
-data <- as.tibble(t(abnret_out))
+data <- as_tibble(t(abnret_out))
 means <- rowMeans(abnret_out, na.rm = TRUE)
 #means <- summarise(data, funs(mean))
-plot((1:length(means)),means)
+plot(abnret_out[90:111,1],means[90:111])
+ 
+
+# Clear the plot window?
+dev.off() 
