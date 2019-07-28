@@ -6,7 +6,7 @@
 \geometry{left=3cm,top=3cm,right=3cm,bottom=3cm}
 \usepackage[round, comma, authoryear, sort&compress]{natbib}
 \setlength{\bibsep}{5pt}
-\usepackage{amsmath}
+\usepackage{amsmath, amsthm, amssymb,}
 \usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{rotating} 
@@ -25,9 +25,9 @@
 \usepackage{hyperref} %[hidelinks]
 \hypersetup{
 	colorlinks,
-	linkcolor={red!80!black},
-	citecolor={blue!80!black},
-	urlcolor={blue!80!black}
+	linkcolor={blue}, %{blue!80!black},
+	citecolor={blue}, %{blue!80!black},
+	urlcolor={blue}   %{blue!80!black},
 }
 \usepackage[toc,page]{appendix}
 \captionsetup[table]{labelfont={small, bf}, font={small, bf}}
@@ -46,12 +46,61 @@
 		#1
 	\end{tabular}
 }
+\usepackage{titlesec} % for editing title sizes
+\titleformat*{\section}{\LARGE \bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+\usepackage{abraces}
+\usepackage{upgreek} % for upright greek letters
+\usepackage{enumitem} %to change enumerate types with options such 
 
+% Change sizes of stuff
+% ie footnote to small
+% title to Huge
+% author to Large
 
-\title{\Huge Banking on Buffers\thanks{I gratefully acknowledge support from Center of Financial Frictions (FRIC), Copenhagen Business School. Grant no. DNRF102.}}
-\author{Andreas Br\o gger\\Copenhagen Business School
-} % NB make name bigger?
-\date{\today}         % No date for final submission
+%% DEFINITIONS
+% make theorem titles bold
+\makeatletter
+\def\th@plain{%
+  \thm@notefont{}% same as heading font
+  \itshape % body font
+}
+\def\th@definition{%
+  \thm@notefont{}% same as heading font
+  \normalfont % body font
+}
+\renewcommand\qedsymbol{$\blacksquare$}
+\DeclareMathOperator{\E}{\mathbb{E}} % for expectation symbol
+\global\delimitershortfall=-1pt %sets so that brackets increase in size
+\makeatother
+% Change numbering to be part of section?? As it was with Lasses original template
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{assumption}{Assumption}%[section]
+\newtheorem{proposition}{Proposition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{lemma}{Lemma}%[section]
+\newtheorem{corollary}{Corollary}
+\newtheorem{condition}{Condition}
+\newtheorem{definition}{Definition}%[section]
+\DeclareMathOperator*{\argmax}{arg\,max} % argmax 
+\setlength{\footskip}{50pt} % Defines how high/low the page number is placed
+%\let\cite=\citet
+\def\thetable{\arabic{table}}
+\def\thesection{\arabic{section}}
+
+% title could be \huge too. More normal. But nice to be large when it is so short. Otherwise make smaller and title bold
+\title{\Huge Banking on Buffers}
+
+\author{\Large Andreas Br\o gger\thanks{
+\small
+I am at
+Copenhagen Business School, Solbjerg Plads 3, 2000 Frederiksberg, Denmark.
+Please contact me at anbr.fi@cbs.dk.
+I thank Jens Dick-Nielsen and David Lando for helpful guidance and support.
+I thank Steffen Andersen, Ken L. Bechmann, Peter Feldh\"{u}tter, Thomas Geelen, Nicola Giommetti, Niels Joachim Gormsen, Lena Jaroszek, Bjarne Astrup Jensen, Christian Skov Jensen, Alexander Kronies, Matthijs Lof, Kristian Miltersen, Michael M\o ller, Mads Stenbo Nielsen, Lasse Heje Pedersen, Peter Raahauge, Henrik Ramlau-Hansen, Jesper Rangvid, Kathrin Schlafman, Daniel Streitz (discussant), Carsten S\o rensen, Morten S\o rensen, Fabrice Tourre, Rasmus Tangsgaard Varneskov, Anders Vilhelmsson (discussant), Ramona Westermann, Paul Whelan; and seminar participants at American Finance Association (AFA) 2019 Annual Meeting, Copenhagen Business School, PhD Nordic Finance Workshop 2019 for helpful suggestions and comments. I gratefully acknowledge support from the FRIC Center for Financial Frictions (Grant no. DNRF102).}
+}
+\date{\Large First version: January 4, 2019\\This version: \today}
 
 \begin{document}
 
@@ -59,12 +108,12 @@
 \thispagestyle{empty} % removes page number for first page
 
 \begin{abstract}
-
-\noindent Contrary to current evidence that investing ethically does not matter for investors, we find that ethical investment does matter for investors when sentiment is high [in good times]. [We further show that climate sentiment tends to be high in good times]. We examine excess returns for a stock portfolio which is long in high ESG-scoring companies and short in low scoring companies. The results are robust to controlling for risk using the Fama French three and five factor models, and the Carhart four factor model, as well as different horizons for the good time indicator, and different portfolio sizes. Using an event-study approach, we further find that a loss in ESG scores matters for performance at a risk-adjusted level, whereas an equal increase does not. We exploit the growing data on Environmental Social Governance (ESG) scores of companies, as well as a sentiment measure from Google Trends.  These results have implications for the understanding of the willingness of investors to forgo returns for ethical investments; as well as if and when CEOs should focus on their sustainable policies.
+\noindent I document asset pricing effects from macroprudential buffers. As macroprudential buffers are announced the price of risk increases. I develop a theoretical model that predicts that as buffers are announced: 1) Price of risk increases, 2) Systemic risk falls, and 3) Assets shifts away from banks to other agents with higher risk aversion. In the model, systemic risk arises from sufficiently strong fire sales that freezes [shuts down] the financial system, due to their regulatory constraints. Since the financial crises Basel III and Basel IV has been agreed upon, and is in the process of being implemented. The effects of these new regulations on financial intermediaries and the economy at large, remains to a large extend unknown.
 \end{abstract}
+% I study the asset pricing and systemic risk implications of macroprudential buffers. I estimate that increasing the macroprudential buffers by 1 percentage point lowers equity prices by [2-3]\%, consistent with a higher price of risk.
 
-\noindent \textbf{Keywords}: Sustainable investing, ESG, Equities, Event Studies.\\
-\noindent \textbf{JEL Codes}: G12, G14, Q5, G11.
+\noindent \textit{Keywords}: Financial Crisis, Macroprudential Policy, Reserve Requirements, Systemic Risk.\\
+\noindent \textit{JEL classification}: G01, G21, G28, G12.
 
 \clearpage
 \setcounter{footnote}{0}
@@ -72,23 +121,56 @@
 \setcounter{page}{1}
 
 
-\section{Introduction}
-Over the last two decades Environmental Social Governance (ESG) scores have been growing. There has been reports that ethical companies out-perform regular companies [source eg FT], alluding that ESG affects firm performance. This paper is an attempt to more deeply look at this assertion. Governments have increasingly been focusing on moving to a carbon-neutral economy[source, make more specific], societal demands for more sustainability in many aspects of life and progress have been growing, and considerations outside of raw returns in the investment community seem to become more pronounced. Large investors such as pension funds are reacting to individuals demands of higher ethical standards of their investments, e.g. by banning unethical companies from their portfolios \footnote{\href{https://www.dr.dk/nyheder/indland/pensionskasser-vil-afvise-selskaber-med-daarlig-skattemoral}{Danish Pension Funds} are faced with demands from their investors to allocate capital in more sustainable and ethical ways. A closer look on the individual investment vehicle is required by pension members.}. As prices are a function of demand and supply, such a large demand outflow could severely affect prices.
+\section*{Introduction}
+Systemic risk can be divided into vulnerabilities of the system and potential systemic triggers. This paper therefore explores triggers arising from regulatory cliff effects, and evaluates the vulnerability using a fire sale model.
 
-In this paper we consider how returns have been affected by their ESG scores. First, we apply a number multi-factor models to risk adjust portfolios based different degrees of sustainability and find that the ESG levels are not generally priced, but they become priced in times when investors are more flush with cash. We distinguish between good and bad times and observe that ESG firms seem to outperform the market in good times. Interestingly, low ESG firms yield higher abnormal returns than high ESG firms, suggesting that investors forgo return by investing more sustainable. Additionally, we want to consider how higher order moments differ relating to their ESG. As well as if holder composition differs amongst these ESG portfolios. 
+In general, banking regulations have been put in place to avert financial crises occurring by reducing liquidity and credit risks, i.e. the direct linkages channel of systemic risk. However, in cases of extreme financial distress, breaching the regulations might have drastic effects on the financial system \citep{CruzLopez2013}, so-called "cliff effects", whereby the regulatory consequences of a measure crossing a threshold causes a violent reaction in financial markets.  For example, price declines could be exacerbated by market participants seeking to sell assets to meet liquidity requirements \citep{Gorton2009}. Alternatively, the demand for collateral could cause an increase in premiums for high-quality assets, creating a cliff effect for borderline assets that might lose their high-quality status during financial downturns \citep{IMF2012}. Thus, while regulations might reduce the chance of a financial crisis, they can add to systemic risk in times when their requirements are breached, through these regulatory cliff effects.
 
-Secondly, using an event-study approach as in \citet{Campbell1997} we see the effects of an ESG improvement or depreciation of the firms on their equity returns. We find that a drop in ESG  has a significant effect, but an improvement does not.\footnote{Swap so that is other way round?}
+\begin{quote}\textit{``
+The countercyclical capital buffer (CCyB) is designed to help counter pro-cyclicality in the financial system... [by] creating buffers that increase the resilience of the banking sector during periods of stress when losses materialise. This will help maintain the supply of credit and dampen the downswing of the financial cycle."}\\
+\hspace{1em}- {European Systemic Risk Board}
+\end{quote}
 
-%Investors consider the ethical conditions of companies they invest in, and we show that they do well, before they do good. [Only in good times, investors in stocks are willing to accept a lower expected return as compensation for a higher ethical score]. As we see that the intercept in a regression of the return of long high-ESG short low-ESG portfolio onto risk factors is significantly negative in good times. Good times are defined as [a price-earnings ratio (PE) higher than the rolling ten year average]. Climate Sentiment, a measure of investors interest in climate issues, partially explains this fact, as Climate Sentiment tends to be high in good times. In this analysis Climate Sentiment [is constructed using the relative Google search volume by the term Sustainability.]
+I contribute by develop theoretical model. In which, systemic risk might arise from explosive fire sales, and raising macroprudential buffers 1) lowers systemic risk and 2) increases price of risk and lowers prices. I then go on to Evaluate effects empirically and find a price effect of increasing macroprudential buffers
+
+\begin{quote}\textit{``
+We notice the Risk Councils recommendation to increase the macroprudentiel buffer, even though the loan growth has been low for a while.\\ ...the increased buffer will also hit the small institutions in the country side, where the economy is not growing as much...
+"}
+- {Ulrik Nødgaard, CEO Finans Danmark}
+\end{quote}
+
+We identify in the paper how a house price fall can trigger a regulatory cliff effect through three regulatory channels. The first is through an increase in risk weights that reduces the banks' solvency. The second channel is through the inclusion of more exposures to the issuing bank in calculations for large exposure regulations. The final channel is through the Liquidity Coverage Ratio (LCR), where the liquidity haircut attached to covered bonds might increase if their ratings decrease. [The paper goes on to give a quantitative analysis on the risk-weight channel, but the same principle works equally for the other channels.]
+
+Our model shows how regulatory cliff effects can cause banks to act in the same way, at the same time, leading to a fire sale with feedback effects. It further shows how an increased exposure to common liquid assets, increased leverage of the banks in the system, and less liquid assets all add to the vulnerability of the system. Finally we identify the conditions for which the fire sale has no stable solution, meaning an explosive scenario.
+
+[Talk about importance of direct vs indirect effects, as motivation]
+[Take from my proposal, but shorten. Include quotes]
+It is clear that indirect effects played a key role in the global financial crisis in 2008. In October 2008, the IMF predicted a loss from mortgage backed securities of 500 bn USD. However, the IMF’s estimate of the total loss, taking into account the spillovers into other asset classes, sectors and countries, are a staggering 1400 bn USD (Hellwig 2009).
+
+Using a novel dataset from Danmarks Nationalbank and the Danish FSA, we use the model to give quantitative consequences for a regulatory cliff effect in Denmark, and find that current market measures imply that the circumstances are satisfied for the Danish financial system.
+
+Our fire sale model is similar in spirit to citet{greenwood2015} with the added feature that in our case the fire sales are initiated by a regulatory cliff effect. Therefore, the first price fall in our model is an endogenous fire sale effect rather than an exogenous shock to asset prices. Our model looks at solvency rather then leverage, which allows us more applicability as it matches the current financial framework better, and allows us to analyse regulatory cliff effects based on risk weights, which could otherwise not be analysed with a leverage based model. We further deviate from citet{greenwood2015} in allowing for further round sales, essentially including more feedback effects by solving for a new steady state.
+
+[macroprudential policy
+Macroprudential policy paragraph. Macroprudential policy has arisen to address the fact from the crisis of 2009 that even if banks individually seem robust, the system could become unstable.
+However Macroprudential policy remains a scarcely researched area. Some of the most influential works include X, Y and Z. In this paper I address how macroprudential policy can be used to reduce systemic risk. It however requires a change from the current regulatory framework of macroprudential policy to be usable.]
+The counter-cyclical buffer, also called the macroprudential buffer, was first activated by Norway in 2013. Since then 12 countries have announced an activation of this buffer. [Part of Basel III. Implemented in EU as Capital Requirements directive IV]. Macroprudential buffers increase the capital requirements of banks.
+
+[Have a summary as second last paragraph]
+
+
+NB Remember that start of paragraph should introduce. And last sentence should summarise.
+
+[One paragraph setting scene, then introduce contribution and what we do.]
+
+NB Check if LCR regulation is in US.
+
+NB Check if I can get covered bonds for Deutsche bank.
 
 \hl{[Write why these methods are useful for this setup/problem]
 	
 	The results are robust to...
 }
-
-These results are interesting as they shed new light on how CEO's should think about their ESG policies, as we now live in a world where investors are becoming more ESG aware. The results suggest, that they should only improve their ESG scores, if they can sustain the higher score. And that they should improve their scores in good times. It is also interesting for fund managers, as there seems to be a significant alpha to investing in firms that have experienced an ESG downgrade.
-
-The remainder of this paper is structured as follows. A literature review sheds light on existing studies on sustainable and ethical investments. The section thereafter elaborates on the data and methodology applied in the analysis. The results report our findings. Finally, we conclude the paper and suggest future venues of research within this field.
 
 
 \subsection*{Related Literature}
@@ -98,6 +180,11 @@ NEW: Optimal time-consistent macroprudential policy JPE 2018
 \url{https://libertystreeteconomics.newyorkfed.org/2018/10/regulatory-changes-and-the-cost-of-capital-for-banks.html}
 
 \url{https://www.newyorkfed.org/research/staff_reports/sr854}
+
+This research adds to [two] main strands of literature: 1) Financial intermediation and assset prices and 2) Systemic Risk.
+Within 1) He Krishnamurthy. Brunnermeier Sannikov. Pedersen Brunnermeier. 
+X also develops theory, but I do Y differently, hence adding Z.
+[Mention where we add to the literature. Add to literature of Financial Intermediation by developing a dynamic model that captures banks behaviour under regulatory requirements (risk weighted Basel II framework) to exogenous shocks. And I add to the literature of banking by identifying regulatory cliff effects, and their potential to trigger a systemic crises. Banking by X, to Financial Intermediation non-linear effects. Regulation(?) by using a risk weighted basel II framework? Systemic Risk? Financial Stability? Banking? SHOULD I JUST PICK ONE? BANKING OR FINANCIAL INTERMEDIATION? SHOULD I SPECIFY THEORY OR EMPIRICS? See Greenwood intro?]
 
 
 \cite{MiltonFriedman1970} once famously argued that the only firm’s social responsibility is to maximize its owners profits. Any activity that does not pursue this very objective is not considered worthy by investors. But what if an increase in social responsibility and sustainability goes hand in hand with value maximization? This paper investigates the relationship between sustainability and financial performance. 
@@ -118,29 +205,603 @@ Finally, \citet{Fisher-Vanden2011} and \citet{Boyle1997} both find that social c
 
 As the literature review suggest, a clear connection between sustainability and financial performance remains yet to be proven with more certainty. We add to the literature by investigating the link between the commitment of social responsibility to firms’ performance from a new perspective. First, we merge the CRSP monthly equity returns with ESG scores from Thomson Reuters, which serve as an indicator for firms’ social commitment. This leaves us with an extensive database that, to our knowledge, has not yet been investigated by any other study. We then form decile portfolios based on previous year ESG scores and apply risk-adjusted factor models to examine financial performance with regards to abnormal returns. Furthermore, we condition the factor models on a bad times indicator and empirically examine changes in responsibility ratings of firms in the spirit of an event study. 
 
+
+[Update later]Section~\ref{sec:model} details the model to be used. Section~\ref{sec:cliffs} describes the regulatory cliff effects and Section~\ref{sec:fireSales} models fire sales. An empirical analysis is conducted in Section~\ref{sec:empiricalAnalysis} followed by discussion in Section~\ref{sec:discussion}, policy recommendations in Section~6 and conclusions in Section~\ref{sec:conclusion}.
+
 %Write more on concept of ESG scores.
+
+\section{Model}
+
+\subsection*{Setup}
+
+Let there in our economy exist a continuum of two agent types. Intermediaries $I$ and households $H$. Intermediaries are risk neutral and maximise final wealth $W^I_T$. Like intermediaries, households also like wealth but additionally dislike risk such that their absolute risk aversion is $\gamma$\footnote{[Write as negative exponential utility instead? Same outcome, but maybe more fancy. Use objective function word? Solved by dynamic programming]}. Thus they maximise $W^H_T - \frac{\gamma}{2}\sigma^2$.
+
+Without loss of generality let the risk-free interest rate be normalised to 0. Additionally, a [single] risky asset exists[is endowed to the households\footnote{[mention that this is done for simplicity, but not important. Maybe as a footnote]} which gives its owner a claim to a [random and] normally distributed dividend $\delta$ at time $T$. Let the dividend $\delta$ be characterised by its expectation $\mu$ and volatility $\sigma$, such that $\E[\delta] = \mu$ and $Var[\delta] = \sigma^2$ [ALT $\sigma[\delta] = \sigma$]. Furthermore let the expectation follow an AR(1) process such that it is updated at each intermediary period, making it time dependent ($\mu_t$).
+
+Intermediaries are given the privilege to apply leverage (ability to borrow at the risk-free rate), as long as a fraction $\theta$ of their investments are financed by their own wealth, such that $\theta_t = \frac{W^I_t}{max(x^{I}_t)}$. The capital requirement $\theta$ is subject to a regulatory cliff effect\footnote{[Delete rest of sentence as to not repeat?]}, which means that it is time varying and in the intermediary periods\footnote{[make singular?]} follows a jump process. 
+
+\begin{definition}[Regulatory cliff effect] Formally let a regulatory cliff effect be an exogenous random change at time $t \in (1,T-1)$ in the capital requirement $\theta$ of $\Delta \theta_t$ ($\Delta \theta_t =  \theta^H-\theta_0$), such that $\theta_t \in \{\theta_0,\theta^H\}$. Where $\theta^H$ is realised with a probability $\lambda$.\footnote{[Write up properly with exponential and lambda?]}
+\end{definition}
+
+Additionally, a macroprudential authority exists, which can may introduce, and repeal, a macroprudential buffer.\footnote{[Introduce this later?]}
+
+\begin{definition}[Macroprudential buffer]
+Let a macroprudential buffer $\theta^C_t$ be defined at time $t$, as a regulatory requirement above the previous regulatory requirement $\theta_{t-}$, such that once introduced the requirement becomes $\theta_t = \theta_{t-} + \theta^C_t$.
+\end{definition}
+
+
+\footnote{[In the following analysis, it will be assumed that if the intermediary does not meet its capital requirement in period $T$, the intermediary will be closed (restructured) and any remaining wealth will be lost in the bankruptcy(/restructuring) process.]} The timing is as follows. In period 0 the model is realised, in period 1  the stochastic capital requirement is realised and the expectation for the dividend $\mu_t$ is updated, and in period 2 the random dividend is realised.
+
+Below first the equilibrium is characterised, and then the solution will be discussed.
+\footnote{WHAT WOULD HAPPEN IN THE MODEL IF VOL IS UPDATED TOO?]}
+\footnote{[Can think of a riskless bond $B$ existing in 0 net supply, such that households are indifferent about any position in $B$?]}
+
+%\subsubsection*{Equilibrium}
+
+\begin{definition}[Equilibrium] \label{d_eqm}
+\footnote{[Make as a equilibrium subsubsection again?]} Let an equilibrium be [characterised by] a price process $p_t$, such that markets clear in each period. I.e. for each time $t$, it will be the case that given the price, intermediary demand $x^I_t$ and household demand $x^H_t$ of the risky asset equals supply $z$. \footnote{(Demand is their optimal demand)} \footnote{[Make a bit more formal as in Zhiguo He?]}
+\end{definition}
+
+\subsection*{Solving the model}
+The model is set up as a dynamic programming problem, and solved by backwards induction. In period 2 the price will trivially be $\delta$, as if it was not, an arbitrage opportunity would exist\footnote{(as a risk-less profit could be achieved)}.
+
+\subsubsection*{Period 1}
+In period 1 the households demand is given as the solution to their maximisation problem\footnote{[REF here?]}, such that
+\begin{equation} \label{e_xH}
+x^{H}_1 = \argmax_{x^H}\left[\E_1[W^I_2] - \gamma/2\sigma^2\right]
+= \frac{\mu - p_1}{\gamma\sigma^2}.
+\end{equation}
+($\sigma_W$ first ?)
+\footnote{[Show in appendix?. NB Not needed. Skip?]}
+
+
+As intermediaries are risk neutral, their demand $x^I$ is simply given by
+\begin{equation}  \label{e_xI}
+x^I_1 = \begin{cases}
+ W^I_1/\theta_1, &\text{for $p \leq \mu$}\\
+ 0, &\text{otherwise [or for $p > \mu$],\footnotemark}
+\end{cases}
+\end{equation}
+\footnotetext{Notice that shorting is not allowed (Else $-x^I_1 = \frac{W^I_1}{\theta_1}, for p \geq \mu$). WRITE THIS OUT EXPLICITLY.} \footnote{make top less or equal. Else change later that price becomes infinitisimally close to fundamental price}
+\noindent as these positions will maximise $\E_1[W^I_2]$ subject to the capital requirement and no shorting constraint.
+
+The following propositions describe the equilibrium price under different circumstances.
+
+\begin{proposition} \label{p_explosiveFiresales}
+If conditions \ref{c_unstable} and \ref{c_inadequateBuffers} below [and lemma/assumption 1?] are fulfilled, there will be:
+
+\begin{enumerate}[label = \roman*)]
+\item[\textnormal{i)}] \textnormal{\textbf{(Explosive fire sales)}} For negative shocks, there will be explosive fire sales. The price will be the lowest possible and given by
+\begin{equation}
+p_1 = \mu - z\gamma\sigma^2.
+\end{equation}
+\item[\textnormal{ii)}]  For positive shocks, the price will be equal to its fundamental value.\footnote{[Give this a name?]}
+[Name this prop explosive fire sales and not condition? Condition is more like unstable equilibrium. See prob 5 in BP. Name just the first case. Name this? Full price reflection?]
+\begin{equation}
+p_1 =  \mu.
+\end{equation}
+\end{enumerate}
+
+
+\footnote{[have it be max 0,X? Or mention parameters are set so that never zero and is a normal feature of models with normally distributed returns or fundamental values (ok with negative return, just not price).]}
+\footnote{[the risk of this is called systemic risk). Mention later or now?]}
+\end{proposition}
+\begin{proof}
+See appendix.
+\end{proof}
+
+\footnote{[is a proof here needed? Seems like not used in BP2009]} To see why this is the case consider the intermediaries in period 1, who have experienced a negative shock, either from a loss in equity (from a lower expectation of the fundamental value of the risky asset), or an increase in the capital requirement. Condition \ref{c_inadequateBuffers} means that the shock is larger than their buffer, and they are therefore now in breach of their capital requirement, and if they do not act, they will be closed, and the equity wiped. Furthermore given condition \ref{c_unstable}, they know that if they sell the price will drop, leading again to a loss in equity for the firm. Given this condition this feedback effect is so strong (explosive) that they will have to sell their total position\footnote{and they will still be closed?!}. Given assumption \ref{l_noBluffing} if they start insolvent, they cannot make purchases, as they cannot leverage further to make this purchase, as they cannot persuade others the purchase in itself, and price appreciation, will be enough to actually make them solvent, with this larger position. Notice that if this assumption is violated we get \textit{self fulfilling asset prices}. Hence the equilibrium price, will be the price, at which, the households are willing to hold all of the risky asset(s). Now instead consider a positive shock. Now the intermediaries are in excess of their capital requirement, and are free to make asset purchases. And when they do so, they will become even more solvent as condition \ref{c_unstable} gives these explosively strong feedback effects through the price. The optimal strategy in this case is for the intermediaries to purchase all of the risky assets as long as the price is below the fundamental value. Hence the only clearing price will be where the price is equal to the fundamental value. \footnote{Here household would want to hold none of the asset, and the intermediaries are indifferent to holding any amount, ie it is an optimal choice for them to hold all of the risky asset.}
+
+\begin{proposition} \label{p_pricewoExplosive}
+If condition 1 is not satisfied, the price will be given as 
+\begin{equation}
+p_1 = \mu - \gamma\sigma^2 \left(z-\frac{W^I_1}{\theta_1}\right).
+\end{equation}
+\end{proposition}
+[As $W_1^I(p_1)$ Written out this is $p_1 = \left[\mu - \gamma\sigma^2 \left(z - \frac{W_0^I - p_0 x_0}{\theta_1}\right)\right]/(1+\frac{\gamma\sigma^2}{\theta_1}) $. With $\gamma\sigma^2$ being the price impact and $z-\frac{W^I_1}{\theta_1}$, or $z - \frac{W_0^I - p_0 x_0}{\theta_1}$, is the purchasing ability (intermediation capacity) of the intermediary, and $\frac{1}{1 + \gamma\sigma^2/theta_1}$ is the price-wealth/solvency feedback multiplier. ] [NB this price is always higher than the fire sale price as $W^I_1/\theta_1$ is positive.] [MAYBE DONT WRITE THIS And will be less than or equal to $mu$ as (set/assumed? that intermedaries cannot afford to buy all of asset?)]
+\begin{proof}
+See appendix.\footnote{Have this proposition first, as it is the standard (interior solution)?}
+\end{proof}
+
+To see why this is the case consider again first a negative shock. The intermediaries are in breach of their capital requirement as condition \ref{c_inadequateBuffers} holds, and needs to liquidate some assets (Assumption \ref{l_noBluffing}). As condition \ref{c_unstable} does not hold, there will be a new sales amount, that when sold, they are not solvent again. (This may be their total position, at which they close). (there will (may?) be an interior solution). [Show exactly amount sold in proof?]. As this is the only optimal choice for the intermediaries, the equilibrium price will be the price at which the households are content to hold the remainder of the asset. Consider instead a positive shock. Now the intermediaries are able to purchase more, and as condition \ref{c_unstable} does not hold they can only purchase a finite amount, as this is the only optimal choice (as long as this amount is less or equal to the total amount of the risky asset) for the intermediaries, the equilibrium price will be the price, at which, the households are happy to hold the remainder of the asset. Proposition \ref{p_explosiveFiresales} is a special case of this proposition, where the intermediary can afford all ($W^I_1/\theta_1 = z$) or none ($W^I_1/\theta_1 = 0$) of the risky asset. [Write out proposition equation fully.]
+
+\begin{proposition} \label{p_pricewBuffer}
+If condition \ref{c_unstable} is satisfied, but not \ref{c_inadequateBuffers}, then 
+\begin{equation}
+p_1 = \mu
+\end{equation}
+\end{proposition}
+\begin{proof}
+See appendix.
+\footnote{[Prove using game theory / proof by contradiction. If intermediary responds to negative shock by reducing position, then price spirals out and becomes minimum and they have to unwind their total position at this price, hence cannot be optimal. And they cannot increase position as they are limited by regulatory contraint.]}
+\footnote{Notice that we do not allow for unsubstantiated purchase rumours (ie creating a bubble to make prices actually work.)}
+\end{proof}
+
+[Write corollary about sharpe ratios?] 
+\begin{corollary}[Sharpe ratios]
+Sharpe ratios will be $SR = ( \mu - p_1 ) / \sigma \in [0,z\gamma\sigma]$. When $z$ is normalised to one this becomes $SR \in [0,\gamma\sigma]$, where $\gamma\sigma$ is the price impact. Therefore the SR in crises are determined by the risky assets price impact (in bad times if time varying). The CHANGE in SR, ie the additional effect of the crises will be $\Delta SR = x^I_0\gamma\sigma$ ie this price impact times the proportion of the asset held by the intermediaries in period 0. So we can see already now that if the market is efficient (or growth is optimal/high) and the financial intermediaries are well capitalised, the SR is low in period 0 and $x^I_0$ is close to 1 and the SR is close to 0, the fire sale /crises effect will be bigger.
+
+[low SR in p0 may indicate that SR can rise by more in p1]
+
+\end{corollary}
+
+
+
+To see why this is the case consider again the intermediaries facing a shock. As their buffer is [more than] large enough, they are able to purchase an additional amount of the risky asset, and in doing so as condition \ref{c_unstable} is satisfied their solvency will improve, and they will actually be able to purchase all of the risky asset. Therefore, as they are risk neutral, the equilibrium price will be infinitesimally close to the fundamental value, as this is the only price where the demands equals the supply.
+
+The following describe the conditions, which are important to know if are fulfilled, to know which price outcome is achieved. Then an assumption is discussed, and the consequences if it is violated is considered. [Make less general. State conclusions].
+
+\begin{condition}[Unstable equilibrium] \label{c_unstable}
+[Unstable equilibrium condition]. There will be an unstable equilibrium if
+\begin{equation}
+x_0^I > \frac{\theta_1}{\gamma \sigma^2}
+\end{equation}
+\end{condition}
+\begin{proof}
+An unstable equilibrium means that the slope of the demand curve exceeds the slope of the supply curve
+\begin{equation*}
+\frac{d x^I}{dp} > \frac{ d (z-y)}{dp}.
+\end{equation*}
+Alternatively write that 
+\begin{equation*}
+\frac{d x^I_t}{dp_t} + \frac{d x^H_t}{dp_t} > \frac{dz_t}{dp_t} = 0.
+\end{equation*}
+We see from the households demand equation (Eqn. \ref{e_xH}) that 
+\begin{equation*}
+\frac{d x^H_1}{dp_1} = -\frac{1}{\gamma \sigma^2}
+\end{equation*}
+And from by substituting in the wealth dynamic equation
+\begin{equation}
+W_{t} = W_{t-1} + (p_{t}-p_{t-1})x_{t-1}
+\end{equation}
+into the intermediaries demand function (Eqn. \ref{e_xI}) that
+\begin{equation*}
+\frac{d x^I_1}{dp_1} = \frac{x_0}{\theta_1}.
+\end{equation*}
+Such that
+\begin{align*}
+\frac{d x^I_t}{dp_t} + \frac{d x^H_t}{dp_t} &> 0,\\
+\frac{x_0}{\theta_1} - \frac{1}{\gamma \sigma^2} &> 0,\\
+x_0 &> \frac{\theta_1}{\gamma \sigma^2},
+\end{align*}
+is the condition for an unstable equilibrium.
+\end{proof}
+
+To see why this is the case consider how a change in price affects the intermediaries demand capacity. If the price rises by one unit they will be able to purchase $x_0/\theta_1$ units of the risky asset. The same price increase will also decrease the demand of the households by $1/(\gamma \sigma^2)$. And if the demand increase by the intermediaries exceed the demand drop by the households, there will be excess demand, and the price has to adjust further upwards. Further increasing how much the intermediary can purchase. This increasing spiral will increase until the intermediary can purchase all of the asset and the household will want to buy none. A price decrease will also equally spiral out until the intermediary can only own zero of the asset, and the intermediary has to demand all of the asset (for the market to clear). 
+
+\begin{condition}[Inadequate buffers] \label{c_inadequateBuffers}
+The buffers will be inadequate (the intermediary will be capital constrained) if 
+\begin{equation}
+\phi^x < \frac{W_0}{\theta_1}\frac{d\theta}{\theta_0}+\frac{1}{\gamma\sigma^2}d\bar{\mu}.
+\end{equation}
+\end{condition}
+\begin{proof}
+For the buffer to be inadequate it must be the case that the intermediary cannot purchase as much of the risky asset in period 1 as he purchased in period 0 (without affecting the price).
+\begin{align*}
+x^I_1 < x^I_0, (\text{at } p_1 = p_0)\\
+\frac{W^I_1}{\theta_1} < x^I_0.
+\end{align*}
+Where $W^I_1 = W^I_0$ as $p_1 = p_0$. And if we define $\phi^x$ as the extra amount of risky asset the intermediaries could have purchased in period 0.
+\begin{align*}
+\frac{W^0_1}{\theta_1} &< \frac{W^I_0}{\theta_0} - \phi^x,\\
+\phi^x &< \frac{W^I_0}{\theta_0} - \frac{W^I_0}{\theta_1},\\
+&= W^I_0 \left(\frac{1}{\theta_0} - \frac{1}{\theta_1}\right),\\
+&= W^I_0 \left(\frac{\theta_1 - \theta_0}{\theta_0 \theta_1}\right),\\
+\phi^x &< \frac{W^I_0}{\theta_1} \frac{d\theta}{\theta_0}.\\
+\end{align*}
+And more generally if there can be a value shock and a regulation shock. We need for inadequate buffer that the demand in period 1 can not exceed the demand in period 0. ie.
+\begin{align*}
+x^H_1 + x^I_1 < x^H_0 + x^I_0,\\
+x^H_1 - x^H_0 + x^I_1 - x^I_0 < 0.\\
+\end{align*}
+Where $x^H_1 - x^H_0 = \frac{d\mu}{\gamma\sigma^2}$ [Do I need to show this? Probably...] and $x^I_1 - x^I_0 = \frac{W^I_0}{\theta_1} - \frac{W^I_0}{\theta_0} + \phi^x$ as before. Such that
+\begin{align*}
+x^H_1 - x^H_0 + x^I_1 - x^I_0 < 0,\\
+\frac{d\mu}{\gamma\sigma^2} + \frac{W^I_0}{\theta_1} - \frac{W^I_0}{\theta_0} + \phi^x < 0,\\
+\phi^x < \frac{W^I_0}{\theta_0} - \frac{W^I_0}{\theta_1} - \frac{d\mu}{\gamma\sigma^2},\\
+\phi^x < \frac{W^I_0}{\theta_1} \frac{d\theta}{\theta_0} - \frac{1}{\gamma\sigma^2}d\mu.
+\end{align*}
+And redefining a positive shock to be a negative value shock by introducing $d\bar{\mu} = -d\mu$ we finally get [maybe swap definitions?]
+\begin{equation}
+\phi^x < \frac{W^I_0}{\theta_1} \frac{d\theta}{\theta_0} + \frac{1}{\gamma\sigma^2}d\bar{\mu}.
+\end{equation} 
+\end{proof}
+
+We see that if the buffer (in terms of how many additional units of the risky asset $x$ the intermediaries were able to purchase in period 0), is less than the relative regulatory shock times the amount of the asset owned from period 0 to period 1 ($W_0/\theta_1$) and the expectation shock ($d\bar{\mu}$, where shock is defined to be positive for a negative value shock so $d\bar{\mu} = -d\mu = -(\mu_1-\mu_0)$) times the households demand sensitivity [to the price] [price insensitivity] (the reciprocal of the price impact). So the first term is the change in intermediaries demand capacity from a change in the regulatory requirement and the second term is the change in households demand from the change in the expected dividend size. If the buffer is smaller than these two terms, then the buffers will be inadequate to absorb the shock, and the financial intermediaries will be capital constrained and will need to adjust their capital structure (sell assets) as to not be closed down by the regulator.
+
+\begin{assumption}[No bluffing] \label{l_noBluffing}
+ \footnote{[Maybe make lemma?]} Banks cannot convince the market (other agents) that they will buy something they cannot a priori afford or are allowed to by capital requirements. If this lemma is violated, we get self fulfilling asset prices (Corollary \ref{c_selfFulfilling}).
+\end{assumption}
+
+\begin{corollary}[Self fulfilling asset prices] \label{c_selfFulfilling}
+If lemma \ref{l_noBluffing} is violated, we can get self-fulfilling asset prices ie get to an equilibrium with higher prices from the lower, just by having the intention to buy (ie being confident). Perhaps by households/the economy having confidence in banks, can lead to this higher equilibrium (makes it possible, and since it is beneficial for the intermediaries, will lead to it).). [Maybe elaborate more on this] (Reference Alexander)
+\end{corollary}
+
+[Include price impact corollary?]
+
+[Likelihood of crises here?]
+
+\subsubsection*{Period 0}
+
+
+We now turn to the initial period. Here, we see the formation of endogenous buffers, are introduced to the definition of systemic risk as well the likelihood of such an event. We also see the usefulness of macroprudential buffers [Make more about conclusions]. Here in general there are not analytical closed form solutions, but comparative statics are given.
+
+\begin{lemma}
+The price in period 0 is found from the equilibrium conditions. [Just have stated as in period 0?]
+\end{lemma}
+\begin{proof}
+[Move to appendix.]
+The households demand is still given by
+\begin{equation}
+x^H_0 = \frac{\mu_0-p_0}{\gamma \sigma^2}.
+\end{equation}
+The intermediaries demand is also again found by the solution to their optimisation problem. Such that
+\begin{equation}
+x^{I}_1 = \underset{x^{I}_1}{\arg} J = \arg \max_{x^I}\left[\E_0[W^I_2] - \gamma/2\sigma^2\right].
+\end{equation}
+(For specific situations this can be solved analytically ? General solutions can be given?) Due to the feedback and non-linear effects in period 1, this needs to be solved numerically. In figures X-X this optimal demand is shown for different parameters.
+As in time 1, the price is then the value p for which $x^I+x^H = z$ (or$x^I= z - x^H $)  (as illustrated in figure X.) (Mention conditions for a solution?).
+\end{proof}
+
+[Show what price will be?] Having gotten the price we can also see
+
+Prop of risk premium / sharpe ratios? This is expected return over volatility $SR = (p_0 - \mu)/ \sigma$. $\lambda = f(p-\mu) = f((W^I)^{-1})$. Do I get a risk premia for regulatory cliff effect???
+
+Can I say anything about volatility? Maybe price in period 0 vs 1 vs 2?
+
+[The model is solved numerically backwards. So the intermediary maximises his objective function $\Gamma$ for a given price in period 0 by choosing $x_0$. As this is a maximation over an expected outcome. Monte carlo simulations (of outcomes) are done to achieve this expectation (mean of outcomes) for each parameter picks. This yields his demand curve. The pension funds demand curve is simply found from his optimality condition, plotting $y_0$ vs $p_0$. The intersection yields the clearing set (price, intermediary demand, and pension demand).]
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{./figures/20181017eqm_t0_seeded.pdf}
+\caption{price in period 0 $p_0$ vs supply $z-y_0$ and demand $x_0$. Fitted $x_0$ in yellow. Average of 1000 simulations. Differentiation is seeded. [Consider changing so that we have two demand lines and one fixed supply line at $z$?]}
+\end{figure}
+
+The clearing price of 0.8 and demands of 0.5 yields a significant buffer, as could have purchased 1 ie all of $z$.  We see that the intermediaries demand is [(almost) monotonically] decreasing in $p_0$ and as we would expect the households supply is increasing.
+
+[Proposition on expected return and risk premia? Also for period 1?]
+
+We now turn to the effects of the period 0 equilibrium on period 1 outcomes.
+
+[Call results from here?]
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{./figures/probFiresale_vs_buffer_smoothed2.pdf}
+\caption{Probability of explosive fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size.\textsuperscript{\color{blue} a}}
+{\small\textsuperscript{{\color{blue} a}} Smoothed through fitting 4th degree polynomial aka Spline.}
+\label{f_probFSvsBuffer}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{./figures/SR0vsTheta0.pdf}
+\caption{Price of risk (Sharpe Ratio) vs buffer size. Shown for $\sigma_x = 0.1, \gamma = 3$. }
+\label{f_probFSvsBuffer}
+\end{figure}
+
+\begin{figure}[h] 
+\centering
+\includegraphics[scale=.7]{./figures/20181017p1vsVolShock.pdf}
+\caption{$p_1$ vs realisation of expected asset value  $\nu_1$. For $p_0 = 90$. Volatility 0.2. [Consider plotting SR instead. More clear where crises are.]}
+\label{f_price1vsvolshock}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{./figures/20181017p1vsReqShock.pdf}
+\caption{$p_1$ vs realisation of capital requirement $\theta_1$. For $p_0 = 0.9$ and a probability of regulatory cliff effect $\theta = 0.1  \rightarrow 0.3$ of $q = 10\% $. Volatility shocks turned off. Seeded.}
+\label{f_price1vsRegShock}
+\end{figure}
+
+Fire sale pressure will result when the fundamental value $\nu_1$ (or $\mu_1)$ realises lower or if the regulatory cliff effect is realised. If the conditions for explosive fire sales are fulfilled, we will see a sudden drop in $p_1$ as no new equilibrum can be found, where financial intermediaries still keep some of the asset. This visualises as yielding a cut-off where the price suddently drops as can be seen in the following figure (It basically gets further from the fundamental value. An illiquidity shock).
+
+\begin{definition} (Systemic risk)
+Let systemic risk be defined by $P_0 (x^I=0)$. Here $P = P^{min}$.
+(\textbf{Systemic risk.} Formally let systemic risk be the likelyhood of a state characterised by the holdings of the banks being zero ($x^B = 0$). Or more generally, by a state of the world with low intermediary wealth $W^I$ and the highest possible risk-premia $\lambda_t$ and sharpe ratio SR. [Just define it from the max SR of $\gamma\sigma$?])
+\end{definition}
+
+The systemic risk is visible in figure \ref{f_price1vsvolshock} and \ref{f_price1vsRegShock} where we are in a state space where the price is further from the fundamental value. The probability of ending in this state is more likely the smaller the buffer is (figure \ref{f_probFSvsBuffer}). (There could be other factors outside model that makes intermediaries have another buffer than otherwise optimal such as tax relief on debt.)
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{./figures/probFiresale_vs_buffer_smoothed.pdf}
+\caption{Probability of fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size. Smoothed through fitting 4th degree polynomial.}
+\label{f_probFSvsBuffer}
+\end{figure}
+
+
+\begin{proposition} (Probability of systemic risk/fire sales)
+The probability of systemic risk (explosive fire sales) is increasing in the size of the regulatory cliff effect and the likelihood. (...)
+\end{proposition}
+
+[Include figure of P(explosive fire sale) vs vol]
+
+Prop/corollary: The probability of systemic risk is increasing in the inverse of the volatility. Ie Systemic risk is high when volatility is low (Reference High moment risk) [merge with above?]
+Merge with below
+\begin{corollary}
+When volatility falls, systemic risk rises. (counter-intuitively).
+\end{corollary}
+
+Prop? Prob sys risk increases as buffer decreases. If there is introduced an exogenous benefit to debt it will make the intermediaries hold a smaller buffer than previously optimal, and it will increase the systemic risk. (ie sys risk increases when buffer decreases (ceteris peribus) [relevant for real world applications/macroprudential policy. Because it is society/households(?) that pays the debt benefit to the intermediary]
+
+\begin{corollary}
+All systemic risk stemming from the regulatory cliff effect can be eliminated by a counter-cyclical buffer of size X. [Make prop? Can make other lemma] 
+\end{corollary}
+
+[Make other corollary with that systemic risk stemming from the fundamental value vol can be eliminated to a VaR of 99.9\% by a counter cyclical buffer of size Y. Make this as second part of previous corollary]
+
+The required buffer size that would be needed to be released to stop fire sales can be seen in figure \ref{f_neededBuffervsRegSize} and is proportional to the size  of the regulatory cliff effect and the probability of the regulatory cliff effect.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.75,trim=7.5cm 10cm 7.5cm 10cm]{./figures/neededBuffervstheta1p100.pdf}
+\caption{Needed buffer $\phi$ vs realisation of capital requirement  $\theta_1$. For $p_0 = 100$ and $\sigma_x = 0, q = 10\%$}
+\label{f_neededBuffervsRegSize}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.75,trim=7.5cm 10cm 7.5cm 10cm]{./figures/neededBuffervsnu1p95.pdf}
+\caption{Needed buffer $\phi$ vs realisation of expected asset value  $\nu_1$. For $p_0 = 95$ and $\sigma_x = 0, q = 10\%$}
+\label{f_neededbufvfunShock}
+\end{figure}
+
+As the fundamental value is a normal variable there is no single buffer that can always avoid fire sales from this channel. However one can find the buffer size that eliminates the probability of explosive fire sales to a certain probability of cases (equivalent to a VaR method). Illustrated as the buffer size needed on the y-axis vs the likelihood along the x-axis in figure \ref{f_neededbufvfunShock} [Make this graph].
+
+\begin{corollary}
+There is a trade-off between lowering systemic risk and market efficiency/ risk premium / sharperatio (alternatively economic growth). This is seen if you regulate/introduce a counter-cyclical buffer in period 0 that you can remove in period 1.
+\end{corollary}
+
+Use this shadow price measure $\Lambda$ as Georgy also uses?
+
+Tradeoff with lower systemic risk and higher sharpe ratios.
+
+Introduce real economy here. Market for projects. Short run vs long run. Decreasing supply of projects in terms of return.
+
+In corollary 2? Systemic risk falls as we increase counter-cyclical buffer
+
+\begin{proposition} (Optimal buffer size)
+[Delet this prop? Not so important?... Move further down at least...]The optimal buffer size is increasing in vol, reg cliff effect, ....
+The (optimal) buffer size is determined in equilibrium by the likelihood and size of the regulatory cliff effect and the volatility of the asset and .... 
+\end{proposition}
+
+
+CALIBRATION\\
+We set fundamental value and amount such that even if intermediaries sell everything, the price is positive.\\
+
+
+APPLICATION\\
+See Num analysis document for application to Denmark. Results: We have explosive fire sales, and we can get size of CCB needed.\\
+
+
+
+PROOFS
+\begin{proof}[Proof of proposition \ref{p_explosiveFiresales}, \ref{p_pricewoExplosive}, and \ref{p_pricewBuffer}.]
+Starting from definition \ref{d_eqm} (Equilibrium). We have for period 1 that
+\begin{align*}
+&x^H_1 + x^I_1 = z,\\
+&\text{And using the households demand (Eqn. \ref{e_xH}) and intermediaries demand (Eqn. \ref{e_xI}),}\\
+&\frac{\mu - p_1}{\gamma\sigma^2} + W^I_1/\theta_1 = z, \text{ for $p<\mu$},\\
+&p_1 = \mu - \gamma \sigma^2 \left(z - \frac{W_1}{\theta_1}\right).\\
+&\text{We now have proposition \ref{p_pricewoExplosive}. Propositions \ref{p_explosiveFiresales} and \ref{p_pricewBuffer} then follow as special cases of this.}\\
+&\text{Proposition \ref{p_explosiveFiresales} is the special case where $x^I_1 = 0$ for negative shocks and $x^I_1 = z$ for positive shocks.}\\
+&\text{For negative shocks we get}\\
+&\frac{\mu - p_1}{\gamma\sigma^2} + 0 = z,\\
+&p_1 = \mu - \gamma\sigma^2 z.\\
+&\text{For positive shocks we get}\\
+&\frac{\mu - p_1}{\gamma\sigma^2} + z = z, \text{ for $p\leq\mu$},\\
+&p_1 = \mu.\\
+&\text{Proposition \ref{p_pricewBuffer} is the special case where $x^I_1 = z$ always. So}\\
+&p_1 = \mu.\\
+&\text{NB Maybe say why these are those cases.}\\
+\end{align*}
+\end{proof}
+
+\begin{proof}[Proof of proposition \ref{p_explosiveFiresales}, extended.]
+\begin{align*}
+p_1 &= \mu - \gamma\sigma^2 \left(z-\frac{W^I_1}{\theta_1}\right).\\
+&\text{And as } W_1^I = (p_1 - p_0)x_0 + W_0,\\
+p_1 &= \mu - \gamma\sigma^2 \left(z-\frac{(p_1 - p_0)x_0 + W_0}{\theta_1}\right),\\
+ &= \mu - p_1\frac{\gamma\sigma^2}{\theta_1} - \gamma\sigma^2 \left(z-\frac{W_0 - p_0x_0}{\theta_1}\right),\\
+p_1(1+\frac{\gamma\sigma^2}{\theta_1}) &= \mu - \gamma\sigma^2 \left(z-\frac{W_0 - p_0x_0}{\theta_1}\right),\\
+p_1 &= \left[\mu - \gamma\sigma^2 \left(z-\frac{W_0 - p_0x_0}{\theta_1}\right)\right]/(1+\frac{\gamma\sigma^2}{\theta_1}).\\
+\end{align*}
+\end{proof}
+
+\newpage
+CHECKLIST
+
+\begin{itemize}
+\item Definition 1: \textbf{Regulatory cliff effect.} Formally let a regulatory cliff effect be an exogenous change at time t in the capital requirement $\theta$ of $\Delta \theta_t$. 
+
+\item Definition 2: \textbf{Systemic risk.} Formally let systemic risk be the likelyhood of a state characterised by the holdings of the banks being zero ($x^B = 0$). Or more generally, by a state of the world with low intermediary wealth $W^I$ and high risk-premia $\lambda_t$.
+
+\item Proposition 1. Systemic risk is decreasing in the size of the buffer.
+
+\item Proposition 2. The (optimal) buffer size is determined in equilibrium by the likelihood and size of the regulatory cliff effect and the volatility of the asset and .... 
+(Prob fire sale and/or size of optimal buffer)
+
+\item Lemma 1. For systemic risk to arise condition 1 and 2 needs to be satisfied.
+
+\item Condition 1. Explosive fire sale condition. (Unstable equilibrium condition). Formally $\frac{\delta x}{p} > \frac{\delta z-y}{p}$.(Write this out explicitly).
+
+\item Condition 2. Inadequate buffer condition. absorbtion capacity $<$ dx or dy.
+
+\item Corollary 1. When volatility falls, systemic risk rises. (counter-intuitively).
+
+\item Definition 3. Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
+
+\item Corollary 2. There is a trade-off between lowering systemic risk and market efficiency (alternatively economic growth). This is seen if you regulate/introduce a counter-cyclical buffer in period 0 that you can remove in period 1.
+
+\item Assumption 1/Lemma 2. Banks cannot convince the market (other agents) that they will buy something they cannot a priori afford or are allowed to by capital requirements. (Corollary: If this is violated, we can get self-fulfilling asset prices ie get to an equilibrium with higher prices from the lower, just by having the intention to buy (ie being confident). Perhaps by households/the economy having confidence in banks, can lead to this higher equilibrium (makes it possible, and since it is beneficial for the intermediaries, will lead to it).). 
+
+\item Testable prediction 1. When the buffer is low, systemic risk is high.
+
+\item Testable prediction 2. When volatility is low, systemic risk is high. Ie Gormsen and Skov (2018, wp). Higher moment risk.
+
+\item Contribution 1. I formalise regulatory cliff effects.
+
+\item Contribution 2. I identify them in current Basel III regulation. 
+
+\item Contribution 3. I formalise the conditions for systemic risk and show that these may be satisfied for several economies, such as the Danish financial system.
+
+\item Contribution 4. I formalise the role of counter-cyclical buffers in the prevention of systemic risk. 
+
+\item Contribution 5. I empircally show a relationship between buffers and systemic risk.
+
+\end{itemize}
+
+NB in paper have period 0 description be before period 1, before period 2?.
+
+NB Should I have conditional variables always have time subscript?
+
+NB Focus on macro-prud i teori
+
+NB Put section headings in middle of page
+
+NB Include price impact corollary?
+
+NB Don't number equations in props etc.
+
+NB Put proposition 1-3 together? (all the p0 ones)
+
+\newpage
+\begin{definition} (Regulatory cliff effect).
+Let a regulatory cliff effect be an exogenous change at time 1 in the capital requirement $\theta_0$ of $\Delta \theta$, such that $\theta_1 = \theta_0 + \Delta \theta$. 
+\end{definition}
+
+\begin{definition}
+Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
+\end{definition}
+
+\newpage
+OLD AFTER THIS
+Corrolary 1. When are there explosive fire sales.
+
+Corollary 2. When is equilibrium safe and when is it not (NB pos shocks always to x=z?)
+
+\bigbreak
+
+NB Add jumpy margin requirement
+
+NB Try repeatable 3 period model. Check if when margin goes from good to bad, that an upward sloping equity premium arises. And when it is good it looks downward sloping. Can I get it without repeatable? Downward yes. Upward not possible without? Compare expected return in this iteration vs expected in next.
+
+The model has three periods, two agents, one risky asset and a riskless one.
+
+In the economy there exists financial intermediaries and pension firms, the two agents.
+
+Intermediaries maximise their final wealth $W_2$, but are subject to a capital requirement in each period which means that  their wealth needs to be above a certain fraction $\theta$ of their risky asset ownership $z + x$, where $z$ is their endowment and $x$ is their purchased amount. [NB should I define as x as being amount sold by intermediaries?] Else they are closed and their ownership is forced to be 0. Formally,
+\begin{equation}
+W_t \geq \theta (z + x_t), \text{ for } t \in (0,1,2).
+\end{equation} 
+
+Pension firms are exponential utility maximisers and thus maximise
+ $U_2 = -e^{-\gamma W_2^P}$, where $\gamma$ is a parameter describing their absolute risk aversion.
+
+The risky asset evolves as an AR(1)\footnote{Autoregressive process of order 1} process such that $\tilde{\nu}_{t+1} = \tilde{\nu}_t + \epsilon_{t+1}$, where $\epsilon$ is a zero mean iid variable with standard deviation $\sigma$. Thus $\E_t[\tilde{\nu}_{t+1}] = \tilde{\nu}_t$.
+
+The riskless asset is without loss of generality normalised to yield a return of 0.
+
+
+
+\section*{t = 2}
+
+In period 2, the price $p_2$ is trivially $\tilde{\nu}_2$ as if it was not a riskless profit could be made by either buying or selling the asset. Hence, in period 1 the pension firms final wealth is given by $W_2^P = W_1^P + (\tilde{\nu} - p_1)y_1$, where $y_t$ is the pension firms ownership at period $t$.\footnote{Here we have used the fact that $p_2 = \tilde{\nu}$}
+
+\section*{t = 1}
+In period 1, the utility maximising strategy for the pension firms is found by maximising their utility function with respect to $y_1$, yielding the following optimal portfolio choice,
+\begin{equation}
+y_1 = \frac{\tilde{\nu} - p_1}{\gamma \sigma^2}.
+\end{equation}
+The wealth optimising strategy for the intermediaries in period 1 is to maximise their wealth in period 2, which can be written as the wealth in period 1 $W_1$ times the return on that wealth, i.e. $\phi$ $\phi W_1$, where
+\begin{equation}
+\phi = 1 + \frac{(\tilde{\nu} - p_1)}{\theta}
+\end{equation}
+
+is the return on equity also known as the shadow cost of equity. Which will be the case whenever $\tilde{\nu} > p_1$, as it is in this case, in expectations, always wealth improving to buy as much as possible of the risky asset, ie. $z + x_1 = W_1/\theta$. If $\tilde{\nu} \leq p_1$ it is optimal to own no assets $z+x = 0 \implies x_1 = -z$. Additionally the intermediaries have a solvency constraint, which if they do not fulfil, they will have to liquidate all assets, $W_1 < \theta(z+x_0) \implies x_1 = -z$. So
+\begin{equation}
+x_1 =
+\begin{cases}
+\frac{W_1}{\theta} - z, &\text{ for } \tilde{\nu} > p_1 \text{ \& } W_1 \geq \theta(z+x_0)\\
+-z, &\text{ otherwise.}
+\end{cases}
+\end{equation}
+
+The price in period 1 $p_1$ is then determined in the market such that $y_1 = - x_1$, when disregarding the unrealistic case where $\tilde{\nu} \leq p_1$, this has two solutions depending on whether the intermediary can operate. So the price will be
+\begin{equation} \label{price1}
+p_1 =
+\begin{cases}
+\tilde{\nu} - \gamma \sigma^2(z - \frac{W_1}{\theta}), &\text{ for } \tilde{\nu} > p_1 \text{ \& } W_1 \geq \theta(z+x_0)\\
+\tilde{\nu} - \gamma \sigma^2 z, &\text{ otherwise}.
+\end{cases}
+\end{equation}
+
+\section*{t = 0}
+
+The optimal decisions in period 0 is a bit more tricky. It proceeds as follows. Pension demand are simply given by 
+\begin{equation}
+y_0 = \frac{\tilde{\nu} - p_0}{\gamma \sigma^2}.
+\end{equation}
+[NB skal sigma være anderledes da det er risiko over længere tid? ie skal der være to-tallet nedenunder? NEJ der er ikke mere risiko. risiko bliver bare realiseret i t=1, på samme måde]
+
+Intermediaries optimisation function is now
+\begin{equation}
+\begin{split}
+\max_{x_0} \E_0&[\phi W_1]\\
+\implies \max_{x_0} \E_0&\left[\left(1 + \frac{\tilde{\nu} - p_1}{\theta}\right)\bigg(W_0 + \left(z+x_0\right)\left(p_1 - p_0\right) \bigg)  \right]
+\end{split}
+\end{equation}
+where $p_1$ in the solvent case, $W_1 \geq \theta(z+x_0)$, is set from Eq. \ref{price1} and the wealth dynamic 
+
+\begin{equation}
+W_1 = W_0 + (p_1-p_0)(z+x_0).
+\end{equation}
+
+There emerges a positive feedback loop between the amount demanded and the price of the risky asset in period 1, as a higher price means that the intermediaries can afford more, leading in itself to an even higher price! This can be seen as plugging the wealth dynamic into Eq. \ref{price1}, and solving for $p_1$, we get the following, for the solvent case 
+\begin{equation}
+\begin{split}
+p_1 &= \tilde{\nu} - \gamma \sigma^2(z - \frac{W_1}{\theta})\\
+    &= \tilde{\nu} - \gamma \sigma^2(z - \frac{W_0+ (p_1-p_0)(z+x_0)}{\theta})\\
+    &= \tilde{\nu} + p_1\frac{\gamma\sigma^2(z+x_0)}{\theta} - \gamma \sigma^2(z - \frac{W_0 - p_0(z+x_0)}{\theta})\\
+p_1(1 - \frac{\gamma\sigma^2(z+x_0)}{\theta})    &= \tilde{\nu} - \gamma \sigma^2(z - \frac{W_0 - p_0(z+x_0)}{\theta})\\
+p_1   &= \frac{\tilde{\nu} - \gamma \sigma^2(z - \frac{W_0 - p_0(z+x_0)}{\theta})}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}}\\
+p_1   &= \frac{\tilde{\nu} + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) - \gamma \sigma^2z}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}}.\\
+\end{split}
+\end{equation}
+
+If we start with the solvent case. We get when substituting in $p_1$ into the banks maximisation problem in period 0 that
+\begin{equation}
+\max_{x_0} \E_0\left[\left(1 + \frac{\tilde{\nu} -\frac{\tilde{\nu} + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) - \gamma \sigma^2z}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}}}{\theta}\right)\bigg(\left(z+x_0\right)\left(\frac{\tilde{\nu} + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) - \gamma \sigma^2z}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}} - p_0\right) \bigg)  \right]
+\end{equation}
+\begin{equation}
+\max_{x_0} \E_0\left[\left(\frac{\theta + \tilde{\nu}}{\theta} - \frac{\tilde{\nu} - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) }{\theta - \gamma\sigma^2(z+x_0)}\right)\left(z+x_0\right)\left(\frac{\tilde{\nu} - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) }{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}} - p_0\right)  \right]
+\end{equation}
+Maximising this expression with respect to $x_0$ we get that 
+\begin{equation}
+\begin{split}
+\frac{\partial}{\partial x_0}\left(\frac{\theta + \tilde{\nu}}{\theta} - \frac{\tilde{\nu}  - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0))}{\theta - \gamma\sigma^2(z+x_0)}\right)\times \\
+\bigg(z+x_0\bigg)  \left(\frac{\tilde{\nu}  - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0))}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}} - p_0\right) \\
+=0
+\end{split}
+\end{equation}
+
+Now solve for $p_0$...
+
+And for the insolvent case we have that...
 
 \section{Data and Methodology}
 
-This section outlines how we use relevant data to empirically answer the relevant research questions of this paper. It is outlined as followed. First, we describe the data sample. Second, we go into detail on how to construct ESG based portfolios. Third, multifactor-models to risk-adjust for returns are reviewed. Finally, we are interested in whether volatility in ESG scores are causally connected to returns in equities and we develop a measure to test against this hypothesis.
+This section outlines how I use relevant data to empirically answer the relevant research questions of this paper. It is outlined as followed. First, we describe the data sample. Second, the event-study methodology is described.
 
-\subsubsection*{Returns}
+\subsubsection*{[Returns]}
 
-The objective of the analysis requires us to combine data on equity returns and sustainability. First, we obtain monthly stock returns from the Center for Research in Security Prices (CRSP). We also obatin monthly data points on the number of stocks and according share price to compute company values.
+[The objective of the analysis requires us to combine data on equity returns and sustainability. First, we obtain monthly stock returns from the Center for Research in Security Prices (CRSP). We also obatin monthly data points on the number of stocks and according share price to compute company values.]
 
-\subsubsection*{ESG}
-We download yearly ESG score data from Thomson Reuters, an equal-weighted rating on companies' sustainability focuses with regards to economic, environmental, social and corporate governance pillars (referred to as the \textit{ASSET4's} pillar). In particular, the ESG score is a measure from 0 to 100. A low score suggests that a given company behaves poorly with regards to sustainability, and vice versa. The higher the company score, the more sustainable it is with regards to the three pillars.\footnote{The interested readers can find a detailed description on how Thomson Retuers determines their ESG scores \href{http://www.esade.edu/itemsweb/biblioteca/bbdd/inbbdd/archivos/Thomson_Reuters_ESG_Scores.pdf}{here}.} We merge the return data from CRSP with the ESG data according to their CUSIP codes. As they differ in time instances, ESG data points are the same throughout the every month of a single year and are updated only once after each year. ESG scores are available from 2002 until today (2017), which therefore defines our sample period.
+\subsubsection*{Equity Prices}
+[We download yearly ESG score data from Thomson Reuters, an equal-weighted rating on companies' sustainability focuses with regards to economic, environmental, social and corporate governance pillars (referred to as the \textit{ASSET4's} pillar). In particular, the ESG score is a measure from 0 to 100. A low score suggests that a given company behaves poorly with regards to sustainability, and vice versa. The higher the company score, the more sustainable it is with regards to the three pillars.\footnote{The interested readers can find a detailed description on how Thomson Retuers determines their ESG scores \href{http://www.esade.edu/itemsweb/biblioteca/bbdd/inbbdd/archivos/Thomson_Reuters_ESG_Scores.pdf}{here}.} We merge the return data from CRSP with the ESG data according to their CUSIP codes. As they differ in time instances, ESG data points are the same throughout the every month of a single year and are updated only once after each year. ESG scores are available from 2002 until today (2017), which therefore defines our sample period.]
 
-\subsubsection*{Risk Factors}
-To control for risk factors we use the risk-free rate and factor-returns of Fama-French's five factors as well as the momentum factor from \href{https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}{Ken French's website}.
-
-\subsubsection*{[Good times]}
-We define good times to be periods where the current price-earnings ratio (PE) is above Shiller's cyclically adjusted price-earnings ratio (CAPE). Shiller calculates the CAPE as the 10-year rolling average PE of what is now called the S\& P 500, on a monthly basis using end-of-day end-of-month prices and earnings are linearly interpolated from the quarter earnings. Alternative specifications we also test, is defining good times more broadly as times with high PE ratios. Data is gathered from \href{http://www.econ.yale.edu/~shiller/data.htm}{Shiller's website}.
-
-\subsubsection*{[Sentiment]}
-We test for sentiment by using the search interest of the word 'Sustainability' on Google. The measure is relative search volume in the United States. A breakdown into states is also possible. The data is retrieved from \href{}{Google Trends}.
-
-[Use Wurgler Investor Sentiment measure instead?]
+\subsubsection*{Market Model}
+To get the abnormal return, I control for the expected return using the market model. The market return and the risk-free rate are gathered from \href{https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}{Ken French's website}.
 
 \subsection{Summary Statistics}
 
@@ -180,11 +841,6 @@ Out of 57 firms that were part of the highest decile ESG scores in 2002, a signi
 
 For the empirical analysis in the next chapter, only ESG score firms are taken into account. The total number of firms in every is thereby identical to the number of firms in Table~\ref{tab:descriptive}. This also implies that the cross-section's total number of firms in every portfolio rises significantly over time. Whereas there are only 57 firms in each decile portfolio in 2003, there is a total number of 270 firms in each decile portfolio in the year of 2017.
 
-\subsection{Portfolio Construction}
-
-We subdivide into ESG disclosure and non-disclosure companies. Within the ESG-score disclosure companies, we distinguish between high and low scores. In total, we subdivide our sample into ten portfolios, ranging from the highest to the lowest decile ESG companies. According to these portfolios, we rearrange our returns for the following year. For example, ESG scores in 2002 determine our portfolios in 2003 and so forth. We construct  equally-weighted decile portfolios for the entire data period, where P1 (P10) depicts the highest (lowest) ESG portfolio. We choose to equally-weight, because the data sample is small in the first few year of the sample.\footnote{If value-weighted, big firms pick up more than a quarter of the total return in some of the portfolios at some points in time. It would therefore be almost entirely driven by big firms and not properly represent the entire universe of the ESG portfolios.} However, one should note that that value composition between the portfolios is not evenly distributed, see Figure~\ref{fig:sizedistr} in Appendix~\ref{app:ESGportfolios}. It seems that high scores are primarily obtained by rather large firms, and vice versa. Finally, ee use the self-developed portfolios to construct a long-short portfolio (LS), which goes goes long in the highest ESG decile portfolio and shorts the lowest ESG decile portfolio. 
-
-
 
 \subsection{Risk-adjusting Returns}
 
@@ -212,7 +868,6 @@ r_{it} - r_t^f =
 where $G_t$ equals 1 in good times and 0 otherwise. $B_t$, on the other hand, equals 1 in bad times and 0 otherwise. This means that the factor loadings of $\alpha_i^{G}$ and $\alpha_i^{B}$ capture the abnormal performance for every decile portfolio $i$ according to good and bad times. The conditional factor models imply that $\alpha^G = 0$ and $\alpha^B = 0$ \citep[see, for example,][for similar applications]{Ferson2009, Christopherson1998}.
 
 
-\subsection{Volatility in ESG Scores}
 
 Finally, we are interested if there is a causality between fluctuations in ESG scores and equity returns. The hypothesis is that the ESG score is seen by investors as an additional source of risk and that volatility in that score is punished with lower cumulative abnormal returns. We follow an approach by \citet{Campbell1997}.
 
@@ -281,6 +936,7 @@ where $R_{it}$ and $R_{mt}$ are the excess returns on firm $i$ and the markets e
 
 \section{Results}
 
+
 In this section, we empirically investigate the relationship between ESG scores and equity returns. The chapters exhibit results of computed portfolios in good and bad times. Furthermore, we adjust for risk through multi-factor models, and investigate volatility in ESG scores and its implications on returns.
 
 \subsection{Empirical Analysis}
@@ -332,500 +988,7 @@ Volatility rises almost monotonically from the lowest to the highest ESG portfol
 
 Sharpe ratios are also U-Shaped; comparing volatility estimates with Sharpe ratios implies that expected returns for low ESG firms are higher. We know that, on average, small firms have higher expected returns than large firms. As just mentioned, it is rather small firms that belong to low-ESG portfolios and therefore it is plausible that these portfolios also exhibit higher expected returns. 
 
-
-
-\subsubsection{Risk-adjusting returns in good and bad times}
-
-[Make table here of the ESG return in good times. PE ratio main specification, then good times alpha. For five factor? or Carhart?]
-
-Secondly, we risk-adjust returns conditionally on good and bad times as expressed in equation~\eqref{eq:goodandbadtimes}, where $\alpha^G$ and $\alpha^B$ exhibit abnormal returns in good (G) and bad (B) times. Go od times (bad times) are defined by the current P/E ratio being above (below) the current price over the 10-year rolling average earnings. Table~\ref{tab:goodandbad} shows the results. 
-
-
-\begin{table}[!htbp] \centering 
-	\caption{Equally-Weighted with badCAPEtimes Dummy} 
-	\fnote{The returns of the equally-weighted portfolios are risk adjusted through the application of the CAPM, 3-factor, 4-factor, and 5-factor models. The LS portfolio goes long in the highest ESG decile firms and shorts the lowest ESG decile firms. Additionally, we condition the regression on good and bad times through binary variables as in $r_{it} - r_t^f = \alpha_i^G G_t + \alpha_i^B B_t + + \sum_{j=1}^{n} \beta_{ij} f_{jt} + \epsilon_{it}$. Here, $\alpha^G$ exhibits the abnormal return in good times, whereas $\alpha^B$ depicts the abnormal return that is additionally earned in bad times. Good times (bad times) are defined by the current P/E ratio being above (below) the current price over the 10-year rolling average earnings. The tables depicts alphas in percentage points. $t-values$ test if the estimated abnormal returns are significantly different from zero and bold numbers signal significance to the 10\% level or less.}
-	\label{tab:goodandbad} 
-	\resizebox{\textwidth}{!}{\begin{tabular}{@{\extracolsep{5pt}} lccccccccccc}
-			\\[-1.8ex]\hline 
-			\hline \\[-1.8ex] 
-			V1 & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & LS \\ 
-			\hline \\[-1.8ex] 
-			CAPM alpha$^G$ & \textbf{0.513} & \textbf{0.728} & \textbf{1.068} & \textbf{0.766} & \textbf{0.888} & \textbf{0.891} & \textbf{0.578} & \textbf{1.179} & \textbf{0.914} & \textbf{2.054} & \textbf{-1.541} \\ 
-			t-value & 2.278 & 2.709 & 3.292 & 2.37 & 2.893 & 2.762 & 1.819 & 2.876 & 2.214 & 4.763 & -3.7 \\ [2ex] 
-			
-			CAPM alpha$^B$ & 0.033 & 0.176 & -0.018 & -0.074 & -0.148 & \textbf{-0.223} & -0.17 & -0.102 & -0.091 & -0.114 & 0.147 \\ 
-			t-value & 0.353 & 1.585 & -0.138 & -0.556 & -1.173 & -1.679 & -1.297 & -0.606 & -0.533 & -0.641 & 0.854 \\[4ex] 
-			
-			
-			3-factor alpha$^G$ & \textbf{0.596} & \textbf{0.765} & \textbf{1.039} & \textbf{0.587} & \textbf{0.675} & \textbf{0.634} & \textbf{0.302} & \textbf{0.841} & \textbf{0.554} & \textbf{1.755} & \textbf{-1.159} \\ 
-			t-value & 2.626 & 2.814 & 3.283 & 1.903 & 2.413 & 2.154 & 1.082 & 2.367 & 1.517 & 4.435 & -3.151 \\ [2ex] 
-			
-			3-factor alpha$^B$ & 0.025 & 0.178 & 0.004 & -0.036 & -0.103 & -0.175 & -0.116 & -0.031 & -0.022 & -0.052 & 0.076 \\ 
-			t-value & 0.267 & 1.613 & 0.029 & -0.288 & -0.905 & -1.459 & -1.02 & -0.216 & -0.145 & -0.32 & 0.51 \\[4ex] 
-			
-			
-			4-factor alpha$^G$ & 0.375 & 0.436 & 0.446 & 0.001 & 0.105 & 0.066 & -0.24 & 0.019 & -0.11 & \textbf{1.019} & \textbf{-0.644} \\ 
-			t-value & 1.622 & 1.603 & 1.517 & 0.004 & 0.414 & 0.242 & -0.934 & 0.063 & -0.32 & 2.763 & -1.778 \\[2ex] 
-			
-			4-factor alpha$^B$ & 0.082 & 0.263 & 0.156 & 0.115 & 0.044 & -0.028 & 0.024 & 0.18 & 0.149 & 0.138 & -0.056 \\ 
-			t-value & 0.891 & 2.44 & 1.34 & 1.013 & 0.435 & -0.264 & 0.233 & 1.487 & 1.1 & 0.945 & -0.393 \\[4ex] 
-			
-			
-			5-factor alpha$^G$ & \textbf{0.647} & \textbf{0.777} & \textbf{1.07} & \textbf{0.597} & \textbf{0.76} & \textbf{0.694} & 0.43 & \textbf{0.936} & \textbf{0.67} & \textbf{1.955} & \textbf{-1.308} \\ 
-			t-value & 2.806 & 2.808 & 3.335 & 1.9 & 2.688 & 2.327 & 1.553 & 2.601 & 1.822 & 5.02 & -3.584 \\[2ex] 
-			
-			5-factor alpha$^B$ & 0.038 & 0.158 & -0.026 & -0.016 & -0.078 & -0.194 & -0.124 & -0.014 & 0.041 & 0.062 & -0.024 \\ 
-			t-value & 0.399 & 1.385 & -0.197 & -0.121 & -0.671 & -1.578 & -1.086 & -0.096 & 0.268 & 0.385 & -0.159 \\ 
-			\hline \\[-1.8ex] 
-	\end{tabular} }
-\end{table} 
-
-
-We find that times indeed matter for the risk-adjusted performance of ESG-sorted portfolios. In good times, risk-adjusted abnormal returns are significant in good times under most of the factor models. Also, low ESG firms significantly outperform high ESG firms in good times. The long-short (LS) portfolio's excess return is significantly different from zero under all specifications. This means that, in good times, investors are better off to go long in low ESG stocks. When intending to minimize market exposure and also going short in high ESG firms, investors earn a significant abnormal return through such a trading strategy.
-
-These results are new to the literature and surprising. It suggests that, in good times, investors willingly forgoe abnormal return by neglecting low ESG stocks. One could argue that investors receive non-monetary utility in these times from instead investing in high ESG firms. 
-
-We further document the regression results of our long-short ESG portfolio (LS) against all factor models in Table~\ref{tab:goodandbadfactor}. Interestingly, the LS portfolio is not market neutral and is further exposed to the small-minus-big (SMB) factor to a significant level. Furthermore, the momentum factor picks up a lot of the explanatory power. As already shown in Table~\ref{tab:goodandbad}, the return on the LS portfolio is significant in good times across all factor models.
-
-
-
-\begin{table}[!htbp] \centering 
-	\caption{Equally-Weighted long-short ESG portfolio in good and bad times (badCAPEtimes Dummy)} 
-	\fnote{The table exhibits the regression results of the long-short (LS) ESG portfolio (LS) against the CAPM, 3-factor, 4-factor, and 5-factor models. The LS portfolio goes long in the highest ESG decile firms and shorts the lowest ESG decile firms. The regressions condition on good and bad times in the economy as in $LS_{t} = \alpha^G G_t + \alpha^B B_t + \sum_{j=1}^{n} \beta_{j} f_{jt} + \epsilon_{t},$ where $\alpha^G$ exhibits the abnormal return in good times, and $\alpha^B$ depicts the abnormal return that is earned in bad times. Good times (bad times) are defined by the current P/E ratio being above (below) the current price over the 10-year rolling average earnings. The tables depicts alphas in percentage points. Standard errors are in the brackets below the coefficients.}
-	\label{tab:goodandbadfactor} 
-	\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} cccc}
-		\\[-1.8ex]\hline 
-		\hline \\[-1.8ex] 
-		& \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
-		\cline{2-5} 
-		\\[-1.8ex] & \multicolumn{4}{c}{LS} \\ 
-		\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
-		\hline \\[-1.8ex] 
-		alpha$^G$ & $-$1.541$^{***}$ & $-$1.159$^{***}$ & $-$0.644$^{*}$ & $-$1.308$^{***}$ \\ 
-		& (0.416) & (0.368) & (0.362) & (0.365) \\ 
-		& & & & \\ 
-		alpha$^B$ & 0.147 & 0.076 & $-$0.056 & $-$0.024 \\ 
-		& (0.172) & (0.150) & (0.143) & (0.150) \\ 
-		& & & & \\ 
-		Market & $-$0.277$^{***}$ & $-$0.140$^{***}$ & $-$0.078$^{**}$ & $-$0.089$^{**}$ \\ 
-		& (0.040) & (0.039) & (0.039) & (0.041) \\ 
-		& & & & \\ 
-		SMB &  & $-$0.455$^{***}$ & $-$0.490$^{***}$ & $-$0.411$^{***}$ \\ 
-		&  & (0.065) & (0.062) & (0.066) \\ 
-		& & & & \\ 
-		HML &  & $-$0.098$^{*}$ & 0.004 & $-$0.148$^{**}$ \\ 
-		&  & (0.059) & (0.059) & (0.065) \\ 
-		& & & & \\ 
-		Mom &  &  & 0.166$^{***}$ &  \\ 
-		&  &  & (0.034) &  \\ 
-		& & & & \\ 
-		RMW &  &  &  & 0.264$^{***}$ \\ 
-		&  &  &  & (0.091) \\ 
-		& & & & \\ 
-		CMA &  &  &  & 0.177 \\ 
-		&  &  &  & (0.110) \\ 
-		& & & & \\ 
-		\hline \\[-1.8ex] 
-		Observations & 180 & 180 & 180 & 180 \\ 
-		Adjusted R$^{2}$ & 0.248 & 0.431 & 0.496 & 0.456 \\ 
-		\hline 
-		\hline \\[-1.8ex] 
-		\textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-	\end{tabular*} 
-\end{table} 
-
-We also run the regressions on a LS portfolio that is goes long the highest 20\% of ESG firms and goes short in the lowest 20\% and find very similar results. The return difference of the LS-portfolio remains significant across all risk-adjustments. Furthermore, we redefine our good and bad times dummy to check the robustness of our good and bad times estimator. We redefine good times through the condition that the current share price over current earnings needs to be above the current share price over the latest 2-year rolling average of earnings instead of over the a 10-year rolling average, and vice versa. Here, too, we find similar results and the negative LS-portfolio returns remain significant in good times.
-
-
-\subsection{The Long-Short portfolio and other explanatory variables}
-
-We attempt to explain the abnormal return through other variables. First, we regress the LS-portfolio against the levels of the PE ratio itself. The level in CAPE (PE) is defined as the current share price over the 10-year (2-year) rolling average. Table~\ref{tab:PEandCAPEexplanatory} exhibits the results. By default, we choose to always incorporate the four-factor model as this was giving us the highest explanatory power out of all the factor models and where alpha$^G$ was at its lowest. 
-
-In Table~\ref{tab:PEandCAPEexplanatory}, column (1) states the findings from Table~\ref{tab:goodandbadfactor} and \ref{tab:goodandbad}. Column (2) regresses the LS portfolio against the CAPE regardless of good and bad times, whereas column (3) incorporates good and bad times. Here, alpha$^G$ and alpha$^B$ cannot be interpreted as returns anymore, because CAPE, as one of the explanatory variables, is not a return itself. We find a significant negative relationship between the level of CAPE and the LS portfolio in one of the specifications.
-
-Column (4), (5), and (6) repeat the analysis, but instead consider the level of P/E according the rolling average over the last 2 years. The results are similar. A negative and significant relationship between the return difference of the highest and lowest ESG portfolio and the level of P/E. 
-
-The results imply that the higher and therefore the 'the better' times are, the higher the absolute abnormal return on the LS short portfolio, or stated differently, the higher the difference between the high and the low ESG portfolio. The level of CAPE or P/E and therefore the level of economic times is a significant indicator for returns on sustainable firms. 
-
-
-\begin{table}[!htbp] \centering 
-	\caption{Equally-Weighted long-short ESG portfolio against PE and CAPE} 
-	\fnote{The table exhibits the regression results of the long-short (LS) ESG portfolio (LS) against the the four-factor model including specifications on good and bad times. The LS portfolio goes long in the highest ESG decile firms and shorts the lowest ESG decile firms. The condition on good and bad times in the economy is specified in $LS_{t} = \alpha^G G_t + \alpha^B B_t + \sum_{j=1}^{n} \beta_{j} f_{jt} + \epsilon_{t},$ where $\alpha^G$ exhibits the abnormal return in good times, and $\alpha^B$ depicts the abnormal return that is earned in bad times. In column 2 (4), good times in $\alpha^G$ are defined by the current P/E ratio being above the current price over the 10-year (2-year) rolling average earnings, and vice versa. CAPE and PE are levels of the ratios itself. The tables depicts alphas in percentage points. Standard errors are in the brackets below the coefficients.}
-	\label{tab:PEandCAPEexplanatory} 
-	\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} cccccc}
-		\\[-1.8ex]\hline 
-		\hline \\[-1.8ex] 
-		& \multicolumn{6}{c}{\textit{Dependent variable:}} \\ 
-		\cline{2-7} 
-		\\[-1.8ex] & \multicolumn{6}{c}{LS} \\ 
-		\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\ 
-		\hline \\[-1.8ex] 
-		Constant &  & 0.244 &  &  & 0.246 &  \\ 
-		&  & (0.240) &  &  & (0.227) &  \\ 
-		& & & & & & \\ 
-		alpha$^G$ & $-$0.644$^{*}$ &  & $-$0.011 & $-$0.330$^{*}$ &  & 0.092 \\ 
-		& (0.362) &  & (0.604) & (0.181) &  & (0.312) \\ 
-		& & & & & & \\ 
-		alpha$^B$ & $-$0.056 &  & 0.212 & 0.048 &  & 0.292 \\ 
-		& (0.143) &  & (0.250) & (0.186) &  & (0.236) \\ 
-		& & & & & & \\ 
-		CAPE &  & $-$0.015$^{*}$ & $-$0.012 &  &  &  \\ 
-		&  & (0.008) & (0.009) &  &  &  \\ 
-		& & & & & & \\ 
-		PE &  &  &  &  & $-$0.016$^{**}$ & $-$0.014$^{*}$ \\ 
-		&  &  &  &  & (0.008) & (0.008) \\ 
-		& & & & & & \\ 
-		Mkt.RF & $-$0.078$^{**}$ & $-$0.068$^{*}$ & $-$0.073$^{*}$ & $-$0.073$^{*}$ & $-$0.069$^{*}$ & $-$0.073$^{*}$ \\ 
-		& (0.039) & (0.037) & (0.039) & (0.038) & (0.037) & (0.038) \\ 
-		& & & & & & \\ 
-		SMB & $-$0.490$^{***}$ & $-$0.500$^{***}$ & $-$0.494$^{***}$ & $-$0.500$^{***}$ & $-$0.496$^{***}$ & $-$0.493$^{***}$ \\ 
-		& (0.062) & (0.060) & (0.062) & (0.061) & (0.060) & (0.060) \\ 
-		& & & & & & \\ 
-		HML & 0.004 & 0.005 & 0.002 & 0.018 & 0.001 & 0.003 \\ 
-		& (0.059) & (0.058) & (0.059) & (0.058) & (0.058) & (0.058) \\ 
-		& & & & & & \\ 
-		Mom & 0.166$^{***}$ & 0.154$^{***}$ & 0.153$^{***}$ & 0.177$^{***}$ & 0.150$^{***}$ & 0.151$^{***}$ \\ 
-		& (0.034) & (0.035) & (0.036) & (0.033) & (0.036) & (0.036) \\ 
-		& & & & & & \\ 
-		\hline \\[-1.8ex] 
-		Observations & 180 & 180 & 180 & 180 & 180 & 180 \\ 
-		Adjusted R$^{2}$ & 0.496 & 0.494 & 0.498 & 0.496 & 0.496 & 0.501 \\ 
-		\hline 
-		\hline \\[-1.8ex] 
-		\textit{Note:}  & \multicolumn{6}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-	\end{tabular*} 
-\end{table} 
-
-
-We also test the specifications against the other factor models (CAPM, 3-factor, 5-factor). The results are even more pronounced for these specifications. Across all other risk-adjustments, the relationship between CAPE or PE and the return on the LS portfolio is negative and significant, confirming the findings from Table~\ref{tab:PEandCAPEexplanatory}.
-
-%ANDREAS regression tables.
-\begin{comment}
-% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: fr, maj 31, 2019 - 16:20:20
-\begin{table}[!htbp] \centering 
-  \caption{ESG premium in good times} 
-  \label{} 
-\small 
-\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
- & \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-5} 
-\\[-1.8ex] & \multicolumn{4}{c}{ESG\_deciles[, 11]} \\ 
-\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
-\hline \\[-1.8ex] 
- Constant & $-$0.002 &  & 0.005 & 0.005 \\ 
-  & t = $-$1.461 &  & t = 2.273$^{**}$ & t = 2.321$^{**}$ \\ 
-  & & & & \\ 
- BadCAPETimes &  & $-$0.0002 &  &  \\ 
-  &  & t = $-$0.159 &  &  \\ 
-  & & & & \\ 
- GoodCAPETimes &  & $-$0.013 &  &  \\ 
-  &  & t = $-$3.584$^{***}$ &  &  \\ 
-  & & & & \\ 
- CAPE &  &  & $-$0.0003 &  \\ 
-  &  &  & t = $-$3.937$^{***}$ &  \\ 
-  & & & & \\ 
- PE &  &  &  & $-$0.0003 \\ 
-  &  &  &  & t = $-$4.219$^{***}$ \\ 
-  & & & & \\ 
- Mkt.RF & $-$0.001 & $-$0.001 & $-$0.001 & $-$0.001 \\ 
-  & t = $-$1.708$^{*}$ & t = $-$2.147$^{**}$ & t = $-$1.577 & t = $-$1.547 \\ 
-  & & & & \\ 
- SMB & $-$0.004 & $-$0.004 & $-$0.004 & $-$0.004 \\ 
-  & t = $-$6.575$^{***}$ & t = $-$6.191$^{***}$ & t = $-$6.656$^{***}$ & t = $-$6.596$^{***}$ \\ 
-  & & & & \\ 
- HML & $-$0.001 & $-$0.001 & $-$0.001 & $-$0.001 \\ 
-  & t = $-$1.836$^{*}$ & t = $-$2.286$^{**}$ & t = $-$1.679$^{*}$ & t = $-$1.801$^{*}$ \\ 
-  & & & & \\ 
- RMW & 0.003 & 0.003 & 0.003 & 0.003 \\ 
-  & t = 2.899$^{***}$ & t = 2.914$^{***}$ & t = 2.946$^{***}$ & t = 2.957$^{***}$ \\ 
-  & & & & \\ 
- CMA & 0.001 & 0.002 & 0.001 & 0.001 \\ 
-  & t = 1.138 & t = 1.614 & t = 0.836 & t = 0.978 \\ 
-  & & & & \\ 
-\hline \\[-1.8ex] 
-Observations & 180 & 180 & 180 & 180 \\ 
-R$^{2}$ & 0.435 & 0.477 & 0.482 & 0.488 \\ 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-\end{tabular} 
-\end{table} 
-
-[Second table with different factor models, and PE.]
-
-% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: to, maj 30, 2019 - 18:05:38
-\begin{table}[!htbp] \centering 
-  \caption{Robustnes to models} 
-  \label{} 
-\small 
-\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
- & \multicolumn{5}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-6} 
-\\[-1.8ex] & \multicolumn{5}{c}{ESG\_deciles[, 11]} \\ 
-\\[-1.8ex] & (1) & (2) & (3) & (4) & (5)\\ 
-\hline \\[-1.8ex] 
- PE & $-$0.0004 & $-$0.0003 & $-$0.0003 & $-$0.0002 & $-$0.0003 \\ 
-  & t = $-$4.443$^{***}$ & t = $-$4.117$^{***}$ & t = $-$4.223$^{***}$ & t = $-$2.097$^{**}$ & t = $-$4.219$^{***}$ \\ 
-  & & & & & \\ 
- Mkt.RF &  & $-$0.002 & $-$0.001 & $-$0.001 & $-$0.001 \\ 
-  &  & t = $-$6.159$^{***}$ & t = $-$2.924$^{***}$ & t = $-$1.836$^{*}$ & t = $-$1.547 \\ 
-  & & & & & \\ 
- SMB &  &  & $-$0.005 & $-$0.005 & $-$0.004 \\ 
-  &  &  & t = $-$7.541$^{***}$ & t = $-$8.237$^{***}$ & t = $-$6.596$^{***}$ \\ 
-  & & & & & \\ 
- HML &  &  & $-$0.001 & 0.00001 & $-$0.001 \\ 
-  &  &  & t = $-$1.464 & t = 0.023 & t = $-$1.801$^{*}$ \\ 
-  & & & & & \\ 
- Mom &  &  &  & 0.001 &  \\ 
-  &  &  &  & t = 4.191$^{***}$ &  \\ 
-  & & & & & \\ 
- RMW &  &  &  &  & 0.003 \\ 
-  &  &  &  &  & t = 2.957$^{***}$ \\ 
-  & & & & & \\ 
- CMA &  &  &  &  & 0.001 \\ 
-  &  &  &  &  & t = 0.978 \\ 
-  & & & & & \\ 
- Constant & 0.007 & 0.007 & 0.006 & 0.002 & 0.005 \\ 
-  & t = 2.407$^{**}$ & t = 2.838$^{***}$ & t = 2.846$^{***}$ & t = 1.082 & t = 2.321$^{**}$ \\ 
-  & & & & & \\ 
-\hline \\[-1.8ex] 
-Observations & 180 & 180 & 180 & 180 & 180 \\ 
-R$^{2}$ & 0.100 & 0.259 & 0.461 & 0.510 & 0.488 \\ 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-\end{tabular} 
-\end{table} 
-
-[Third table with sentiment instead of PE. And regression of PE on sentiment.]
-
-% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: fr, maj 31, 2019 - 17:37:17
-\begin{table}[!htbp] \centering 
-  \caption{Sentiment} 
-  \label{} 
-\small 
-\begin{tabular}{@{\extracolsep{5pt}}lccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
- & \multicolumn{3}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-4} 
-\\[-1.8ex] & \multicolumn{3}{c}{ESG\_deciles[c(13:180), 11]} \\ 
-\\[-1.8ex] & (1) & (2) & (3)\\ 
-\hline \\[-1.8ex] 
- PE[c(13:180)] & $-$0.0003 &  &  \\ 
-  & t = $-$4.202$^{***}$ &  &  \\ 
-  & & & \\ 
- Sustainability...United.States. &  & $-$0.0003 &  \\ 
-  &  & t = $-$2.337$^{**}$ &  \\ 
-  & & & \\ 
- climate...United.States. &  &  & $-$0.0002 \\ 
-  &  &  & t = $-$1.925$^{*}$ \\ 
-  & & & \\ 
- Mkt.RF[c(13:180)] & $-$0.001 & $-$0.001 & $-$0.001 \\ 
-  & t = $-$1.640 & t = $-$1.587 & t = $-$1.767$^{*}$ \\ 
-  & & & \\ 
- SMB[c(13:180)] & $-$0.004 & $-$0.004 & $-$0.004 \\ 
-  & t = $-$6.681$^{***}$ & t = $-$6.372$^{***}$ & t = $-$6.512$^{***}$ \\ 
-  & & & \\ 
- HML[c(13:180)] & $-$0.001 & $-$0.002 & $-$0.001 \\ 
-  & t = $-$2.082$^{**}$ & t = $-$2.498$^{**}$ & t = $-$2.102$^{**}$ \\ 
-  & & & \\ 
- RMW[c(13:180)] & 0.002 & 0.003 & 0.002 \\ 
-  & t = 2.034$^{**}$ & t = 2.493$^{**}$ & t = 2.198$^{**}$ \\ 
-  & & & \\ 
- CMA[c(13:180)] & 0.001 & 0.002 & 0.001 \\ 
-  & t = 1.287 & t = 1.743$^{*}$ & t = 1.256 \\ 
-  & & & \\ 
- Constant & 0.005 & 0.014 & 0.008 \\ 
-  & t = 2.392$^{**}$ & t = 2.027$^{**}$ & t = 1.493 \\ 
-  & & & \\ 
-\hline \\[-1.8ex] 
-Observations & 168 & 168 & 168 \\ 
-R$^{2}$ & 0.485 & 0.447 & 0.441 \\ 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{3}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-\end{tabular} 
-\end{table} 
-
-\end{comment}
-
-
-\begin{table}[!htbp] \centering 
-	\caption{} 
-	\label{} 
-	\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
-		\\[-1.8ex]\hline 
-		\hline \\[-1.8ex] 
-		& \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
-		\cline{2-5} 
-		\\[-1.8ex] & \multicolumn{4}{c}{LS[13:180]} \\ 
-		\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
-		\hline \\[-1.8ex] 
-		gt[13:180] &  & $-$0.595 &  & 0.097 \\ 
-		&  & (1.029) &  & (0.635) \\ 
-		& & & & \\ 
-		bt[13:180] &  & 0.052 &  & 0.784 \\ 
-		&  & (0.705) &  & (0.477) \\ 
-		& & & & \\ 
-		Sustainability...United.States. & $-$0.008 & $-$0.002 &  &  \\ 
-		& (0.010) & (0.011) &  &  \\ 
-		& & & & \\ 
-		climate...United.States. &  &  & $-$0.016$^{*}$ & $-$0.016$^{*}$ \\ 
-		&  &  & (0.009) & (0.009) \\ 
-		& & & & \\ 
-		Mkt.RF[13:180] & $-$0.067$^{*}$ & $-$0.081$^{**}$ & $-$0.066$^{*}$ & $-$0.081$^{**}$ \\ 
-		& (0.038) & (0.040) & (0.038) & (0.039) \\ 
-		& & & & \\ 
-		SMB[13:180] & $-$0.495$^{***}$ & $-$0.487$^{***}$ & $-$0.495$^{***}$ & $-$0.482$^{***}$ \\ 
-		& (0.063) & (0.063) & (0.062) & (0.062) \\ 
-		& & & & \\ 
-		HML[13:180] & $-$0.002 & $-$0.008 & 0.002 & $-$0.011 \\ 
-		& (0.060) & (0.060) & (0.058) & (0.059) \\ 
-		& & & & \\ 
-		Mom[13:180] & 0.169$^{***}$ & 0.157$^{***}$ & 0.172$^{***}$ & 0.156$^{***}$ \\ 
-		& (0.034) & (0.035) & (0.033) & (0.035) \\ 
-		& & & & \\ 
-		Constant & 0.363 &  & 0.708 &  \\ 
-		& (0.657) &  & (0.476) &  \\ 
-		& & & & \\ 
-		\hline \\[-1.8ex] 
-		Observations & 168 & 168 & 168 & 168 \\ 
-		Adjusted R$^{2}$ & 0.479 & 0.483 & 0.488 & 0.494 \\ 
-		\hline 
-		\hline \\[-1.8ex] 
-		\textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-	\end{tabular} 
-\end{table} 
-
-
-\subsection*{Other climate sentiment measures}
-We also test whether we should use other measures for climate sentiment in table X, and find that \emph{Climate} to be the best one.
-
-\subsection*{Different sentiment measures}
-In this section we consider sentiment measures separately for climate, socially responsible, and corporate governance. Table X shows that climate seems to be the main factor driving our ESG returns, closely followed by governance with social sentiment mattering the least.
-
-
-
-
-
-\subsection{ESG Volatility}
-
-This chapter investigates changes in ESG scores and their impact on returns. We test score volatility in the spirit of an event study, where we base the prediction on stock returns on factor loadings predicted from the time horizon of 18 months prior to the change in the score. Our event window lasts five months. For example, a firm that experiences a change in their ESG score from 2005 to 2006 of more than $X$ points is analyzed during the first 5 months of 2007. The estimation period runs from July 2004 until December 2006. Table~\ref{tab:eventstudy} and Figure~\ref{fig:eventstudy} display the results.
-
-We find that drops of more than 15, 25, and 30 points in ESG scores lead to positive and significant cumulative abnormal returns. It is striking to see that, in particular, drops of more than 30 points lead to a cumulative abnormal return of more than 10\% over the time horizon of 5 months after the change. Increases in scores, however, do not yield the same effect. Even though we see significant negative cumulative abnormal returns for increases of more than 5, 10, 15, 20 points, they are minor in their magnitude. We find the findings rather counterintuitive, as we expected that negative changes would go hand in hand with negative abnormal returns, and vice versa. 
-
-The drawback of this analysis clearly lies in the uncertainty of when investors receive access to the new ESG scores. The assumption herein is that ESG scores for the current year are available the last day of December of that particular year. It might be that investors anticipated or even received access to information to changes in the score throughout the current year and therefore adjusted their portfolios before our presumed event window. Furthermore, it could be that the markets exposure and therefore factor loadings change drastically over the event window. 
-
-\begin{table}[!htbp] \centering 
-	\caption{Event Study} 
-	\fnote{The table exhibits the test statistics for the event study on changes in ESG scores. We report the number of events, the cumulative abnormal returns, the test statistics of $J_1$ and $J_2$ as well as the according $p$-values. We estimate factor loadings for every stock 18 months prior to the event up to one month before. The event window lasts five months. The post-event window includes another seven months.}
-	\label{tab:eventstudy} 
-	\begin{tabular}{@{\extracolsep{5pt}} ccccccc} 
-		\\[-1.8ex]\hline 
-		\hline \\[-1.8ex] 
-		\multicolumn{1}{c}{$\Delta$ ESG} & \multicolumn{1}{c}{\# of Events} & \multicolumn{1}{c}{$\overline{CAR}$ (\%)} & \multicolumn{1}{c}{J$_1$} & \multicolumn{1}{c}{\textit{p}-value (\%)} & \multicolumn{1}{c}{J$_2$} & \multicolumn{1}{c}{\textit{p}-value (\%)} \\  
-		\hline \\[-1.8ex] 
-		$\leq$ -40 & 19 & 2.23 & 0.44 & 65.81 & 0.33 & 74.46 \\ 
-		$\leq$ -35 & 39 & 9.20 & 1.51 & 13.18 & 2.14 & 3.22 \\ 
-		\rowcolor{LightCyan} $\leq$ -30 & 73 & 10.72 & 2.78 & 0.55 & 3.67 & 0.02 \\ 
-		\rowcolor{LightCyan} $\leq$ -25 & 157 & 6.09 & 2.68 & 0.73 & 2.48 & 1.31 \\ 
-		$\leq$ -20 & 302 & 3.34 & 2.15 & 3.18 & 1.57 & 11.68 \\ 
-		\rowcolor{LightCyan} $\leq$ -15  & 597 & 3.20 & 2.86 & 0.43 & 1.98 & 4.82 \\ 
-		$\leq$ -10 & 1,154 & 1.63 & 2.13 & 3.29 & -0.19 & 85.25 \\ 
-		$\leq$ -5 & 2,200 & 1.11 & 1.98 & 4.78 & -0.14 & 88.60 \\ 
-		No Change & 1,109 & -0.01 & -0.02 & 98.79 & -0.85 & 39.71 \\ 
-		\rowcolor{LightCyan} $\geq$ 5 & 3,039 & -1.13 & -2.37 & 1.79 & -2.99 & 0.28 \\ 
-		\rowcolor{LightCyan} $\geq$ 10 & 1,915 & -1.72 & -2.85 & 0.44 & -3.19 & 0.14 \\ 
-		\rowcolor{LightCyan} $\geq$ 15 & 1,238 & -1.30 & -1.79 & 7.28 & -2.51 & 1.20 \\ 
-		\rowcolor{LightCyan} $\geq$ 20 & 809 & -1.82 & -2.06 & 3.94 & -2.87 & 0.41 \\ 
-		$\geq$ 25 & 534 & -0.89 & -0.82 & 41.47 & -1.36 & 17.41 \\ 
-		$\geq$ 30 & 351 & -0.58 & -0.44 & 65.73 & -1.22 & 22.39 \\ 
-		$\geq$ 35 & 243 & -0.14 & -0.09 & 92.80 & -0.63 & 52.91 \\ 
-		$\geq$ 40 & 161 & 0.28 & 0.16 & 87.60 & -0.35 & 72.77 \\ 
-		\hline \\[-1.8ex] 
-	\end{tabular} 
-\end{table} 
-
-
-\begin{figure}[!htbp]
-	\centering
-	\caption{Cumulative Abnormal Returns}
-	\fnote{The plots exhibits the cumulative abnormal returns over the time line of the event study for different changes in the ESG score. -10 (10) takes into account all stocks that experienced a drop (increase) in their ESG score of 10 points or more and so on. $No Jump$ incorporates all stocks that experience a change of less than five ESG score points. We estimate factor loadings for every stock 18 months prior to the event up to one month before. The event window lasts five months. The post-event window includes another seven months.}
-	\label{fig:eventstudy}
-	\vspace{-1cm}
-%	\includegraphics[width=0.9\linewidth]{../figures/eventstudy.pdf}
-\end{figure}
-
-
-We can check changes in the market exposure by creating a trading strategy. If investors would indeed earn abnormal returns in the five months after significant drops in the score then they should by these stocks, hold them for a short period of time and then sell them again. We back-test this strategy by buying all stocks that were exposed to drops of more than 30 points, hold them for a year and then sell them again. Table~\ref{tab:tradingstrategy} reports the results. 
-
-The findings show the opposite. We generate negative abnormal returns, which are only significant under CAPM. This suggests that stocks experiencing drops in their score quickly adjust their risk exposure. The market factor, for example, is relatively high with 1.418 under CAPM. 
-
-We summarize the main findings of this chapter as follows. We find significant cumulative abnormal returns as a results of large drops in ESG scores and based on the market exposure estimated from before the change occurred. In an attempt to exploit these findings by setting up a trading strategy, we find that market exposure is quickly adjusted leaving us with negative abnormal returns. Nonetheless, this it seems as if ESG scores represent uncertainty for investors. Volatility in the scores impact returns. 
-
-
-
-\begin{table}[!htbp] \centering 
-	\caption{Trading Strategy} 
-	\fnote{We buy stocks that experienced a drop of more than 30 points in their ESG score, hold them for a year, and then sell them again. We equally-weight our portfolio over all the stocks in year $t$. There are two years in which we do not hold any stocks are there are none that experienced changes of more than 30 points in their score. Our sample thereby drops from 180 to only 156 observations. $t$-values are reported in parenthesis. }
-	\label{tab:tradingstrategy} 
-	\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
-		\\[-1.8ex]\hline 
-		\hline \\[-1.8ex] 
-		& \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
-		\cline{2-5} 
-		\\[-1.8ex] & \multicolumn{4}{c}{Excess Return} \\ 
-		\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
-		\hline \\[-1.8ex] 
-		alpha & \textbf{$-$0.574} & $-$0.454 & $-$0.356 & $-$0.415 \\ 
-		& ($-$1.816) & ($-$1.512) & ($-$1.252) & ($-$1.317) \\ 
-		& & & & \\ 
-		Market & \textbf{1.418} & \textbf{1.301} & \textbf{1.215} & \textbf{1.284} \\ 
-		& (18.303) & (15.932) & (15.292) & (14.294) \\ 
-		& & & & \\ 
-		SMB &  & 0.102 & 0.149 & 0.086 \\ 
-		&  & (0.725) & (1.112) & (0.583) \\ 
-		& & & & \\ 
-		HML &  & \textbf{0.534} & \textbf{0.343} & \textbf{0.544} \\ 
-		&  & (4.120) & (2.645) & (3.701) \\ 
-		& & & & \\ 
-		Mom &  &  & \textbf{$-$0.309} &  \\ 
-		&  &  & ($-$4.440) &  \\ 
-		& & & & \\ 
-		RMW &  &  &  & $-$0.097 \\ 
-		&  &  &  & ($-$0.440) \\ 
-		& & & & \\ 
-		CMA &  &  &  & $-$0.039 \\ 
-		&  &  &  & ($-$0.158) \\ 
-		& & & & \\ 
-		\hline \\[-1.8ex] 
-		Observations & 156 & 156 & 156 & 156 \\ 
-		Adjusted R$^{2}$ & 0.683 & 0.715 & 0.747 & 0.712 \\ 
-		\hline 
-		\hline \\[-1.8ex] 
-	\end{tabular} 
-\end{table} 
-
-
-\subsection{Trading strategy on Sentiment}
-[Do this?]
-
-\subsection{Decomposition into E S G}
-[Make factor on E, S, and G seperately]
-
-\subsection{Consideration of Demand and Supply effects}
-Look at fund holdings as proxy for demand.
-Look at aggregated ESG scores as proxy for supply of ESG.
-
-\subsection{Robustness Checks and further Implications}
+\subsection{Robustness Checks}
 
 We conduct two test to check if our results are robust. First we subdivide in only five equally-weighted portfolios. Second, we additionally download information on the number of shares and the share prices from CRSP allowing us to value-weight our portfolios. In particular, we value-weight the portfolio in month $t$ based on market values in month $t-1$. 
 
@@ -833,10 +996,7 @@ When sorting our portfolios into only five portfolios instead of ten, we obtain 
 
 Considering value-weighted ESG-sorted portfolios, we cannot confirm our previous findings. Except for a few exceptions, significance evaporates. We see this happening when looking at the entire time horizon as well as when conditioning on good and bad times. This suggests that our previous results are predominantly driven by small firms. We thereby conclude that ESG scores only have performance implications on small firms but are irrelevant for large firms.
 
-\subsection{Event study using changes in ESG score on Thomson Reuters}
-
-
-%We do the analysis for Quintile Portfolios.
+\subsection{Further Implications}
 
 \section{Conclusion}
 This paper shows that ESG has become a factor that influences asset returns in good times i.e. investors do well, before they do good. Furthermore large drops in ESG, leads to an initial price drop and future increases in return. In the future it would be interesting to get more precise announcement times of the ESG scores to more cleanly isolate the ESG effects, from other correlated factors. It would also be interesting to look at whether the effects generally increased over time, as there has become more public interest. Looking at bonds and other markets would also be of interest, to see if this is an affect that holds there too.
@@ -849,149 +1009,6 @@ This paper shows that ESG has become a factor that influences asset returns in g
 
 \newpage
 \begin{appendices}
-
-
-\section{ESG Scores}
-\label{app:esgscores}
-
-
-
-
-\begin{table}[!htbp] \centering 
-	\caption{High Profile ESG Companies} 
-	\fnote{The table exhibits companies of the highest decile ESG portfolio that were member of this prtfolio in both 2002 and 2016 (beginning and end of the sample). In total, we see 33 companies to be part of this group. The according CUSIP codes can be used to access the companies' information through CRSP.}
-	\label{tab:high_esg_companies} 
-	\begin{tabular}{@{\extracolsep{5pt}} clc} 
-		\\[-1.8ex]\hline 
-		\hline \\[-1.8ex] 
-		\# & Name & CUSIP \\ 
-		\hline \\[-1.8ex] 
-		1 & A B B LTD & 00037520 \\ 
-		2 & ABBOTT LABORATORIES & 00282410 \\ 
-		3 & BANCO BILBAO VIZCAYA ARGENTARIA & 05946K10 \\ 
-		4 & BANCO SANTANDER CENTRAL HISP SA & 05964H10 \\ 
-		5 & BAXTER INTERNATIONAL INC & 07181310 \\ 
-		6 & B H P LTD & 08860610 \\ 
-		7 & BOEING CO & 09702310 \\ 
-		8 & BRISTOL MYERS SQUIBB CO & 11012210 \\ 
-		9 & BRITISH AMERICAN TOBACCO PLC & 11044810 \\ 
-		10 & CHEVRON CORP & 16676410 \\ 
-		11 & CISCO SYSTEMS INC & 17275R10 \\ 
-		12 & DOW CHEMICAL CO & 26054310 \\ 
-		13 & DU PONT E I DE NEMOURS \& CO & 26353410 \\ 
-		14 & DUKE ENERGY CORP & 26441C20 \\ 
-		15 & EASTMAN CHEMICAL CO & 27743210 \\ 
-		16 & ENBRIDGE INC & 29250N10 \\ 
-		17 & GLAXOSMITHKLINE PLC & 37733W10 \\ 
-		18 & HEWLETT PACKARD CO & 40434L10 \\ 
-		19 & IMPERIAL OIL LTD & 45303840 \\ 
-		20 & I N G GROEP N V & 45683710 \\ 
-		21 & INTEL CORP & 45814010 \\ 
-		22 & INTERNATIONAL BUSINESS MACHS COR & 45920010 \\ 
-		23 & JOHNSON \& JOHNSON & 47816010 \\ 
-		24 & KONINKLIJKE PHILIPS ELEC N V & 50047230 \\ 
-		25 & MERCK \& CO INC & 58933Y10 \\ 
-		26 & MOTOROLA INC & 62007630 \\ 
-		27 & NOKIA CORP & 65490220 \\ 
-		28 & OCCIDENTAL PETROLEUM CORP & 67459910 \\ 
-		29 & PROCTER \& GAMBLE CO & 74271810 \\ 
-		30 & STMICROELECTRONICS NV & 86101210 \\ 
-		31 & TEXAS INSTRUMENTS INC & 88250810 \\ 
-		32 & MINNESOTA MINING \& MFG CO & 88579Y10 \\ 
-		33 & UNITED PARCEL SERVICE INC & 91131210 \\ 
-		\hline \\[-1.8ex] 
-	\end{tabular} 
-\end{table} 
-
-
-\clearpage
-\section{ESG Portfolios}
-\label{app:ESGportfolios}
-
-
-
-
-\begin{figure}[!htp]
-	\centering
-	\caption{ESG Portfolio Returns}
-	\fnote{The figure plots the highest and lowest equally-weighted decile cumulative return portfolio. The high (low) ESG decile portfolio 1. D. (10. D.) depicts the highest (lowest) firms with the highest (lowest) ESG scores. Portfolios are rearranged every year according to the previous year's ESG score. Moreover, the plot shows the equally-weighted ESG portfolio, a portfolio that includes every firm with a score, regardless of its magnitudes. Also, all firms' returns with no ESG scores in the sample are equally-weighted and combined in a portfolio. Finally, the S\&P500 serves as a comparable time series.}
-	\label{fig:esg_returns}
-		\vspace{-0.5cm}
-%	\includegraphics[width=0.7\linewidth]{../figures/cumreturndec_ew.pdf}
-\end{figure}
-
-
-
-\clearpage
-\section{Good versus Bad times}
-
-\begin{figure}[!htp]
-	\centering
-	\caption{Good and Bad times}
-	\fnote{}
-	\label{fig:goodversusbaddummy}
-	\begin{subfigure}{0.5\textwidth}
-		\centering
-		\caption{Good times}
-		\label{fig:goodtimesdummy}
-		%\includegraphics[width=0.9\linewidth]{../figures/goodtimes.pdf}
-	\end{subfigure}%
-	\begin{subfigure}{0.5\textwidth}
-		\centering
-		\caption{Bad times}
-		\label{fig:badtimesdummy}
-		%\includegraphics[width=0.9\linewidth]{../figures/badtimes.pdf}
-	\end{subfigure}
-\end{figure}
-
-
-
-
-\clearpage
-\section{Robustness Checks}
-\label{app:robustness}
-
-
-\begin{table}[!htbp] \centering 
-	\caption{Risk-adjusted and value-weighted ESG portfolio returns with badCAPEtimes Dummy} 
-	\fnote{The returns of the value-weighted ESG portfolios are risk adjusted through the application of the CAPM, 3-factor, 4-factor, and 5-factor models. The LS portfolio goes long in the highest ESG decile firms and shorts the lowest ESG decile firms. Additionally, we condition the regression on good and bad times through binary variables as in $r_{it} - r_t^f = \alpha_i^G G_t + \alpha_i^B B_t + + \sum_{j=1}^{n} \beta_{ij} f_{jt} + \epsilon_{it}$. Here, $\alpha^G$ exhibits the abnormal return in good times, whereas $\alpha^B$ depicts the abnormal return that is additionally earned in bad times. Good times (bad times) are defined by the current P/E ratio being above (below) the current price over the 10-year rolling average earnings. The tables depicts alphas in percentage points. $t-values$ test if the estimated abnormal returns are significantly different from zero and bold numbers signal significance to the 10\% level or less.}
-	\label{tab:goodandbad_value} 
-	\resizebox{\textwidth}{!}{\begin{tabular}{@{\extracolsep{5pt}} lccccccccccc}
-			\\[-1.8ex]\hline 
-			\hline \\[-1.8ex] 
-			 & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & LS \\ 
-			\hline \\[-1.8ex] 
-			CAPM alpha$^G$ & \textbf{0.513} & \textbf{0.728} & \textbf{1.068} & \textbf{0.766} & \textbf{0.888} & \textbf{0.891} & \textbf{0.578} & \textbf{1.179} & \textbf{0.914} & \textbf{2.054} & -0.084 \\ 
-			t-value & 2.278 & 2.709 & 3.292 & 2.37 & 2.893 & 2.762 & 1.819 & 2.876 & 2.214 & 4.763 & -0.171 \\[2ex]
-			
-			CAPM alpha$^B$ & 0.033 & 0.176 & -0.018 & -0.074 & -0.148 & \textbf{-0.223} & -0.17 & -0.102 & -0.091 & -0.114 & -0.056 \\ 			
-			t-value & 0.353 & 1.585 & -0.138 & -0.556 & -1.173 & -1.679 & -1.297 & -0.606 & -0.533 & -0.641 & -0.278 \\[4ex] 
-			
-			3-factor alpha$^G$ & \textbf{0.596} & \textbf{0.765} & \textbf{1.039} & \textbf{0.587} & \textbf{0.675} & \textbf{0.634} & 0.302 & \textbf{0.841} & 0.554 & \textbf{1.755} & 0.343 \\ 
-			t-value & 2.626 & 2.814 & 3.283 & 1.903 & 2.413 & 2.154 & 1.082 & 2.367 & 1.517 & 4.435 & 0.736 \\[2ex] 
-			
-			3-factor alpha$^B$ & 0.025 & 0.178 & 0.004 & -0.036 & -0.103 & -0.175 & -0.116 & -0.031 & -0.022 & -0.052 & -0.105 \\ 			
-			t-value & 0.267 & 1.613 & 0.029 & -0.288 & -0.905 & -1.459 & -1.02 & -0.216 & -0.145 & -0.32 & -0.552 \\[4ex] 
-			
-			4-factor alpha$^G$ & 0.375 & 0.436 & 0.446 & 0.001 & 0.105 & 0.066 & -0.24 & 0.019 & -0.11 & \textbf{1.019} & \textbf{0.826} \\ 
-			t-value & 1.622 & 1.603 & 1.517 & 0.004 & 0.414 & 0.242 & -0.934 & 0.063 & -0.32 & 2.763 & 1.747 \\[2ex] 
-			
-			4-factor alpha$^B$ & 0.082 & 0.263 & 0.156 & 0.115 & 0.044 & -0.028 & 0.024 & 0.18 & 0.149 & 0.138 & -0.229 \\ 
-			t-value & 0.374 & 0.016 & 0.182 & 0.313 & 0.664 & 0.792 & 0.816 & 0.139 & 0.273 & 0.346 & 0.223 \\[4ex] 
-			
-			5-factor alpha$^G$ & \textbf{0.647} & \textbf{0.777} & \textbf{1.07} & \textbf{0.597} & \textbf{0.76} & \textbf{0.694} & 0.43 & \textbf{0.936} & \textbf{0.67} & \textbf{1.955} & 0.023 \\ 
-			t-value & 2.806 & 2.808 & 3.335 & 1.9 & 2.688 & 2.327 & 1.553 & 2.601 & 1.822 & 5.02 & 0.052 \\[2ex] 
-			
-			5-factor alpha$^B$ & 0.038 & 0.158 & -0.026 & -0.016 & -0.078 & -0.194 & -0.124 & -0.014 & 0.041 & 0.062 & -0.271 \\ 
-			t-value & 0.399 & 1.385 & -0.197 & -0.121 & -0.671 & -1.578 & -1.086 & -0.096 & 0.268 & 0.385 & -1.475 \\ 
-			\hline \\[-1.8ex] 
-	\end{tabular}}
-\end{table} 
-
-
-
-
-
 
 
 \end{appendices}
