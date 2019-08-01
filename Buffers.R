@@ -8,11 +8,16 @@
 #NB Need to get longer dataseries for market!!
 #NB Made inner join between country days in market days
 #NB Make estimation window smaller? Seems too wrong/long?
+#NB Novo has iid of W02 but no W01 !!
+#NB Add eventid at end
+#NB TO DO change to business days!
+
+#NB To do. Check if other countries benefit when another country announces?
 
 #ASK JDN
 #geo return looks off?
 
-#start needed libraries
+## HEADER ######################################################################
 library(RPostgres)
 library(ggplot2)
 #library(tidyverse)
@@ -26,10 +31,13 @@ library(tidyr) #for gather
 library(broom) #for tidy on lm (tidy.lm)
 library(lubridate) #for function ymd
 library(eventstudies)
+library(broom) #for tidy lm
+library(tidyquant) #for tq_mutate
+#library(tikzDevice) # try to make tikz graphs
 ## Initiate functions
 # Getting Fama factors
 source("getFactorsDaily.R")
-# Data collection
+# Makes index data
 getData <- function () {
   #log in to server
   wrds <- dbConnect(Postgres(),
@@ -161,16 +169,89 @@ getFirmData <- function() {
     return(result)
 }
 
+getCDSData <- function() {
+  # NB need to choose tier, docclause and ccy
+  # Experiment with different ones later!
+  
+  #log in to server
+  wrds <- dbConnect(Postgres(),
+                    host='wrds-pgdata.wharton.upenn.edu',
+                    port=9737,
+                    dbname='wrds',
+                    sslmode='require',
+                    user = 'anbr',
+                    password = 'Hvilkenkode1'
+  )
+  
+  #Make country list
+  # first make it work for just 1 country
+  #countries = list('BGR','CZE','DNK','IRL','LTU','NOR','SVK','SWE','GBR')
+  list('Bulgaria','Czech Republic','Denmark','Ireland','Lithuania','Norway','Slovakia','Sweden','United Kingdom')
+  # get data
+  # NB need to choose tier, docclause and ccy
+  # Experiment with different ones later!
+  res <- dbSendQuery(wrds, "
+                  SELECT * FROM (
+                    SELECT * FROM markit.cds2019
+                    UNION ALL
+                    SELECT * FROM markit.cds2018
+                    UNION ALL
+                    SELECT * FROM markit.cds2017
+                    UNION ALL
+                    SELECT * FROM markit.cds2016
+                    UNION ALL
+                    SELECT * FROM markit.cds2015
+                    UNION ALL
+                    SELECT * FROM markit.cds2014
+                    UNION ALL
+                    SELECT * FROM markit.cds2013
+                    UNION ALL
+                    SELECT * FROM markit.cds2012
+                  ) AS foo
+                  WHERE date BETWEEN '2012-12-12'
+                    AND '2019-12-30'
+                  AND country IN
+                    ('Bulgaria','Czech Republic','Denmark','Ireland','Lithuania','Norway','Slovakia','Sweden','United Kingdom')
+                  --AND tier = 'SNRFOR'
+                  --AND docclause = 'MM'
+                  --AND ccy = 'EUR'
+                  --AND country = 'Denmark'
+                  --AND date = '2012-12-12'
+                  ORDER BY redcode,date,tier,docclause,ccy;
+                     ")
+  #nb the n=10 limits to 10 rows, to test. Delete this later when SQL correct
+  #data <- dbFetch(res, n=10)
+  data <- dbFetch(res, n=-1)
+  #dbClearResult(res) closes the connection, readying for another query.
+  dbClearResult(res)
+  data
+  #make tibble & only keep stuff I need
+  # nb I can get all this stuff!!!
+  data_all <- as_tibble(data) %>%
+    filter(tier == 'SNRFOR' & ccy == 'EUR' & docclause == 'MM') %>%
+    arrange(redcode,ticker,shortname,country,sector,tier,docclause,ccy,date)
+  #save data
+  file <- "data_from_function_wrds/markit_firms.csv"
+  write.csv(data_all, file)
+  
+  result <- read.csv(file)
+  return(result)
+}
+#END HEADER
 
+############ Reload data from WRDS and Ken French etc #########################
 # Reload data from wrds
 firms <- getFirmData()
+CDS <- getCDSData()
 
 # OR just load from saved file
 file <- "data_from_function_wrds/compustat_firms.csv"
 firms <- read.csv(file)
+file <- "data_from_function_wrds/markit_firms.csv"
+CDS <- read.csv(file)
 
 
-# NB can also change function above to not return the data and run silently.
+#This is the index data
 data_compustat <- getData()
 
 #get data using fn earlier defined
@@ -183,380 +264,16 @@ eventsNoChange <- list[[4]]
 eventreturns <- list[[5]]
 mkt <-  list[[6]]
 
-###############################################################################
-## Try and redo old results. ie make my own event study
-# put into event-time together with market
-# estimate betas
-# calculate expected return ie beta*market (cumulative)
-# do for loop over all events
-# NB made so can run just this part of the script
 
-# Clear the plot window
-dev.off() 
-# deletes all objects in workspace except makeData
-rm(list=setdiff(ls(), "makeData"))
-# Force R to release memory it is no longer using
-gc()
+#### step 1 Try own instead - 1. a Data ready. Can be skipped#################
 
-# get data again
-list <- makeData()
-#split list into the datasets
-compustat <- as_tibble(list[[1]])
-events <- list[[2]]
-eventsAllChanges <- list[[3]]
-eventsNoChange <- list[[4]]
-eventreturns <- list[[5]]
-mkt <-  list[[6]]
-
-#clear plot window to make sure just the next are recorded
-#dev.off()
-
-#nb I think it works even with errors just not plots but that is fine
-doEventStudy <- function(events, eventreturns, mkt, L_pre_record, L_post_record){
-  
-  #set so views 20 graphs
-  par(mfrow = c(4,5))
-  #initiate output data objects as na
-  beta <- vector(length = length(events$when))
-  retabn_out <- matrix(data = NA, nrow = (L_pre_record + L_post_record + 1), ncol =  (length(events$when) + 1) )
-  retact_out <- matrix(data = NA, nrow = (L_pre_record + L_post_record + 1), ncol =  (length(events$when) + 1) )
-  #make first column the event times
-  retabn_out[,1] = ((0:(L_pre_record + L_post_record)) - L_pre_record)
-  retact_out[,1] = ((0:(L_pre_record + L_post_record)) - L_pre_record)
-  #NB using #can plot either actual or abnormal returns!
-  for (i in 1:length(events$when)) {
-    flag <- TRUE
-    tryCatch({
-      #nb right now two observations for norway not working as not data early enough for norway
-      #...and not long enough for market ie event 9 and 12.
-      #this is ones with errors for large changes (standard)
-      #if (i == 9 | i == 12) next
-      #this is ones with error for nochanges
-      if (i %in% c(13,24,36,75,90,111,124,137,161,190,202,225,288)) next
-      #get right date and country
-      date <- events$when[i]
-      country <- events$name[i]
-      print(i)
-      print(date)
-      print(country)
-      
-      #get correct return-series
-      returns <- eventreturns[,country]
-      #make event time for country returns and market returns
-      returnsEventTime = time(returns) - date
-      mktEventTime = time(mkt) - date
-    
-      #make new data format and join in terms of event time
-      tbl1 <- tibble(eventTime = returnsEventTime, ret_i = coredata(returns))
-      tbl2 <- tibble(eventTime = mktEventTime, ret_m = coredata(mkt))
-      data <- full_join(tbl1,tbl2, by = "eventTime")
-      
-      #estimate beta
-      #NB Maybe make estimation window smaller. Betas seem wrong?
-      #parameters
-      #start with standard for wrds event study
-      estimation_length = 365 #change to a year later ie 252 #nb this is actual days #wrds uses 100
-      estimation_window = -rev(c(1:(estimation_length + 1)))
-      #nb should I intruduce a gap between estimation and event date?
-      #use like mackinlay without gap
-      data_estimation = filter(data,data$eventTime %in% estimation_window)
-      beta[i] <- lm(data_estimation$ret_i ~ data_estimation$ret_m) %>% tidy() %>%
-        select(estimate) %>% slice(2) %>% as.numeric()
-      #[i] <- tmp$coefficients[2]
-      
-      #get abnormal return
-      #do for up to a year before even though this doesnt really make sense
-      return_abnormal = data$ret_i - beta[i] * data$ret_m
-      #also record actual return
-      return_actual = data$ret_i
-      
-      ## Used before for fun. Not needed anymore. Delete next time I see this
-      ##plot around event
-      #L_pre = 5
-      #L_post = 10 #NB eventwindow is 1 longer than this
-      #retabn = tibble(ret = return_abnormal,eventTime = data$eventTime) %>%
-      #  filter(data$eventTime %in% ((0:(L_pre + L_post)) - L_pre))
-      #retact = tibble(ret = return_actual,eventTime = data$eventTime) %>%
-      #  filter(data$eventTime %in% ((0:(L_pre + L_post)) - L_pre))
-      ##plot(retabn$eventTime,retabn$ret,xlab = "event time",ylab = "ret")
-      ##! NB This is not cum returns!
-      ## NB This is cumprod returns plotted
-      #plot(retabn$eventTime,cumprod(retabn$ret + 1) - 1,xlab = "event time",ylab = "ret abn",main = country)
-      ## try plotting normal returns instead
-      ##plot(retact$eventTime,cumprod(retact$ret + 1) - 1,xlab = "event time",ylab = "ret act",main = country)
-      
-      
-      #output
-      eventDates_out = ((0:(L_pre_record + L_post_record)) - L_pre_record)
-      for (j in 1:length(eventDates_out) ) {
-        eventTime_j = eventDates_out[j]
-        retabn_out[j,(i + 1)] = tibble(ret = return_abnormal,eventTime = data$eventTime) %>% 
-          filter(data$eventTime == eventTime_j) %>% select(ret) %>% as.numeric()
-        retact_out[j,(i + 1)] = tibble(ret = return_actual,eventTime = data$eventTime) %>% 
-          filter(data$eventTime == eventTime_j) %>% select(ret) %>% as.numeric()
-      }
-    },
-    # ... but if an error occurs, tell me what happened: 
-    error = function(error_message) {
-      message("This is my custom message.")
-      message("And below is the error message from R:")
-      message(error_message)
-      flag <<- FALSE
-    })
-    if (!flag) next
-  }
-  results = list(retabn_out, retact_out)
-  return(results)
-}
-#event window to record nb just take all?
-L_pre_record = 60#100
-L_post_record = 30#100 #NB eventwindow is 1 longer than this
-list <- doEventStudy(events, eventreturns, mkt, L_pre_record, L_post_record)
-retabno <- list[[1]]
-retactu <- list[[2]]
-
-#try and do eventstudy with nochange events
-L_pre_record = 60#100
-L_post_record = 30#100 #NB eventwindow is 1 longer than this
-list <- doEventStudy(eventsNoChange, eventreturns, mkt, L_pre_record, L_post_record)
-retabno <- list[[1]]
-retactu <- list[[2]]
-
-## Save results from analysis
-#save graphs
-dev.copy(pdf,"output/eventPlotsAbnormal_first.pdf")
-#dev.copy(pdf,"output/eventPlotsActual_first.pdf")
-dev.off()
-#save data
-data <- retactu
-file <- "output_to_input/retctual.csv"
-write.csv(data, file)
-data <- retabno
-file <- "output_to_input/retabnormal.csv"
-write.csv(data, file)
-
-###############################################################################
-## Start analysis/plotting of data created
-# NB should do lines instead of points?
-
-# Clear the plot window
-dev.off() 
-# If you want to delete all the objects in the workspace and start with a clean slate
-rm(list = ls())
-# Force R to release memory it is no longer using
-gc()
-file <- "output_to_input/retctual.csv"
-retactu <- read.csv(file)
-file <- "output_to_input/retabnormal.csv"
-retabno <- read.csv(file) 
-
-##Calculate mean and do inference
-#NB this doesnt seem to work
-
-# A. doing for pure returns each do (no sums)
-#setup data
-# A.1
-data <- as_tibble(retactu) %>% gather(key = "event", value = "ret", -V1) %>%
-  filter(event != "X")
-#plot
-#NB divide by 100 as already in percentages
-ggplot(data = data) + 
-  geom_point(mapping = aes(x = V1, y = ret/100, color = event),na.rm = TRUE) +
-  ylab("day to day returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE) +
-  ylab("day to day returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-# a bit more stuff added on
-ggplot(data = data) + 
-geom_smooth(mapping = aes(x = V1, y = ret/100),
-            na.rm = TRUE, method = "loess", level = 0.9, span = 0.2,) +
-  ylab("day to day returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
-  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = mean, shape = 17, size = 3)
-
-# A.2 do for abnormal return
-data <- as_tibble(retabno) %>% gather(key = "event", value = "ret", -V1) %>%
-  filter(event != "X")
-#plot
-#NB divide by 100 as already in percentages
-ggplot(data = data) + 
-  geom_point(mapping = aes(x = V1, y = ret/100, color = event),na.rm = TRUE) +
-  ylab("day to day returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),
-              na.rm = TRUE, method = "loess", level = 0.9, span = 0.2,) +
-  ylab("day to day returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
-  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = mean, shape = 17, size = 3)
-#use gam method instead
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),
-              na.rm = TRUE, method = "auto", level = 0.9) +
-  ylab("day to day returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
-  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = mean, shape = 17, size = 3)
-
-
-
-# B. Do for cumulative returns.
-# Try first with just adding
-data <- as_tibble(retactu) %>% mutate_at(-c(1,2),~ replace(., is.na(.), 0)) %>% 
-  mutate_at(-c(1,2), cumsum) %>% gather(key = "event", value = "ret", -V1) %>%
-  filter(event != "X")
-#plot
-ggplot(data = data) + 
-  geom_point(mapping = aes(x = V1, y = ret/100, color = event),na.rm = TRUE) +
-  ylab("cum sum actual returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-#plot smooth
-#NB This is level 0.9!
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE, level = 0.9) +
-  ylab("cum sum actual returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-#specify model
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),
-              na.rm = TRUE, method = "loess", span = 0.1, level = 0.9) +
-  ylab("cum sum actual returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 0.1))
-
-#also do for abnormal returns
-data <- as_tibble(retabno) %>% mutate_at(-c(1,2),~ replace(., is.na(.), 0)) %>% 
-  mutate_at(-c(1,2), cumsum) %>% gather(key = "event", value = "ret", -V1) %>%
-  filter(event != "X")
-#plot
-ggplot(data = data) + 
-  geom_point(mapping = aes(x = V1, y = ret/100, color = event),na.rm = TRUE) +
-  ylab("cum sum abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-#plot smooth
-#NB This is level 0.9!
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE, level = 0.9) +
-  ylab("cum sum abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-#more advanced version
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),
-            na.rm = TRUE, method = "loess", level = 0.9, span = 0.1,) +
-  ylab("cum sum abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
-  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = mean, shape = 17, size = 3)
-
-
-# C. ok now do for cumprod returns
-#fn needed below
-addOne <- function (x) {x + 1}
-subOne <- function (x) {x - 1}
-# C.1 actual returns
-data <- as_tibble(retactu) %>% mutate_at(-c(1,2),~ replace(., is.na(.), 0)) %>% 
-  mutate_at(-c(1,2), addOne) %>% mutate_at(-c(1,2), cumprod) %>% 
-  mutate_at(-c(1,2), subOne) %>%
-  gather(key = "event", value = "ret", -V1) %>% filter(event != "X")
-#plot
-ggplot(data = data) + 
-  geom_point(mapping = aes(x = V1, y = ret/100, color = event),na.rm = TRUE) +
-  ylab("cum prod actual returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-#plot smooth
-#NB This is level 0.9!
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE, level = 0.9) +
-  ylab("cum prod actual returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-
-# C.2 abn ret
-data <- as_tibble(retabno) %>% mutate_at(-c(1,2),~ replace(., is.na(.), 0)) %>% 
-  mutate_at(-c(1,2), addOne) %>% mutate_at(-c(1,2), cumprod) %>% 
-  mutate_at(-c(1,2), subOne) %>%
-  gather(key = "event", value = "ret", -V1) %>% filter(event != "X")
-#plot
-ggplot(data = data) + 
-  geom_point(mapping = aes(x = V1, y = ret/100, color = event),na.rm = TRUE) +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
-#plot smooth
-#NB This is level 0.9!
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),
-              na.rm = TRUE, level = 0.9, formula = "y~x", method = ) +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  geom_vline(xintercept = 0) + geom_hline(yintercept = 0)
-#more advanced version
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),
-              na.rm = TRUE, method = "loess", level = 0.9, span = 0.2,) +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
-  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = mean, shape = 17, size = 3)
-
-#NB doing a model to get standard errors, is better than just taking quantiles!
-# ie maybe because it is estimated from all data
-#NBNB geom_smooth uses the loess model which is a fit which uses a polynomial weighting
-# depending on difference and then least squares after that
-# NB should I use a lower span?
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE, level = 0.9, span = 0.1) +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = quantile, 
-               fun.args=(list(probs = c(0.10, 0.90))), shape = 17, size = 3)
-#try with gam
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE, level = 0.9, method="gam") +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = quantile, 
-               fun.args=(list(probs = c(0.10, 0.90))), shape = 17, size = 3)
-# mean instead of quantiles here
-ggplot(data = data) + 
-geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE, level = 0.9, formula = "y~x") +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = mean, shape = 17, size = 3)
-# also make points data
-ggplot(data = data) + geom_point(mapping = aes(x = V1, y = ret/100, colour = event)) +
-  geom_smooth(mapping = aes(x = V1, y = ret/100),na.rm = TRUE, level = 0.9, formula = "y~x") +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  geom_vline(xintercept = 0) + geom_hline(yintercept = 0)
-# lm instead of lowess here. but lm ofc doesnt make sense
-ggplot(data = data) + 
-  geom_smooth(mapping = aes(x = V1, y = ret/100),
-              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess",span = 0.1) +
-  ylab("cum prod abnormal returns (%)") + xlab("event time") + theme_classic() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  stat_summary(aes(x = V1, y = ret/100), geom = "point", fun.y = mean, shape = 17, size = 3)
-
-###############################################################################
-# Compute returns from prices
-# Assume prices are adjusted as mentioned on webpage below
-# https://wrds-support.wharton.upenn.edu/hc/en-us/articles/115003135651-Is-there-sample-code-to-adjust-prices-and-earnings-for-splits-mergers-etc-
-
-#AH! some firms have two types of shares!
-# filter iid = 01W ie get main ones!
-# could grp by iid too to get seperate
-# Use log or actual returns?
-# now use actual
-
-# OR just load from saved file
+## START DATA
+# get firm returns
 file <- "data_from_function_wrds/compustat_firms.csv"
 firms <- read.csv(file)
-
-
-head(firms)
-
-# basically the same for daily!
+file <- "data_from_function_wrds/markit_firms.csv"
+CDS <- read.csv(file)
+# compute returns
 firm_returns <- firms %>% filter(iid == "01W") %>%
   select(datadate,gvkey,prccd,loc) %>%
   rename(date = datadate) %>%
@@ -566,76 +283,764 @@ firm_returns <- firms %>% filter(iid == "01W") %>%
   mutate(returns = (returns/lag(returns) - 1)) %>%
   arrange(gvkey, date)
 
-head(firm_returns)
 
-#NB log returns!
-firm_returns_alt_alt <- firms %>% filter(iid == "01W") %>%
-  select(datadate,gvkey,prccd,loc) %>%
-  rename(date = datadate) %>%
-  mutate(date = ymd(parse_date_time(date, "%Y%m%d") ) ) %>%
-  group_by(loc,gvkey) %>%
-  rename(returns = prccd) %>%
-  mutate(returns = (log(returns) - log(lag(returns)))) %>%
-  arrange(gvkey, date)
-
-head(firm_returns_alt_alt)
-
-
-firm_returns_alt <- firms %>% filter(iid == "01W") %>%
-  select(datadate,gvkey,prccd,loc) %>%
-  rename(date = datadate) %>%
-              mutate(date = ymd(parse_date_time(date, "%Y%m%d") ) ) %>%
-               group_by(loc,gvkey) %>%
-  tq_transmute(prccd,mutate_fun = dailyReturn) %>%
-  arrange(gvkey, date)
-
-
-head(firm_returns_alt)
-
-
-# same! which is great! 
-# means these probably are log returns in the first one too!
-# not used right now
-
-# find a way to get the prices into a matrix like eventreturns
-
-# copy events so that there comes a row with each gvkey in a country
-
-# get factor(s)
+# Get factor(s)
 # NB it is an issue that one has a - in the name! makes it much harder
 Europe_3_Factors_Daily <- getFactorsDaily("Europe_3_Factors_Daily")
 Factors <- Europe_3_Factors_Daily %>%
   mutate('Mkt' = (!!Europe_3_Factors_Daily$'Mkt-RF' + !!Europe_3_Factors_Daily$RF)) %>% 
   select(date,Mkt)
-Factors
-#Europe_5_Factors_Daily <- factorDaily("Europe_5_Factors_Daily")
-#Europe_Mom_Factor_Daily <- factorDaily("Europe_MOM_Factor_Daily")
-
+# Europe_5_Factors_Daily <- factorDaily("Europe_5_Factors_Daily")
+# Europe_Mom_Factor_Daily <- factorDaily("Europe_MOM_Factor_Daily")
 #now merge
 firmdata <- left_join(firm_returns,Factors, by = "date")
-firmdata
 
-#now make data so can do event study
-# make wide
-# NB does not work with country!
-firmdata 
-wide <- firmdata %>% group_by(gvkey) %>% select(-loc) %>% spread(.,gvkey,returns)
-head(wide,n=30)
-
-###############################################################################
-# Try and do event study using package again
-
-## Make data so it looks like the old version
-# done
-## Make events copied so there is one for each gvkey in loc
-# ie copy event length(gvkey in loc) times. Then rename to gvkey in loc
-
-# get data again
+# Do events
+# Events
 list <- makeData()
 #split list into the datasets
-compustat <- as_tibble(list[[1]])
 events <- list[[2]]
 eventsAllChanges <- list[[3]]
 eventsNoChange <- list[[4]]
-eventreturns <- list[[5]]
-mkt <-  list[[6]]
+# change event country names to match firms
+events <- events %>% as_tibble() %>% rename(loc = "name")
+events$loc <- recode(events$loc,
+                     "Bulgaria" = "BGR",
+                     "Czech Republic" = "CZE",
+                     "Denmark" = "DNK",
+                     "Ireland" = "IRL",
+                     "Lithuania" = "LTU",
+                     "Norway" = "NOR",
+                     "Slovakia" = "SVK",
+                     "Sweden" = "SWE",
+                     "United Kingdom" = "GBR",
+)
+
+eventsNoChange <- eventsNoChange %>% as_tibble() %>% rename(loc = "name")
+eventsNoChange$loc <- recode(eventsNoChange$loc,
+                     "Austria" = "AUS",
+                     "Belgium" = "BEL",
+                     "Bulgaria" = "BGR",
+                     "Czech Republic" = "CZE",
+                     "Denmark" = "DNK",
+                     "Ireland" = "IRL",
+                     "Lithuania" = "LTU",
+                     "Norway" = "NOR",
+                     "Slovakia" = "SVK",
+                     "Sweden" = "SWE",
+                     "United Kingdom" = "GBR",
+)
+
+# change cds country names too
+CDS$country <- recode(CDS$country,
+                      "Austria" = "AUS",
+                      "Belgium" = "BEL",
+                      "Bulgaria" = "BGR",
+                      "Czech Republic" = "CZE",
+                      "Denmark" = "DNK",
+                      "Ireland" = "IRL",
+                      "Lithuania" = "LTU",
+                      "Norway" = "NOR",
+                      "Slovakia" = "SVK",
+                      "Sweden" = "SWE",
+                      "United Kingdom" = "GBR",
+                      ) 
+# change date to date
+CDS$date <- as.Date(CDS$date)
+
+# NB DO BELOW FOR CDS DATA TOO!
+# create an event for each firm within the country experiencing buffer
+eventsnew <- tibble()
+i = 0
+eventloc = events$loc[1] #test
+eventloc = "DNK" #test
+for (eventloc in events$loc) {
+  i = i + 1
+  #get firms
+  currentfirms <- filter(firms,loc == eventloc) %>% select(gvkey, conm) %>%
+    distinct() %>%
+    #add date
+    mutate(when = events$when[i])
+  
+  #add to main tibble
+  eventsnew <- bind_rows(eventsnew,currentfirms)
+} 
+## data done. Now prepare data
+events <- eventsnew %>% rowwise() %>% mutate(gvkey = paste("c",toString(gvkey),sep = "")) %>%
+  rename(name = "gvkey") %>% select(-conm) %>%
+  as.data.frame()
+eventandmktreturns <- firmdata %>% rowwise() %>% mutate(gvkey = paste("c",toString(gvkey),sep = ""))
+
+# NB DO BELOW FOR CDS DATA TOO!
+# NB need to recode countries into short version
+eventsnew <- tibble()
+i = 0
+eventloc = events$loc[1] #test
+eventloc = "DNK" #test
+for (eventloc in events$loc) {
+  i = i + 1
+  #get firms
+  currentfirms <- filter(CDS,country == eventloc) %>% select(redcode,shortname) %>%
+    distinct() %>%
+    #add date
+    mutate(when = events$when[i])
+  
+  #add to main tibble
+  eventsnew <- bind_rows(eventsnew,currentfirms)
+} 
+## data done. Now prepare data
+eventsCDS <- eventsnew %>% rowwise() %>%
+  rename(name = "redcode") %>% select(-shortname) %>%
+  as.data.frame()
+#eventandmktreturns <- firmdata %>% rowwise() %>% mutate(gvkey = paste("c",toString(gvkey),sep = ""))
+CDS <- CDS
+
+# also do for no events
+eventsnew <- tibble()
+i = 0
+eventloc = eventsNoChange$loc[1] #test
+eventloc = "DNK" #test
+for (eventloc in eventsNoChange$loc) {
+  i = i + 1
+  #get firms
+  currentfirms <- filter(firms,loc == eventloc) %>% select(gvkey, conm) %>%
+    distinct() %>%
+    #add date
+    mutate(when = eventsNoChange$when[i])
+  
+  #add to main tibble
+  eventsnew <- bind_rows(eventsnew,currentfirms)
+} 
+## data done. Now prepare data
+eventsNoChange <- eventsnew %>% rowwise() %>% mutate(gvkey = paste("c",toString(gvkey),sep = "")) %>%
+  rename(name = "gvkey") %>% select(-conm) %>%
+  as.data.frame()
+eventandmktreturns <- firmdata %>% rowwise() %>% mutate(gvkey = paste("c",toString(gvkey),sep = ""))
+
+# also do for CDS no events
+eventsnew <- tibble()
+i = 0
+eventloc = eventsNoChange$loc[1] #test
+eventloc = "DNK" #test
+for (eventloc in eventsNoChange$loc) {
+  i = i + 1
+  #get firms
+  currentfirms <- filter(CDS,country == eventloc) %>% select(redcode, shortname) %>%
+    distinct() %>%
+    #add date
+    mutate(when = eventsNoChange$when[i])
+  
+  #add to main tibble
+  eventsnew <- bind_rows(eventsnew,currentfirms)
+} 
+## data done. Now prepare data
+eventsNoChangeCDS <- eventsnew %>% rowwise() %>%
+  rename(name = "redcode") %>% select(-shortname) %>%
+  as.data.frame()
+eventandmktreturns <- firmdata %>% rowwise() %>% mutate(gvkey = paste("c",toString(gvkey),sep = ""))
+## END DATA
+
+
+### 1.b now create analysis data NB Can be skipped ############################
+
+#event window to record nb just take all?
+L_pre_record = 5#100
+L_post_record = 10#100 #NB eventwindow is 1 longer than this
+L_Estimation = 365
+
+# old version without lapply
+#eventdata <- tibble()
+##when <- events$when[1]
+#for (i in 1:length(events$when)) {
+#  print(paste(i,"out of",length(events$when)))
+#  thisdata <- slice(events,i)
+#  eventdataAdd <- filter(eventandmktreturns,gvkey == thisdata$name) %>%
+#    mutate(eventdate = date - thisdata$when) %>%
+#    filter(eventdate >= -L_Estimation-10 & eventdate <= L_post_record+10) %>%
+#    mutate(eventid = i)
+#  eventdata <- bind_rows(eventdata,eventdataAdd)
+#}
+
+# NB CHANGE THESE TO BUSINESS DAYS
+
+# first for significant changes   
+eventdata <- tibble()
+d <- lapply( seq_len(length(events$when)), function(i) {
+  print(paste(i,"out of",length(events$when)))
+  thisdata <- slice(events,i)
+  eventdataAdd <- filter(eventandmktreturns,gvkey == thisdata$name) %>%
+    mutate(eventdate = date - thisdata$when) %>%
+    ### CHANGE THIS ABOVE TO BUSINESS DAYS! bizdays package?####
+    filter(eventdate >= -L_Estimation-10 & eventdate <= L_post_record+10) %>%
+    mutate(eventid = i)   
+  return(eventdataAdd)
+})
+eventdata <- do.call(bind_rows,d)
+#save data
+file <- "output_to_input/eventStudyDataRaw.csv"
+write.csv(eventdata, file)
+
+# first for significant changes - CDS
+eventdata <- tibble()
+d <- lapply( seq_len(length(eventsCDS$when)), function(i) {
+  print(paste(i,"out of",length(eventsCDS$when)))
+  thisdata <- slice(eventsCDS,i)
+  eventdataAdd <- filter(CDS,redcode == thisdata$name) %>%
+    mutate(eventdate = date - thisdata$when) %>%
+    ### CHANGE THIS ABOVE TO BUSINESS DAYS! bizdays package?####
+  filter(eventdate >= -L_Estimation-10 & eventdate <= L_post_record+10) %>%
+    mutate(eventid = i)   
+  return(eventdataAdd)
+})
+eventdata <- do.call(bind_rows,d)
+#save data
+file <- "output_to_input/eventStudyDataRawCDS.csv"
+write.csv(eventdata, file)
+
+
+
+# then for no changes
+eventdata <- tibble()
+d <- lapply( seq_len(length(eventsNoChange$when)), function(i) {
+  print(paste(i,"out of",length(eventsNoChange$when)))
+  thisdata <- slice(eventsNoChange,i)
+  eventdataAdd <- filter(eventandmktreturns,gvkey == thisdata$name) %>%
+    mutate(eventdate = date - thisdata$when) %>%
+    ### CHANGE THIS ABOVE TO BUSINESS DAYS! bizdays package?####
+  filter(eventdate >= -L_Estimation-10 & eventdate <= L_post_record+10) %>%
+    mutate(eventid = i)   
+  return(eventdataAdd)
+})
+eventdata <- do.call(bind_rows,d)
+#save data
+file <- "output_to_input/eventStudyNoChangeDataRaw.csv"
+write.csv(eventdata, file)
+
+# then for no data changes - CDS
+eventdata <- tibble()
+d <- lapply( seq_len(length(eventsNoChangeCDS$when)), function(i) {
+  print(paste(i,"out of",length(eventsNoChangeCDS$when)))
+  thisdata <- slice(eventsNoChangeCDS,i)
+  eventdataAdd <- filter(CDS,redcode == thisdata$name) %>%
+    mutate(eventdate = date - thisdata$when) %>%
+    ### CHANGE THIS ABOVE TO BUSINESS DAYS! bizdays package?####
+  filter(eventdate >= -L_Estimation-10 & eventdate <= L_post_record+10) %>%
+    mutate(eventid = i)   
+  return(eventdataAdd)
+})
+eventdata <- do.call(bind_rows,d)
+#save data
+file <- "output_to_input/eventStudyNoChangeDataRawCDS.csv"
+write.csv(eventdata, file)
+
+
+  
+  
+##### step 2.A (can be start) Own event study ################################################
+file <- "output_to_input/eventStudyDataRaw.csv"
+eventdata <- read.csv(file)
+file <- "output_to_input/eventStudyNoChangeDataRaw.csv"
+noEventdata  <- read.csv(file)
+file <- "output_to_input/eventStudyDataRawCDS.csv"
+eventdataCDS <- read.csv(file)
+file <- "output_to_input/eventStudyNoChangeDataRawCDS.csv"
+noEventdataCDS  <- read.csv(file)
+#NB these defined earlier if choosing very large might be larger than current
+# data and hence need to remake it
+# these are original settings
+L_pre_record = 5#100
+L_post_record = 10#100 #NB eventwindow is 1 longer than this
+L_Estimation = 365
+
+# change here if you want
+L_pre_record = L_pre_record
+L_post_record = L_post_record
+L_Estimation = L_Estimation
+
+#compute betas
+eventdata <- eventdata %>% group_by(eventid)
+betas <- eventdata %>% group_by(eventid) %>%
+  filter(eventdate >= (-L_Estimation - 10) & eventdate <= -10) %>%
+  do(model = lm(returns ~ Mkt, data = .)) %>%
+  tidy(model) %>% filter(term == "Mkt") %>% select(estimate) %>%
+  rename(beta = estimate)
+eventdatafitted <- left_join(eventdata,betas,by = "eventid") %>%
+#compute excess returns
+mutate(retabn = returns - beta*Mkt)
+
+#compute betas for no events
+noEventdata <- noEventdata %>% group_by(eventid)
+betas <- noEventdata %>% group_by(eventid) %>%
+  filter(eventdate >= (-L_Estimation - 10) & eventdate <= -10) %>%
+  do(model = lm(returns ~ Mkt, data = .)) %>%
+  tidy(model) %>% filter(term == "Mkt") %>% select(estimate) %>%
+  rename(beta = estimate)
+noEventdatafitted <- left_join(noEventdata,betas,by = "eventid") %>%
+  #compute excess returns
+  mutate(retabn = returns - beta*Mkt)
+
+##### step 2.B make plot data! #############################################
+#first make plot data. THen plot
+## 3.1 Make plot data
+#NB these defined earlier if choosing very large might be larger than current
+# data and hence need to remake it
+L_pre_record <- 10
+L_post_record <- 10
+
+plotdata <- eventdatafitted %>%
+  filter(eventdate >= -L_pre_record & eventdate <= L_post_record) %>%
+  group_by(eventid) %>%
+  mutate(cumsabn = cumsum(retabn %>% replace_na(0))) %>%
+  mutate(cumpabn = cumprod((1 + retabn) %>% replace_na(1)) - 1) %>%
+  mutate(cumsabs = cumsum(returns %>% replace_na(0))) %>%
+  mutate(cumpabs = cumprod((1 + returns) %>% replace_na(1)) - 1)%>%
+  select(-X)
+
+plotdataCDS <- eventdataCDS %>%
+  filter(eventdate >= -L_pre_record & eventdate <= L_post_record) %>%
+  group_by(eventid) %>%
+  #mutate(cumsabn = cumsum(retabn %>% replace_na(0))) %>%
+  #mutate(cumpabn = cumprod((1 + retabn) %>% replace_na(1)) - 1) %>%
+  #mutate(cumsabs = cumsum(returns %>% replace_na(0))) %>%
+  #mutate(cumpabs = cumprod((1 + returns) %>% replace_na(1)) - 1)%>%
+  select(-X)
+
+
+plotdataNoEvent <- noEventdatafitted %>%
+  filter(eventdate >= -L_pre_record & eventdate <= L_post_record) %>%
+  group_by(eventid) %>%
+  mutate(cumsabn = cumsum(retabn %>% replace_na(0))) %>%
+  mutate(cumpabn = cumprod((1 + retabn) %>% replace_na(1)) - 1) %>%
+  mutate(cumsabs = cumsum(returns %>% replace_na(0))) %>%
+  mutate(cumpabs = cumprod((1 + returns) %>% replace_na(1)) - 1)%>%
+  select(-X)
+
+plotdataNoEventCDS <- noEventdataCDS %>%
+  filter(eventdate >= -L_pre_record & eventdate <= L_post_record) %>%
+  group_by(eventid) %>%
+  #mutate(cumsabn = cumsum(retabn %>% replace_na(0))) %>%
+  #mutate(cumpabn = cumprod((1 + retabn) %>% replace_na(1)) - 1) %>%
+  #mutate(cumsabs = cumsum(returns %>% replace_na(0))) %>%
+  #mutate(cumpabs = cumprod((1 + returns) %>% replace_na(1)) - 1)%>%
+  select(-X)
+
+## add on their sector
+# Can see sector meanings here
+#  https://en.wikipedia.org/wiki/Global_Industry_Classification_Standard
+# nb also do it with industry groups
+# nb I trust loess more!! But hard with many datapoints like for noevents
+
+# get firm data
+file <- "data_from_function_wrds/compustat_firms.csv"
+firms <- read.csv(file)
+
+plotdatasuper <- left_join(plotdata,
+                           firms %>% select(gvkey,gsector,ggroup) %>% 
+                             mutate(gvkey = paste("c",gvkey,sep = ""))  %>%
+                             distinct(),
+                           by = "gvkey") %>%
+  mutate(gsector = paste("s",gsector,sep="")) %>%
+  mutate(ggroup = paste("g",ggroup,sep="")) %>%
+  # create new variable with either finance or nonfinance
+  mutate(finance = (gsector == "s40")) %>%
+  mutate(bank = (ggroup == "g4010")) %>%
+  mutate(type = if (ggroup == "g4010") "bank fin" else {
+    if (gsector == "s40") "non-bank fin" else "other" } ) %>%
+  group_by(gsector)
+
+#for cds
+plotdatasuperCDS <- 
+  # create new variable with either finance or nonfinance
+  mutate(plotdataCDS, finance = (sector == "Financials")) %>%
+  #mutate(bank = (ggroup == "g4010")) %>%
+  #mutate(type = if (ggroup == "g4010") "bank fin" else {
+  #  if (gsector == "s40") "non-bank fin" else "other" } ) %>%
+  group_by(sector)
+
+
+plotdatasuperNoEvent <- left_join(plotdataNoEvent,
+                                  firms %>% select(gvkey,gsector,ggroup) %>% 
+                                    mutate(gvkey = paste("c",gvkey,sep = ""))  %>%
+                                    distinct(),
+                                  by = "gvkey") %>%
+  mutate(gsector = paste("s",gsector,sep="")) %>%
+  mutate(ggroup = paste("g",ggroup,sep="")) %>%
+  # create new variable with either finance or nonfinance
+  mutate(finance = (gsector == "s40")) %>%
+  mutate(bank = (ggroup == "g4010")) %>%
+  mutate(type = if (ggroup == "g4010") "bank fin" else {
+    if (gsector == "s40") "non-bank fin" else "other" } ) %>%
+  group_by(gsector)
+
+plotdatasuperNoEventCDS <- #left_join(plotdataNoEvent,
+    #                              firms %>% select(gvkey,gsector,ggroup) %>% 
+   #                                 mutate(gvkey = paste("c",gvkey,sep = ""))  %>%
+  #                                  distinct(),
+   #                               by = "gvkey") %>%
+  #mutate(gsector = paste("s",gsector,sep="")) %>%
+  #mutate(ggroup = paste("g",ggroup,sep="")) %>%
+  # create new variable with either finance or nonfinance
+  mutate(plotdataNoEventCDS, finance = (sector == "Financials")) %>%
+#  mutate(bank = (ggroup == "g4010")) %>%
+#  mutate(type = if (ggroup == "g4010") "bank fin" else {
+#    if (gsector == "s40") "non-bank fin" else "other" } ) %>%
+  group_by(sector)
+
+
+
+## Step 3 Now plot and save ##################################################
+#test tikzDevice
+
+ggplot(data = plotdata) +
+  geom_smooth(mapping = aes(x = eventdate, y = returns ),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual raw returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = returns), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill = NA))
+ggsave("figures/retraw.pdf", width = 5.86, height = 5.86)
+
+#cds spread
+ggplot(data = plotdataCDS) +
+  geom_smooth(mapping = aes(x = eventdate, y = spread3y),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("2 year spread") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = spread3y), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill = NA))
+#ggsave("figures/spreadCDS.pdf", width = 5.86, height = 5.86)
+
+# with no events
+ggplot(data = plotdataNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = returns ),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual raw returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = returns), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retrawNoEvent.pdf", width = 5.86, height = 5.86)
+
+#cds spread no events
+ggplot(data = plotdataNoEventCDS) +
+  geom_smooth(mapping = aes(x = eventdate, y = spread3y),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("2 year spread") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = spread3y), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill = NA))
+#ggsave("figures/spreadCDS.pdf", width = 5.86, height = 5.86)
+
+
+# with excess returns
+ggplot(data = plotdata) +
+  geom_smooth(mapping = aes(x = eventdate, y = retabn ),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabn.pdf", width = 5.86, height = 5.86)
+### !! This above actually looks really good !!! Both for 5 and 10 days##############
+
+# with excess returns
+ggplot(data = plotdataNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = retabn ),
+              na.rm = TRUE, level = 0.9, formula = "y~x",method = "loess") +
+  ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabnNoEvent.pdf", width = 5.86, height = 5.86)
+# NB notice that very high return on day 1!
+
+# with excess returns cums
+ggplot(data = plotdata) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn ),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method ="loess") +
+  ylab("cumulative sum of abnormal returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncum.pdf", width = 5.86, height = 5.86)
+### !! This above too! ###
+
+# no event
+ggplot(data = plotdataNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn ),
+              na.rm = TRUE, level = 0.9, formula = "y~x") +
+  ylab("cumulative sum of abnormal returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+# no event loess method
+ggplot(data = plotdataNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn ),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("cumulative sum of abnormal returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumNoEvent.pdf", width = 5.86, height = 5.86)
+
+# with excess return cump
+ggplot(data = plotdata) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumpabn ),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumpabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncump.pdf", width = 5.86, height = 5.86)
+
+### Now figure out which firms are hit the most! ##############################
+
+
+### step 4 plot ####
+# NB is robust to cum product vs cum sum
+
+# with excess return indvidual
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = retabn, group = gsector,
+                            linetype = gsector, color = gsector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess", se = FALSE) +
+  ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabnSplit.pdf", width = 5.86, height = 5.86)
+# cds
+ggplot(data = filter(plotdatasuperCDS)) +
+  geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = sector,
+                            linetype = sector, color = sector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess", se = FALSE) +
+  ylab("2 year spread") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+# cds minus materials
+ggplot(data = filter(plotdatasuperCDS, sector != "Basic Materials")) +
+  geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = sector,
+                            linetype = sector, color = sector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess", se = FALSE) +
+  ylab("2 year spread") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/spreadSplitCDS.pdf", width = 5.86, height = 5.86)
+
+# no event
+ggplot(data = plotdatasuperNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = retabn, group = gsector,
+                            linetype = gsector, color = gsector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabnSplitNoEvent.pdf", width = 5.86, height = 5.86)
+# no event cds
+ggplot(data = plotdatasuperNoEventCDS) +
+  geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = sector,
+                            linetype = sector, color = sector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess", se = FALSE) +
+  ylab("2 year spread ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/spreadSplitNoEvent.pdf", width = 5.86, height = 5.86)
+
+
+# with excess return cump
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = gsector,
+                            linetype = gsector, color = gsector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumSplitShade.pdf", width = 5.86, height = 5.86)
+# noevent cums
+ggplot(data = plotdatasuperNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = gsector,
+                            linetype = gsector, color = gsector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumSplitNoEventShade.pdf", width = 5.86, height = 5.86)
+# NB Why does cump look so different to cums?!
+
+## next two same but no shade
+# with excess return cump
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = gsector,
+                            linetype = gsector, color = gsector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumSplit.pdf", width = 5.86, height = 5.86)
+# noevent cums
+ggplot(data = plotdatasuperNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = gsector,
+                            linetype = gsector, color = gsector),
+              na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumSplitNoEvent.pdf", width = 5.86, height = 5.86)
+# NB Why does cump look so different to cums?!
+
+# group by industry group rather than sector
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = ggroup,
+                             color = ggroup),
+              na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumSplitSplit.pdf", width = 5.86, height = 5.86)
+# noevent
+ggplot(data = plotdatasuperNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = ggroup,
+                            color = ggroup),
+              na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumSplitSplitNoEvent.pdf", width = 5.86, height = 5.86)
+
+# group by finance or non-finance
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = finance,
+                            linetype = finance, color = finance),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumFin.pdf", width = 5.86, height = 5.86)
+# cds
+ggplot(data = plotdatasuperCDS) +
+  geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = finance,
+                            linetype = finance, color = finance),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("spread") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = spread2y, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/spreadFinCDS.pdf", width = 5.86, height = 5.86)
+# noevents cums. nb normal event data looks same for cums and cump
+ggplot(data = plotdatasuperNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = finance,
+                            linetype = finance, color = finance),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumFinNoEvent.pdf", width = 5.86, height = 5.86)
+# noevents cds
+ggplot(data = plotdatasuperNoEventCDS) +
+  geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = finance,
+                            linetype = finance, color = finance),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = spread2y, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/spreadFinNoEventCDS.pdf", width = 5.86, height = 5.86)
+
+# try finance non-bank vs finance bank
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = type,
+                            linetype = type, color = type),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn, group = type), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumType.pdf", width = 5.86, height = 5.86)
+# no event cums
+ggplot(data = plotdatasuperNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = type,
+                            linetype = type, color = type),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn, group = type), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumTypeNoEvent.pdf", width = 5.86, height = 5.86)
+
+
+# group by bank or non-bank
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = bank,
+                            linetype = bank, color = bank),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn, group = bank), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumBank.pdf", width = 5.86, height = 5.86)
+# Interesting!! Banks less affected than non-banks fin, who are all less
+# afftected than non-fins
+# try finance non-bank vs finance bank Other method.
+# Better but doesnt work for too many datapoints 
+# NB Below not used???? Same as one just before?
+ggplot(data = plotdatasuper) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = bank,
+                            linetype = bank, color = bank),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn, group = bank), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+
+
+# no event
+ggplot(data = plotdatasuperNoEvent) +
+  geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = bank,
+                            linetype = bank, color = bank),
+              na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  stat_summary(aes(x = eventdate, y = cumsabn, group = bank), geom = "point", fun.y = mean, shape = 17, size = 3)+
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/retabncumBankNoEvent.pdf", width = 5.86, height = 5.86)
