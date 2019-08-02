@@ -5,6 +5,7 @@
 \usepackage{geometry}
 \geometry{left=3cm,top=3cm,right=3cm,bottom=3cm}
 \usepackage[round, comma, authoryear, sort&compress]{natbib}
+\bibliographystyle{apa}
 \setlength{\bibsep}{5pt}
 \usepackage{amsmath, amsthm, amssymb,}
 \usepackage{amsfonts}
@@ -41,6 +42,9 @@
 \definecolor{LightCyan}{rgb}{0.88,1,1}
 \renewcommand{\floatpagefraction}{.8}
 \usepackage{tikz}
+\usetikzlibrary{snakes}
+\usetikzlibrary{decorations.pathreplacing}
+\tikzset{>=latex}
 \newcommand{\mytab}[1]{
 	\begin{tabular}{@{}c@{}}
 		#1
@@ -53,6 +57,8 @@
 \usepackage{abraces}
 \usepackage{upgreek} % for upright greek letters
 \usepackage{enumitem} %to change enumerate types with options such 
+\usepackage{bm} %bold math (?)
+%\usepackage{apacite} %for apa bib style
 
 % Change sizes of stuff
 % ie footnote to small
@@ -85,7 +91,7 @@
 \newtheorem{definition}{Definition}%[section]
 \DeclareMathOperator*{\argmax}{arg\,max} % argmax 
 \setlength{\footskip}{50pt} % Defines how high/low the page number is placed
-%\let\cite=\citet
+\let\cite=\citet
 \def\thetable{\arabic{table}}
 \def\thesection{\arabic{section}}
 
@@ -94,8 +100,7 @@
 
 \author{\Large Andreas Br\o gger\thanks{
 \small
-I am at
-Copenhagen Business School, Solbjerg Plads 3, 2000 Frederiksberg, Denmark.
+I am at Copenhagen Business School, Solbjerg Plads 3, 2000 Frederiksberg, Denmark.
 Please contact me at anbr.fi@cbs.dk.
 I thank Jens Dick-Nielsen and David Lando for helpful guidance and support.
 I thank Steffen Andersen, Ken L. Bechmann, Peter Feldh\"{u}tter, Thomas Geelen, Nicola Giommetti, Niels Joachim Gormsen, Lena Jaroszek, Bjarne Astrup Jensen, Christian Skov Jensen, Alexander Kronies, Matthijs Lof, Kristian Miltersen, Michael M\o ller, Mads Stenbo Nielsen, Lasse Heje Pedersen, Peter Raahauge, Henrik Ramlau-Hansen, Jesper Rangvid, Kathrin Schlafman, Daniel Streitz (discussant), Carsten S\o rensen, Morten S\o rensen, Fabrice Tourre, Rasmus Tangsgaard Varneskov, Anders Vilhelmsson (discussant), Ramona Westermann, Paul Whelan; and seminar participants at American Finance Association (AFA) 2019 Annual Meeting, Copenhagen Business School, PhD Nordic Finance Workshop 2019 for helpful suggestions and comments. I gratefully acknowledge support from the FRIC Center for Financial Frictions (Grant no. DNRF102).}
@@ -105,7 +110,7 @@ I thank Steffen Andersen, Ken L. Bechmann, Peter Feldh\"{u}tter, Thomas Geelen, 
 \begin{document}
 
 \maketitle
-\thispagestyle{empty} % removes page number for first page
+%\thispagestyle{empty} % removes page number for first page
 
 \begin{abstract}
 \noindent I document asset pricing effects from macroprudential buffers. As macroprudential buffers are announced the price of risk increases. I develop a theoretical model that predicts that as buffers are announced: 1) Price of risk increases, 2) Systemic risk falls, and 3) Assets shifts away from banks to other agents with higher risk aversion. In the model, systemic risk arises from sufficiently strong fire sales that freezes [shuts down] the financial system, due to their regulatory constraints. Since the financial crises Basel III and Basel IV has been agreed upon, and is in the process of being implemented. The effects of these new regulations on financial intermediaries and the economy at large, remains to a large extend unknown.
@@ -116,22 +121,22 @@ I thank Steffen Andersen, Ken L. Bechmann, Peter Feldh\"{u}tter, Thomas Geelen, 
 \noindent \textit{JEL classification}: G01, G21, G28, G12.
 
 \clearpage
-\setcounter{footnote}{0}
+%\setcounter{footnote}{0}
 \renewcommand{\thefootnote}{\arabic{footnote}}
-\setcounter{page}{1}
+%\setcounter{page}{1}
 
 
 \section*{Introduction}
-Systemic risk can be divided into vulnerabilities of the system and potential systemic triggers. This paper therefore explores triggers arising from regulatory cliff effects, and evaluates the vulnerability using a fire sale model.
-
-In general, banking regulations have been put in place to avert financial crises occurring by reducing liquidity and credit risks, i.e. the direct linkages channel of systemic risk. However, in cases of extreme financial distress, breaching the regulations might have drastic effects on the financial system \citep{CruzLopez2013}, so-called "cliff effects", whereby the regulatory consequences of a measure crossing a threshold causes a violent reaction in financial markets.  For example, price declines could be exacerbated by market participants seeking to sell assets to meet liquidity requirements \citep{Gorton2009}. Alternatively, the demand for collateral could cause an increase in premiums for high-quality assets, creating a cliff effect for borderline assets that might lose their high-quality status during financial downturns \citep{IMF2012}. Thus, while regulations might reduce the chance of a financial crisis, they can add to systemic risk in times when their requirements are breached, through these regulatory cliff effects.
+Macroprudential buffers has been implemented in Europe for the first time over the last 6 years, and the effects are still largely unexplored. It is one of the few policies euro countries still have independence about, and hence have been used at different times and at various levels across time and the cross-section. This paper will first explore what effects these macroprudential policy could theoretically have, and secondly empirically explore the effects on asset markets. Specifically in regards to the markets pricing of risk, and its perception thereof.
 
 \begin{quote}\textit{``
 The countercyclical capital buffer (CCyB) is designed to help counter pro-cyclicality in the financial system... [by] creating buffers that increase the resilience of the banking sector during periods of stress when losses materialise. This will help maintain the supply of credit and dampen the downswing of the financial cycle."}\\
 \hspace{1em}- {European Systemic Risk Board}
 \end{quote}
 
-I contribute by develop theoretical model. In which, systemic risk might arise from explosive fire sales, and raising macroprudential buffers 1) lowers systemic risk and 2) increases price of risk and lowers prices. I then go on to Evaluate effects empirically and find a price effect of increasing macroprudential buffers
+The countercyclical capital buffer, or macroprudential buffer, was introduced in... and the benefits have been quoted to be... [references]. However, there are also worries about prices in the economy, and hence growth.
+
+[In general, banking regulations have been put in place to avert financial crises occurring by reducing liquidity and credit risks, i.e. the direct linkages channel of systemic risk. However, in cases of extreme financial distress, breaching the regulations might have drastic effects on the financial system \citep{CruzLopez2013}, so-called "cliff effects", whereby the regulatory consequences of a measure crossing a threshold causes a violent reaction in financial markets.  For example, price declines could be exacerbated by market participants seeking to sell assets to meet liquidity requirements \citep{Gorton2009}. Alternatively, the demand for collateral could cause an increase in premiums for high-quality assets, creating a cliff effect for borderline assets that might lose their high-quality status during financial downturns \citep{IMF2012}. Thus, while regulations might reduce the chance of a financial crisis, they can add to systemic risk in times when their requirements are breached, through these regulatory cliff effects.]
 
 \begin{quote}\textit{``
 We notice the Risk Councils recommendation to increase the macroprudentiel buffer, even though the loan growth has been low for a while.\\ ...the increased buffer will also hit the small institutions in the country side, where the economy is not growing as much...
@@ -139,43 +144,47 @@ We notice the Risk Councils recommendation to increase the macroprudentiel buffe
 - {Ulrik Nødgaard, CEO Finans Danmark}
 \end{quote}
 
-We identify in the paper how a house price fall can trigger a regulatory cliff effect through three regulatory channels. The first is through an increase in risk weights that reduces the banks' solvency. The second channel is through the inclusion of more exposures to the issuing bank in calculations for large exposure regulations. The final channel is through the Liquidity Coverage Ratio (LCR), where the liquidity haircut attached to covered bonds might increase if their ratings decrease. [The paper goes on to give a quantitative analysis on the risk-weight channel, but the same principle works equally for the other channels.]
+[Explain where these worries come from.] [These seemingly contradictory effects, and more, are what we will look at in more depth, but theoretically and empirically]
 
-Our model shows how regulatory cliff effects can cause banks to act in the same way, at the same time, leading to a fire sale with feedback effects. It further shows how an increased exposure to common liquid assets, increased leverage of the banks in the system, and less liquid assets all add to the vulnerability of the system. Finally we identify the conditions for which the fire sale has no stable solution, meaning an explosive scenario.
+I contribute by developing a theoretical model. In which, systemic risk might arise from explosive fire sales, and raising macroprudential buffers 1) lowers systemic risk and 2) increases price of risk and lowers prices. I then go on to Evaluate effects empirically and find a price effect of increasing macroprudential buffers
+
+
+[We identify in the paper how a house price fall can trigger a regulatory cliff effect through three regulatory channels. The first is through an increase in risk weights that reduces the banks' solvency. The second channel is through the inclusion of more exposures to the issuing bank in calculations for large exposure regulations. The final channel is through the Liquidity Coverage Ratio (LCR), where the liquidity haircut attached to covered bonds might increase if their ratings decrease.] [The paper goes on to give a quantitative analysis on the risk-weight channel, but the same principle works equally for the other channels.]
+
+[Our model shows how regulatory cliff effects can cause banks to act in the same way, at the same time, leading to a fire sale with feedback effects. It further shows how an increased exposure to common liquid assets, increased leverage of the banks in the system, and less liquid assets all add to the vulnerability of the system. Finally we identify the conditions for which the fire sale has no stable solution, meaning an explosive scenario.]
 
 [Talk about importance of direct vs indirect effects, as motivation]
 [Take from my proposal, but shorten. Include quotes]
 It is clear that indirect effects played a key role in the global financial crisis in 2008. In October 2008, the IMF predicted a loss from mortgage backed securities of 500 bn USD. However, the IMF’s estimate of the total loss, taking into account the spillovers into other asset classes, sectors and countries, are a staggering 1400 bn USD (Hellwig 2009).
 
-Using a novel dataset from Danmarks Nationalbank and the Danish FSA, we use the model to give quantitative consequences for a regulatory cliff effect in Denmark, and find that current market measures imply that the circumstances are satisfied for the Danish financial system.
+[Using a novel dataset from Danmarks Nationalbank and the Danish FSA, we use the model to give quantitative consequences for a regulatory cliff effect in Denmark, and find that current market measures imply that the circumstances are satisfied for the Danish financial system.]
 
-Our fire sale model is similar in spirit to citet{greenwood2015} with the added feature that in our case the fire sales are initiated by a regulatory cliff effect. Therefore, the first price fall in our model is an endogenous fire sale effect rather than an exogenous shock to asset prices. Our model looks at solvency rather then leverage, which allows us more applicability as it matches the current financial framework better, and allows us to analyse regulatory cliff effects based on risk weights, which could otherwise not be analysed with a leverage based model. We further deviate from citet{greenwood2015} in allowing for further round sales, essentially including more feedback effects by solving for a new steady state.
 
 [macroprudential policy
 Macroprudential policy paragraph. Macroprudential policy has arisen to address the fact from the crisis of 2009 that even if banks individually seem robust, the system could become unstable.
 However Macroprudential policy remains a scarcely researched area. Some of the most influential works include X, Y and Z. In this paper I address how macroprudential policy can be used to reduce systemic risk. It however requires a change from the current regulatory framework of macroprudential policy to be usable.]
 The counter-cyclical buffer, also called the macroprudential buffer, was first activated by Norway in 2013. Since then 12 countries have announced an activation of this buffer. [Part of Basel III. Implemented in EU as Capital Requirements directive IV]. Macroprudential buffers increase the capital requirements of banks.
 
-[Have a summary as second last paragraph]
+[Talk about why it is a good event. Not at the same time as monetary policy changes. Normally signals a strong economy to increase so not together with bad expectations of economy. Is not a short term decision, so not done because economy is doing badly.]
 
+[Have a summary as second last paragraph]
 
 NB Remember that start of paragraph should introduce. And last sentence should summarise.
 
 [One paragraph setting scene, then introduce contribution and what we do.]
 
-NB Check if LCR regulation is in US.
 
-NB Check if I can get covered bonds for Deutsche bank.
-
-\hl{[Write why these methods are useful for this setup/problem]
+[Write why these methods are useful for this setup/problem]
 	
-	The results are robust to...
-}
+[The results are robust to...]
+
 
 
 \subsection*{Related Literature}
 
 NEW: Optimal time-consistent macroprudential policy JPE 2018
+
+Portugal study
 
 \url{https://libertystreeteconomics.newyorkfed.org/2018/10/regulatory-changes-and-the-cost-of-capital-for-banks.html}
 
@@ -186,31 +195,25 @@ Within 1) He Krishnamurthy. Brunnermeier Sannikov. Pedersen Brunnermeier.
 X also develops theory, but I do Y differently, hence adding Z.
 [Mention where we add to the literature. Add to literature of Financial Intermediation by developing a dynamic model that captures banks behaviour under regulatory requirements (risk weighted Basel II framework) to exogenous shocks. And I add to the literature of banking by identifying regulatory cliff effects, and their potential to trigger a systemic crises. Banking by X, to Financial Intermediation non-linear effects. Regulation(?) by using a risk weighted basel II framework? Systemic Risk? Financial Stability? Banking? SHOULD I JUST PICK ONE? BANKING OR FINANCIAL INTERMEDIATION? SHOULD I SPECIFY THEORY OR EMPIRICS? See Greenwood intro?]
 
+[Include Daniel literature from email "dates"]
 
-\cite{MiltonFriedman1970} once famously argued that the only firm’s social responsibility is to maximize its owners profits. Any activity that does not pursue this very objective is not considered worthy by investors. But what if an increase in social responsibility and sustainability goes hand in hand with value maximization? This paper investigates the relationship between sustainability and financial performance. 
+
+[Our fire sale model is similar in spirit to citet{greenwood2015} with the added feature that in our case the fire sales are initiated by a regulatory cliff effect. Therefore, the first price fall in our model is an endogenous fire sale effect rather than an exogenous shock to asset prices. Our model looks at solvency rather then leverage, which allows us more applicability as it matches the current financial framework better, and allows us to analyse regulatory cliff effects based on risk weights, which could otherwise not be analysed with a leverage based model. We further deviate from citet{greenwood2015} in allowing for further round sales, essentially including more feedback effects by solving for a new steady state.]
+
+%\cite{MiltonFriedman1970} once famously argued that the only firm’s social responsibility is to maximize its owners profits. Any activity that does not pursue this very objective is not considered worthy by investors. But what if an increase in social responsibility and sustainability goes hand in hand with value maximization? This paper investigates the relationship between sustainability and financial performance. 
 
 [Other studies that show ethics has no effect on stock valuation] [Studies that show that it does] [Other studies that look into climate finance] [Other studies that look into sentiment]
+\newline
+\newline
+[To do: Look at PhD awards and ESG paper for inspiration]
 
-The paper is related to two strands of literature: Climate Finance and Sentiment. Climate Finance, and specifically sustainable investments has gained momentum over the past one or two decades. Many claim that it is not only return they are after, but increasingly also want to incorporate other aspects in their investment decisions as, for instance, how social and sustainable firms are. They claim to consider social norms to similar extents as performance. Considering this holds true across different markets and investors, we should observe performance differences according to the degree of sustainability of firms. We define the measure of sustainability through the concept of ESG, a still relatively new concept to assign monetary scores to companies according to their consideration of environmental, social, and governmental factors. The concept of ESG scores has become so popular amongst the investment community that fund managers have long started ESG-only mutual or exchange-traded funds.\footnote{Asset managers like \href{https://www.ishares.com/uk/individual/en/themes/sustainable-investing?switchLocale=y&siteEntryPassthrough=true}{BlackRock}, \href{https://www.jpmorgan.com/country/DK/en/detail/1320566638713}{JPMorgan}, \href{https://www.ubs.com/global/en/asset-management/investment-capabilities/sustainability.html}{UBS}, and many others have long started their own ESG funds, in which they pick particular companies that fulfills their investment agenda. They often refer to them as sustainable and impact investing.} 
+\subsection*{Outline}
 
-Other studies have looked at similar objectives with ambiguous results. Some find a positive relationship between ESG performance and financial performance, whereas other find the opposite or entirely reject the existence of a significant causality. Differences in findings partly root to an unclear definition sustainability. Some of these studies have been conducted on the very same concept of ESG scores, whereas others used the framework of corporate social responsibility (CSR) to link corporates' behavior to performance.
-
-More recent studies, in particular, argue that an increased commitment on social and environmental issues goes hand in hand with positive impacts on firm value and performance. For example, \citet{Dimson2015} review U.S. public companies that engage in environmental, social, and governance concerns and find that commitments come along with positive abnormal returns. Additionally, unsuccessful commitments do not generate significant abnormal returns in either direction. They also present findings showing that successful engagements lead to better accounting performance and increased institutional ownership, suggesting that, in particular, institutions keep a close eye on their investments wider concerns. \citet{Eccles2014} exhibit similar results. They review a sample of 180 firms in the U.S. show that more sustainable firms are more long-term oriented and transparent than their peers. Additionally, they show that high sustainability firms outperform their peers in the long-run. Another study by \citet{Kruger2015} provides evidence on investor’s reactions to events affecting firms’ corporate social responsibility. He finds that negative events triggers a strong negative investor’s reaction and that this reaction is particularly pronounced when these events concern communities and the environment. Other authors, as for instance \citet{Ge2015}, \citet{Fatemi2015}, or \citet{Porter2006} provide additional evidence on positive a relationship between ESG performance and financial performance. Apart from financial performance, literature also suggest out that non-financial performance increases when firms focus commit to more social and environmental sustainability. \citet{Porter1995, Greening2000, Xie2014} refer to, for example, for improved resource productivity, motivated employees, or more customer satisfaction \citep[as cited in][]{Fatemi2018}.
- 
-
-
-Other authors claim that there is no significant relationship between social and environmental sustainability and financial performance. \citet{Alexander1978}, for example, study U.S. firms over the time horizon of 1970 until 1970 and find a low insignificant relationship between social commitment and risk-adjusted returns. Similar findings are presented by \citet{Siegel2000}, arguing that corporate social responsibility has a neutral impact on firm performance and abnormal returns are not significant once returns are risk-adjusted. There is also evidence of no significant relationship provided on a fund-level by, for instance, \citet{Renneboog2008}, \citet{Bauer2005}, or \citet{Hamilton1993}. 
-
-Finally, \citet{Fisher-Vanden2011} and \citet{Boyle1997} both find that social commitment is inversely correlated with financial performance and causes negative abnormal returns. \citet{Fisher-Vanden2011} hypothesizes that it is rather those firms with weak governance standards that engage in environmental initiatives and thereby signal their lack of organizational structure. \citet{Boyle1997}, on the other hand suggest that sustainable engagements will lead to lower cash flows in the future and thus decrease firm value. Evidence on a negative relationship on a fund level is provided \citet{ElGhoul2017} on a fund level, who find that high corporate social responsibility funds perform worse than low funds. They consequently argue that investors thereby must derive non-performance related features out of their engagements when choosing high socially responsibility funds. Coming from another perspective, \citet{Hong2009} have studied 'bad' firms whose business objective revolves around producing and selling alcohol or tobacco, or are involved in gambling. They find that, because investors actively neglect these stocks due to social norms, they have higher expected returns than their peers. Their conclusion is that social norms indeed affect stock prices and returns and investors, as \citet{Hong2009} put it, pay for their discriminatory tastes.
-
-As the literature review suggest, a clear connection between sustainability and financial performance remains yet to be proven with more certainty. We add to the literature by investigating the link between the commitment of social responsibility to firms’ performance from a new perspective. First, we merge the CRSP monthly equity returns with ESG scores from Thomson Reuters, which serve as an indicator for firms’ social commitment. This leaves us with an extensive database that, to our knowledge, has not yet been investigated by any other study. We then form decile portfolios based on previous year ESG scores and apply risk-adjusted factor models to examine financial performance with regards to abnormal returns. Furthermore, we condition the factor models on a bad times indicator and empirically examine changes in responsibility ratings of firms in the spirit of an event study. 
-
-
-[Update later]Section~\ref{sec:model} details the model to be used. Section~\ref{sec:cliffs} describes the regulatory cliff effects and Section~\ref{sec:fireSales} models fire sales. An empirical analysis is conducted in Section~\ref{sec:empiricalAnalysis} followed by discussion in Section~\ref{sec:discussion}, policy recommendations in Section~6 and conclusions in Section~\ref{sec:conclusion}.
+[Update later]Section~\ref{sec:model} details the model to be used. An empirical analysis is conducted in Section~\ref{sec:empiricalAnalysis} followed by discussion in Section~\ref{sec:discussion}, policy recommendations in Section~6 and conclusions in Section~\ref{sec:conclusion}.
 
 %Write more on concept of ESG scores.
 
-\section{Model}
+\section{Model} \label{sec:model}
 
 \subsection*{Setup}
 
@@ -242,6 +245,16 @@ Below first the equilibrium is characterised, and then the solution will be disc
 \footnote{[Make as a equilibrium subsubsection again?]} Let an equilibrium be [characterised by] a price process $p_t$, such that markets clear in each period. I.e. for each time $t$, it will be the case that given the price, intermediary demand $x^I_t$ and household demand $x^H_t$ of the risky asset equals supply $z$. \footnote{(Demand is their optimal demand)} \footnote{[Make a bit more formal as in Zhiguo He?]}
 \end{definition}
 
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1,trim=6cm 15.5cm 1.7cm 5.5cm]{timeline.pdf}
+\caption{Timeline of model}
+\label{fig:timeline}
+\end{figure}
+
+
 \subsection*{Solving the model}
 The model is set up as a dynamic programming problem, and solved by backwards induction. In period 2 the price will trivially be $\delta$, as if it was not, an arbitrage opportunity would exist\footnote{(as a risk-less profit could be achieved)}.
 
@@ -264,6 +277,35 @@ x^I_1 = \begin{cases}
 \end{equation}
 \footnotetext{Notice that shorting is not allowed (Else $-x^I_1 = \frac{W^I_1}{\theta_1}, for p \geq \mu$). WRITE THIS OUT EXPLICITLY.} \footnote{make top less or equal. Else change later that price becomes infinitisimally close to fundamental price}
 \noindent as these positions will maximise $\E_1[W^I_2]$ subject to the capital requirement and no shorting constraint.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.75]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+\node at (5,5) [circle,fill,inner sep=1.5pt]{};
+
+\draw(3,1)--(7,9) node[right]{$x_1^I$};
+
+\draw(1,2)--(9,8) node[right]{$z-x_1^H$};
+
+\draw[dashed](0,5)--(5,5)--(5,0);
+
+\draw[gray,snake=zigzag,->](8,8)-- (5.1,5.1);
+
+\draw[gray,snake=zigzag,->](2,2) -- (4.9,4.9);
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. General case}
+\label{fig:t1pricediscovery}
+\end{figure}
 
 The following propositions describe the equilibrium price under different circumstances.
 
@@ -303,7 +345,53 @@ p_1 = \mu - \gamma\sigma^2 \left(z-\frac{W^I_1}{\theta_1}\right).
 See appendix.\footnote{Have this proposition first, as it is the standard (interior solution)?}
 \end{proof}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.75]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+\node at (4.5,5) [blue, circle,fill,inner sep=1.5pt]{};
+
+\draw[blue](0,4)--(9,6) node[right]{$x_1^I$};
+
+%\draw(0,4) -- (18,2/9*18+4);
+
+%\draw(0,8) -- (18,8);
+
+\draw(0,2)--(9,8) node[right]{$z-x_1^H$};
+
+\draw(0,8) -- (9,8);
+
+
+\node [left] at (0,8) {$\bar{p}_1^* = \mu $};
+
+\node at (0,8) [circle,fill,inner sep=1.5pt]{};
+
+\node [left] at (0,2) {$\underline{p}_1^* = \mu - z\gamma\sigma^2$};
+
+\node at (0,2) [circle,fill,inner sep=1.5pt]{};
+
+\draw[dashed](0,5)--(4.5,5)--(4.5,0);
+
+\draw[gray,snake=zigzag,->](5.5,5.5) -- (9,8);
+
+\draw[gray,snake=zigzag,->](3.9,4.9) --(0.5,3);
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. Explosive fire sales.}
+\label{fig:t1explosiveFS}
+\end{figure}
+
 To see why this is the case consider again first a negative shock. The intermediaries are in breach of their capital requirement as condition \ref{c_inadequateBuffers} holds, and needs to liquidate some assets (Assumption \ref{l_noBluffing}). As condition \ref{c_unstable} does not hold, there will be a new sales amount, that when sold, they are not solvent again. (This may be their total position, at which they close). (there will (may?) be an interior solution). [Show exactly amount sold in proof?]. As this is the only optimal choice for the intermediaries, the equilibrium price will be the price at which the households are content to hold the remainder of the asset. Consider instead a positive shock. Now the intermediaries are able to purchase more, and as condition \ref{c_unstable} does not hold they can only purchase a finite amount, as this is the only optimal choice (as long as this amount is less or equal to the total amount of the risky asset) for the intermediaries, the equilibrium price will be the price, at which, the households are happy to hold the remainder of the asset. Proposition \ref{p_explosiveFiresales} is a special case of this proposition, where the intermediary can afford all ($W^I_1/\theta_1 = z$) or none ($W^I_1/\theta_1 = 0$) of the risky asset. [Write out proposition equation fully.]
+
+
 
 \begin{proposition} \label{p_pricewBuffer}
 If condition \ref{c_unstable} is satisfied, but not \ref{c_inadequateBuffers}, then 
@@ -324,8 +412,6 @@ Sharpe ratios will be $SR = ( \mu - p_1 ) / \sigma \in [0,z\gamma\sigma]$. When 
 [low SR in p0 may indicate that SR can rise by more in p1]
 
 \end{corollary}
-
-
 
 To see why this is the case consider again the intermediaries facing a shock. As their buffer is [more than] large enough, they are able to purchase an additional amount of the risky asset, and in doing so as condition \ref{c_unstable} is satisfied their solvency will improve, and they will actually be able to purchase all of the risky asset. Therefore, as they are risk neutral, the equilibrium price will be infinitesimally close to the fundamental value, as this is the only price where the demands equals the supply.
 
@@ -369,6 +455,7 @@ is the condition for an unstable equilibrium.
 
 To see why this is the case consider how a change in price affects the intermediaries demand capacity. If the price rises by one unit they will be able to purchase $x_0/\theta_1$ units of the risky asset. The same price increase will also decrease the demand of the households by $1/(\gamma \sigma^2)$. And if the demand increase by the intermediaries exceed the demand drop by the households, there will be excess demand, and the price has to adjust further upwards. Further increasing how much the intermediary can purchase. This increasing spiral will increase until the intermediary can purchase all of the asset and the household will want to buy none. A price decrease will also equally spiral out until the intermediary can only own zero of the asset, and the intermediary has to demand all of the asset (for the market to clear). 
 
+
 \begin{condition}[Inadequate buffers] \label{c_inadequateBuffers}
 The buffers will be inadequate (the intermediary will be capital constrained) if 
 \begin{equation}
@@ -407,7 +494,55 @@ And redefining a positive shock to be a negative value shock by introducing $d\b
 \end{equation} 
 \end{proof}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.75]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+%\node at (4.5,5) [circle,fill,inner sep=1.5pt]{};
+
+\draw[black](0,4)--(9,6) node[anchor = north west]{$x_1^I$};
+
+\draw(0,2)--(9,8) node[right]{$z-x_1^H$};
+
+%\draw(0,8) -- (9,8);
+
+
+%\node [left] at (0,8) {$\bar{p}_1^* = \mu $};
+
+%\node at (0,8) [circle,fill,inner sep=1.5pt]{};
+
+%\node [left] at (0,2) {$\underline{p}_1^*$};
+
+%\node at (0,2) [circle,fill,inner sep=1.5pt]{};
+
+\draw[dashed](0,5)--(4.5,5)--(4.5,0);
+
+\draw[gray](0,4)--(9,6) node[anchor = north west]{$x_1^I$};
+\draw(0,5)--(9,7) node[right]{$x_1^{I'}$};
+
+\draw[thick,decorate,decoration={brace,amplitude=3pt}] (4.5,5) -- (0,5) node[pos=0.5,below]{${ES_1}$};
+
+\draw[blue,thick,decorate,decoration={brace,amplitude=3pt}] (0,5) -- (3,5) node[pos=0.5,above]{$\bm{\phi^{x}}$};
+
+\draw(0,5)--(9,7) node[gray,right]{$x_1^{I'}$};
+\draw[gray](0,4)--(9,6) node[anchor = north west]{$x_1^I$};
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. Inadequate buffers.}
+\label{fig:t1unstableEqm}
+\end{figure}
+
 We see that if the buffer (in terms of how many additional units of the risky asset $x$ the intermediaries were able to purchase in period 0), is less than the relative regulatory shock times the amount of the asset owned from period 0 to period 1 ($W_0/\theta_1$) and the expectation shock ($d\bar{\mu}$, where shock is defined to be positive for a negative value shock so $d\bar{\mu} = -d\mu = -(\mu_1-\mu_0)$) times the households demand sensitivity [to the price] [price insensitivity] (the reciprocal of the price impact). So the first term is the change in intermediaries demand capacity from a change in the regulatory requirement and the second term is the change in households demand from the change in the expected dividend size. If the buffer is smaller than these two terms, then the buffers will be inadequate to absorb the shock, and the financial intermediaries will be capital constrained and will need to adjust their capital structure (sell assets) as to not be closed down by the regulator.
+
+
 
 \begin{assumption}[No bluffing] \label{l_noBluffing}
  \footnote{[Maybe make lemma?]} Banks cannot convince the market (other agents) that they will buy something they cannot a priori afford or are allowed to by capital requirements. If this lemma is violated, we get self fulfilling asset prices (Corollary \ref{c_selfFulfilling}).
@@ -420,6 +555,9 @@ If lemma \ref{l_noBluffing} is violated, we can get self-fulfilling asset prices
 [Include price impact corollary?]
 
 [Likelihood of crises here?]
+
+
+
 
 \subsubsection*{Period 0}
 
@@ -445,7 +583,22 @@ As in time 1, the price is then the value p for which $x^I+x^H = z$ (or$x^I= z -
 
 [Show what price will be?] Having gotten the price we can also see
 
-Prop of risk premium / sharpe ratios? This is expected return over volatility $SR = (p_0 - \mu)/ \sigma$. $\lambda = f(p-\mu) = f((W^I)^{-1})$. Do I get a risk premia for regulatory cliff effect???
+\begin{proposition}[Prop of risk premium / sharpe ratios[finish this]
+The risk premium is increasing in buffer size (NB but not linearly).
+This is expected return over volatility $SR = (p_0 - \mu)/ \sigma$. $\lambda = f(p-\mu) = f((W^I)^{-1})$. Do I get a risk premia for regulatory cliff effect???
+\end{proposition}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{./figures/SR0vsTheta0.pdf}
+\caption{Price of risk (Sharpe Ratio) vs buffer size. Shown for $\sigma_x = 0.1, \gamma = 3$. }
+\label{f_probSRvsBuffer}
+\end{figure}
+
+
+\begin{proposition}[[Include something about assets moving from financial intermediaries to households?]]
+
+\end{proposition}
 
 Can I say anything about volatility? Maybe price in period 0 vs 1 vs 2?
 
@@ -465,20 +618,9 @@ We now turn to the effects of the period 0 equilibrium on period 1 outcomes.
 
 [Call results from here?]
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale=.6]{./figures/probFiresale_vs_buffer_smoothed2.pdf}
-\caption{Probability of explosive fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size.\textsuperscript{\color{blue} a}}
-{\small\textsuperscript{{\color{blue} a}} Smoothed through fitting 4th degree polynomial aka Spline.}
-\label{f_probFSvsBuffer}
-\end{figure}
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale=.6]{./figures/SR0vsTheta0.pdf}
-\caption{Price of risk (Sharpe Ratio) vs buffer size. Shown for $\sigma_x = 0.1, \gamma = 3$. }
-\label{f_probFSvsBuffer}
-\end{figure}
+
+
 
 \begin{figure}[h] 
 \centering
@@ -505,8 +647,9 @@ The systemic risk is visible in figure \ref{f_price1vsvolshock} and \ref{f_price
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=.7]{./figures/probFiresale_vs_buffer_smoothed.pdf}
-\caption{Probability of fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size. Smoothed through fitting 4th degree polynomial.}
+\includegraphics[scale=.6]{./figures/probFiresale_vs_buffer_smoothed2.pdf}
+\caption{Probability of explosive fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size.\textsuperscript{\color{blue} a}}
+{\small\textsuperscript{{\color{blue} a}} Smoothed through fitting 4th degree polynomial aka Spline.}
 \label{f_probFSvsBuffer}
 \end{figure}
 
@@ -566,6 +709,491 @@ The (optimal) buffer size is determined in equilibrium by the likelihood and siz
 \end{proposition}
 
 
+
+\section{Empirical Predictions}
+The model yields several testable empirical predictions.
+
+In the time-series, the model predicts that as the regulatory uncertainty increases (or the magnitude of the regulatory cliff effect increases) the banks will react with a larger buffer today.
+We can measure the regulatory uncertainty using the news-based measure developed by X and already used in several papers published in [American Economic Review...].
+
+In the cross-section, the model predicts that if an individual bank faces highler regulatory uncertainty (or the magnitude of the regulatory cliff effect increases), then they will equally respond with a higher buffer (to avoid having to fire-sell). This buffer increase should thus be larger than for other banks, ceteris peribus. This can be tested on Danish data as Nykredit was in such a situation in 2017, considering implementing a risk-weight floor for mortgage loans. In the US sample we can test this on banks that receive a high add-on requirement from the stress-test, and see if they increased their buffer before (this assumes that the bank suspects that they may receive this). (We can also look at banks that receive an operational-risk addon and see if they increase before). Has there been uncertainty of individual banks before?? How can we proxy this?
+
+Things we need to control for in time-series?: asset vol changes (banks assets, proxy with sp500?), fear(VIX)?,
+
+NB don't have to worry of reverse-casuality as increase in buffers in not likely to lead to regulatory uncertainty, if anything then loosening of contraints which is opposite effect. (We also partially control using lagged buffers to implementation of regulation).
+
+\section{Evidence on macroprudential policy effects on asset prices using an event study} \label{sec:empiricalAnalysis}
+
+\subsection{Data and Methodology}
+
+This section outlines how I use relevant data to empirically answer the relevant research questions of this paper. It is outlined as followed. First, we describe the data sample. Second, the event-study methodology is described.
+
+\subsubsection*{Macroprudential Policy}
+The ESRB has documented european countries announcements and implementations of the macroprudential buffer. Which is accessible on their website. The announcements are used in this analysis as they indicate the surprise to the market, the reaction to which is then observed. Additionally as market prices should incorporate expectations of future events, this makes it a sensible measure.
+
+\subsubsection*{Returns}
+
+Returns are calculated on adjusted returns taken from Compustat Global. Compustat global additionally supplies data on firms location, and sector, and even industry group, as according to their Global Industry Classification Standard (GICS). See \url{https://en.wikipedia.org/wiki/Global_Industry_Classification_Standard}. This is useful for our analysis.
+
+The objective of the analysis requires us to combine data on equity returns and macroprudential policy. First, we obtain daily stock returns from the Compustat. It is also possible to obtain daily data points on the number of stocks outstanding and their trading volume, as well as daily high and low prices.
+
+\subsubsection*{Risk-adjusting Returns using the Market Model} \label{sec:eventstudymethod}
+To get the abnormal return, I control for the expected return using the market model. The market return and the risk-free rate are gathered from \href{https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}{Ken French's website}.
+
+A bold comparison of cumulative returns exhibits first insights in how macroprudential buffers return profiles. Secondly, we run the the capital asset pricing model (CAPM), to get abnormal returns \citep[see][]{Sharpe1964,Fama1967}. We thereby follow the regression approach of
+
+
+\begin{equation}
+\label{eq:riskadjustment}
+r_{it} - r_t^f = \alpha_i + \sum_{j=1}^{n} \beta_{ij} f_{jt} + \epsilon_{it},
+\end{equation}
+%CHECK FORMULA!
+
+where $r_{it}$ depicts portfolio's $i$'s return at time $t$. Moreover, $r_t^f$, $\alpha_i$, and $n$ denote the risk-free rate, the abnormal return, and the number of factors. Finally, the $\beta_{j}$, $f_{jt}$ and $\epsilon_{it}$ are the factors, factor loadings and the error term. We run the regressions on both equally-weighted portfolios.
+
+
+We apply the CAPM model to estimate expected returns based on the factor loading 350 days prior to the event. [In prior the example this relates to an estimation period of July 2010 until December 2011.] Our time line looks as follows.
+
+
+\begin{figure}[!htpb]
+	\centering
+	\begin{tikzpicture}
+	
+	\usetikzlibrary{arrows,decorations.pathreplacing}
+	
+	\tikzset{number line/.style={}}
+	
+	\tikzset{
+		brace_top/.style={
+			color=black,
+			decoration={brace},
+			decorate
+		},
+		brace_bottom/.style={
+			color=black,
+			decoration={brace, mirror},
+			decorate
+		}
+	}
+	
+	\draw (0,0) -- (15,0);
+	\foreach \x in {0.8, 7.5, 8.5, 10.5, 14.2}
+	\draw(\x cm,3pt) -- (\x cm, -6pt);
+	\draw (0.8,0) node[above=3pt] {$T_0 = -350$};
+	\draw (7.5,0) node[above=3pt] {$T_1 = -1$};
+	\draw (8.5,0) node[above=3pt] {$0$};
+	\draw (10.5,0) node[above=3pt] {$T_2 = 5$};
+	\draw (14.2,0) node[above=3pt] {$T_3 = 12$};
+	\draw (4,0) node[above=18pt, align=center] {
+		$\left(\mytab{estimation window}\right]$};
+	\draw (9,0) node[above=18pt, align=center] {
+		$\left(\mytab{event window}\right]$};
+	\draw (12.3,0) node[above=18pt, align=center] {
+		$\left(\mytab{post-event window}\right]$};
+	
+	\node (3,-0.5) at (3,-0.5) {};
+	\node (7.5,-0.5) at (7.5,-0.5) {};
+	
+	\end{tikzpicture}
+\end{figure}
+
+
+We use the calculated expected returns and compare them to actually realized returns. We then compute the differences, measured by abnormal returns, and cumulate them over the following days. As in in \citet{Campbell1997}, we assume the market model to hold true, meaning that for any security $i$, we expect a return of 
+
+\begin{equation}
+R_{it} = \alpha_i + \beta_i  R_{mt} + \epsilon_{it},
+\end{equation}
+
+where $R_{it}$ and $R_{mt}$ are the excess returns on firm $i$ and the markets excess return, both at time $t$. Furthermore, $E[\epsilon_{it}] = 0$ and $Var[\epsilon_{it}] = \sigma^2_{\epsilon_{i}}$. The difference between the expected and the actual return then depicts the abnormal return for a given month. We cumulate abnormal returns over a time horizon of 5 months and derive the relevant test statistics of $J_1$ and $J_2$.
+
+%Finally, we vary the event window to check for robustness.
+
+
+
+\subsection{Summary Statistics}
+
+
+
+\subsection{Results (Evidence from event study on equity returns)}
+
+The results show that equity prices fall as an increase to the macroprudential buffer is announced (Figures \ref{fig:eventRaw} and \ref{fig:eventAbnCum}). However prices rise after an announcement of sustaining the macroprudential buffer at its current level (Figures \ref{fig:eventRawNoEvent} and \ref{fig:eventAbnNoEvent}). This is consistent with a pre-announcement risk-premium, as well as the price of risk increasing as macroprudential buffers are increased.
+
+When considering who is affected by an increase in the macroprudential buffer, we see from figure \ref{fig:eventAbnNoEvent} that non-bank finance firms are hit the hardest, followed by other firms, and banks are hit the least. This is in contrast with no-events where we now see banks having the smallest increase, followed by non-bank finance firms, and others having the largest increase. This is consistent with a theory where non-bank finance firms invest in equity by borrowing from banks. As banks have to raise their capital level, one way they can do so is to reduce lending to non-bank finance firms, and they hence have to reduce their balance sheets by selling stocks of "other" firms at a reduced price, to make up for the fact that new agents with a higher risk preference needs to be the new owners. 
+
+Further figures show splits by all industries and all sector groups, as well as bank vs non-bank, and finance vs non-finance, for events and no-events.
+
+[The empirical analysis consists of two major components. First, we risk-adjust returns of our ESG decile portfolios through the application of factor-models. We further condition on good and bad in the economy and thereby split abnormal returns in different economic environments. We then attempt to test return differences in high and low ESG portfolios against other explanatory variables. 
+
+Secondly, we review changes in ESG scores and what they mean for the performance of firms. Specifically, we apply an event-study approach to calculate cumulative abnormal returns after changes in scores.]
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retraw.pdf}
+	\caption{Individual Raw Returns - Event}
+	\label{fig:eventRaw}
+	\fnote{Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retrawNoEvent.pdf}
+	\caption{Individual Raw Returns - No Event}
+	\label{fig:eventRawNoEvent}	
+	\fnote{No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabn.pdf}
+	\caption{Individual Abnormal Returns - Event}
+	\label{fig:eventAbn}
+	\fnote{Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabnNoEvent.pdf}
+	\caption{Individual Abnormal Returns - No Event}
+	\label{fig:eventAbnNoEvent}
+	\fnote{No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncum.pdf}
+	\caption{Cumulative Abnormal Returns - Event}
+	\label{fig:eventAbnCum}
+	\fnote{Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - No Event}
+	\label{fig:eventAbnCumNoEvent}
+	\fnote{Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumType.pdf}
+	\caption{Cumulative Abnormal Returns - Bank and non-bank finance split - Event}
+	\label{fig:eventAbnType}
+	\fnote{True means in bank industry group, Non-bank fin means in an industry sector group, which is not banking according to the the Global Industry Classification Standard, and all else are in other. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumTypeNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Bank and non-bank finance split - No Event}
+	\label{fig:eventAbnNoEventSplit}
+	\fnote{True means in bank industry group, Non-bank fin means in an industry sector group, which is not banking according to the the Global Industry Classification Standard, and all else are in other. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitSplit.pdf}
+	\caption{Cumulative Abnormal Returns - Split by industry group - Event}
+	\label{fig:eventAbnCumSplitSplit}
+	\fnote{Split by industry group according to the the Global Industry Classification Standard. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitSplitNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Split by industry group - No Event}
+	\label{fig:eventAbnCumSplitSplitNoEvent}
+	\fnote{Split by industry group according to the the Global Industry Classification Standard. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabnSplit.pdf}
+	\caption{Individual Abnormal Returns - Split by sector - Event}
+	\label{fig:eventAbnSplit}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabnSplitNoEvent.pdf}
+	\caption{Individual Abnormal Returns - Split by sector - No Event}
+	\label{fig:eventAbnSplitNoEvent}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplit.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - Event}
+	\label{fig:eventAbnCumSplit}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - No Event}
+	\label{fig:eventAbnCumSplitNoEvent}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure} 
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitShade.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - Event}
+	\label{fig:eventAbnCumSplitShade}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitNoEventShade.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - No Event}
+	\label{fig:eventAbnCumSplitShadeNoEvent}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumBank.pdf}
+	\caption{Cumulative Abnormal Returns - Bank split - Event}
+	\label{fig:eventAbnCumBank}
+	\fnote{True means in bank industry group according to the the Global Industry Classification Standard, else false. Cumulated using sums. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumBankNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Bank split - No Event}
+	\label{fig:eventAbnCumBankNoEvent}
+	\fnote{True means in bank industry group according to the the Global Industry Classification Standard, else false. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumFin.pdf}
+	\caption{Cumulative Abnormal Returns - Finance split from rest - Event}
+	\label{fig:eventAbnCumFin}
+	\fnote{True means in finance sector according to the the Global Industry Classification Standard, else false. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumFinNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Finance split from rest - No Event}
+	\label{fig:eventAbnCumFinNoEvent}
+	\fnote{True means in finance sector according to the the Global Industry Classification Standard, else false. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+
+\subsection{Robustness Checks}
+
+
+Robust to computing CAR using cumulative product instead of cumulative sums, as the results look almost identical, as can be seen from figure \ref{fig:eventAbnCump}.
+
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncum.pdf}
+	\caption{Cumulative Abnormal Returns - Event}
+	\label{fig:eventAbnCump}
+	\fnote{Cumulated using products. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\subsection{Further Implications}
+
+\section{Evidence from Credit Default Swap prices}
+We now look at credit default swap prices instead...
+
+\subsection{Data and Methodology}
+Credit default swap (CDS) data is taken from markit which collects spreads on traded credit default swap contracts. They cover contracts on debt issued from all over the world [X different countries], including firms from various European Countries and are thus an interesting data source to test the empirical prediction 3, that systemic risk decreases as macroprudential buffers are increased. The dataset also includes a sector for each firm, and sector groups, such as whether the firm is a bank, could potentially be added in the future.
+
+We also use the event study methodology described in section \ref{sec:eventstudymethod}.
+
+\subsection{Results}
+The results from the credit default swap study, are less obvious. The risk seems to be higher when macroprudential buffers are announced to be increased (Figure \ref{fig:eventCDS}) versus no-change (Figure \ref{fig:eventCDSNoEvent}), and fall after the announcement, especially for financials (Figure \ref{fig:eventCDSFin}). Basic materials seems to be the most sensitive falling a lot at increases and almost straight for no-changes (Figure \ref{fig:eventCDSSplitwMat} and \ref{fig:eventCDSSplitNoEvent}). 
+
+When split into finance firms and no finance firms the risk for finance firms seems to fall when an increase is announced, and stay the same when no-changes are announced, as shown in figures \ref{fig:eventCDSFin} and \ref{fig:eventCDSNoEvent}.
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadCDS.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDS}
+	\fnote{Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadCDSNoEvent.pdf}
+	\caption{Credit default swap spreads - No Event}
+	\label{fig:eventCDSNoEvent}
+	\fnote{No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadFinCDS.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDSFin}
+	\fnote{Split whether firm is a financial firm according to Markit sectors. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadFinNoEventCDS.pdf}
+	\caption{Credit default swap spreads - No Event}
+	\label{fig:eventCDSFinNoEvent}
+	\fnote{Split whether firm is a financial firm according to Markit sectors. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadSplitCDS.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDSSplit}
+	\fnote{Split according to their Markit sector. Basic materials sector not included. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadSplitCDSwMat.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDSSplitwMat}
+	\fnote{Split according to their Markit sector. Basic materials sector included. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadSplitNoEventCDS.pdf}
+	\caption{Credit default swap spreads - No Event}
+	\label{fig:eventCDSSplitNoEvent}
+	\fnote{Split according to their Markit sector. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\section{Evidence from Bond prices}
+To come...
+[Using eurofidai]
+
+\section{Conclusion}
+[This paper shows that ESG has become a factor that influences asset returns in good times i.e. investors do well, before they do good. Furthermore large drops in ESG, leads to an initial price drop and future increases in return. In the future it would be interesting to get more precise announcement times of the ESG scores to more cleanly isolate the ESG effects, from other correlated factors. It would also be interesting to look at whether the effects generally increased over time, as there has become more public interest. Looking at bonds and other markets would also be of interest, to see if this is an affect that holds there too.]
+
+
+\clearpage
+\bibliography{bibliography}
+
+\newpage
+\begin{appendices}
+
+
+\section{Model}
+
+\subsection{Figures}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{./figures/probFiresale_vs_buffer_smoothed.pdf}
+\caption{Probability of fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size. Smoothed through fitting 4th degree polynomial.}
+\label{f_probFSvsBufferAppendix}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.4]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+\node at (5,5) [circle,fill,inner sep=1.5pt]{};
+
+\draw(3,1)--(7,9) node[right]{$x_1^I$};
+
+\draw(1,2)--(9,8) node[right]{$z-x_1^H$};
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. Clean version}
+\label{fig:t1pricediscClean}
+\end{figure}
+
+\newpage
+\subsection{Unused text}
+
+\begin{definition} (Regulatory cliff effect).
+Let a regulatory cliff effect be an exogenous change at time 1 in the capital requirement $\theta_0$ of $\Delta \theta$, such that $\theta_1 = \theta_0 + \Delta \theta$. 
+\end{definition}
+
+\begin{definition}
+Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
+\end{definition}
+
+\newpage
+
 CALIBRATION\\
 We set fundamental value and amount such that even if intermediaries sell everything, the price is positive.\\
 
@@ -609,72 +1237,6 @@ p_1 &= \left[\mu - \gamma\sigma^2 \left(z-\frac{W_0 - p_0x_0}{\theta_1}\right)\r
 \end{proof}
 
 \newpage
-CHECKLIST
-
-\begin{itemize}
-\item Definition 1: \textbf{Regulatory cliff effect.} Formally let a regulatory cliff effect be an exogenous change at time t in the capital requirement $\theta$ of $\Delta \theta_t$. 
-
-\item Definition 2: \textbf{Systemic risk.} Formally let systemic risk be the likelyhood of a state characterised by the holdings of the banks being zero ($x^B = 0$). Or more generally, by a state of the world with low intermediary wealth $W^I$ and high risk-premia $\lambda_t$.
-
-\item Proposition 1. Systemic risk is decreasing in the size of the buffer.
-
-\item Proposition 2. The (optimal) buffer size is determined in equilibrium by the likelihood and size of the regulatory cliff effect and the volatility of the asset and .... 
-(Prob fire sale and/or size of optimal buffer)
-
-\item Lemma 1. For systemic risk to arise condition 1 and 2 needs to be satisfied.
-
-\item Condition 1. Explosive fire sale condition. (Unstable equilibrium condition). Formally $\frac{\delta x}{p} > \frac{\delta z-y}{p}$.(Write this out explicitly).
-
-\item Condition 2. Inadequate buffer condition. absorbtion capacity $<$ dx or dy.
-
-\item Corollary 1. When volatility falls, systemic risk rises. (counter-intuitively).
-
-\item Definition 3. Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
-
-\item Corollary 2. There is a trade-off between lowering systemic risk and market efficiency (alternatively economic growth). This is seen if you regulate/introduce a counter-cyclical buffer in period 0 that you can remove in period 1.
-
-\item Assumption 1/Lemma 2. Banks cannot convince the market (other agents) that they will buy something they cannot a priori afford or are allowed to by capital requirements. (Corollary: If this is violated, we can get self-fulfilling asset prices ie get to an equilibrium with higher prices from the lower, just by having the intention to buy (ie being confident). Perhaps by households/the economy having confidence in banks, can lead to this higher equilibrium (makes it possible, and since it is beneficial for the intermediaries, will lead to it).). 
-
-\item Testable prediction 1. When the buffer is low, systemic risk is high.
-
-\item Testable prediction 2. When volatility is low, systemic risk is high. Ie Gormsen and Skov (2018, wp). Higher moment risk.
-
-\item Contribution 1. I formalise regulatory cliff effects.
-
-\item Contribution 2. I identify them in current Basel III regulation. 
-
-\item Contribution 3. I formalise the conditions for systemic risk and show that these may be satisfied for several economies, such as the Danish financial system.
-
-\item Contribution 4. I formalise the role of counter-cyclical buffers in the prevention of systemic risk. 
-
-\item Contribution 5. I empircally show a relationship between buffers and systemic risk.
-
-\end{itemize}
-
-NB in paper have period 0 description be before period 1, before period 2?.
-
-NB Should I have conditional variables always have time subscript?
-
-NB Focus on macro-prud i teori
-
-NB Put section headings in middle of page
-
-NB Include price impact corollary?
-
-NB Don't number equations in props etc.
-
-NB Put proposition 1-3 together? (all the p0 ones)
-
-\newpage
-\begin{definition} (Regulatory cliff effect).
-Let a regulatory cliff effect be an exogenous change at time 1 in the capital requirement $\theta_0$ of $\Delta \theta$, such that $\theta_1 = \theta_0 + \Delta \theta$. 
-\end{definition}
-
-\begin{definition}
-Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
-\end{definition}
-
-\newpage
 OLD AFTER THIS
 Corrolary 1. When are there explosive fire sales.
 
@@ -703,12 +1265,24 @@ The risky asset evolves as an AR(1)\footnote{Autoregressive process of order 1} 
 The riskless asset is without loss of generality normalised to yield a return of 0.
 
 
+\section{test of TikzDevice in R to produce graphs in R in tikz for latex}
+It is not bad... But probably not necessary
+\begin{figure}%[!htbp]
+	\centering
+	%\label{fig:eventRaw}
+	%\vspace{-1cm}
+	%\input{testTikzDevice.tex}
+	\caption{redo in R if we want this}
+	\fnote{...}
+\end{figure}
+
 
 \section*{t = 2}
 
 In period 2, the price $p_2$ is trivially $\tilde{\nu}_2$ as if it was not a riskless profit could be made by either buying or selling the asset. Hence, in period 1 the pension firms final wealth is given by $W_2^P = W_1^P + (\tilde{\nu} - p_1)y_1$, where $y_t$ is the pension firms ownership at period $t$.\footnote{Here we have used the fact that $p_2 = \tilde{\nu}$}
 
 \section*{t = 1}
+
 In period 1, the utility maximising strategy for the pension firms is found by maximising their utility function with respect to $y_1$, yielding the following optimal portfolio choice,
 \begin{equation}
 y_1 = \frac{\tilde{\nu} - p_1}{\gamma \sigma^2}.
@@ -789,239 +1363,49 @@ Now solve for $p_0$...
 
 And for the insolvent case we have that...
 
-\section{Empirical Predictions}
-The model yields several testable empirical predictions.
-
-In the time-series, the model predicts that as the regulatory uncertainty increases (or the magnitude of the regulatory cliff effect increases) the banks will react with a larger buffer today.
-We can measure the regulatory uncertainty using the news-based measure developed by X and already used in several papers published in [American Economic Review...].
-
-In the cross-section, the model predicts that if an individual bank faces highler regulatory uncertainty (or the magnitude of the regulatory cliff effect increases), then they will equally respond with a higher buffer (to avoid having to fire-sell). This buffer increase should thus be larger than for other banks, ceteris peribus. This can be tested on Danish data as Nykredit was in such a situation in 2017, considering implementing a risk-weight floor for mortgage loans. In the US sample we can test this on banks that receive a high add-on requirement from the stress-test, and see if they increased their buffer before (this assumes that the bank suspects that they may receive this). (We can also look at banks that receive an operational-risk addon and see if they increase before). Has there been uncertainty of individual banks before?? How can we proxy this?
-
-Things we need to control for in time-series?: asset vol changes (banks assets, proxy with sp500?), fear(VIX)?,
-
-NB don't have to worry of reverse-casuality as increase in buffers in not likely to lead to regulatory uncertainty, if anything then loosening of contraints which is opposite effect. (We also partially control using lagged buffers to implementation of regulation).
-
-\section{Data and Methodology}
-
-This section outlines how I use relevant data to empirically answer the relevant research questions of this paper. It is outlined as followed. First, we describe the data sample. Second, the event-study methodology is described.
-
-\subsubsection*{[Returns]}
-
-[The objective of the analysis requires us to combine data on equity returns and sustainability. First, we obtain monthly stock returns from the Center for Research in Security Prices (CRSP). We also obatin monthly data points on the number of stocks and according share price to compute company values.]
-
-\subsubsection*{Equity Prices}
-[We download yearly ESG score data from Thomson Reuters, an equal-weighted rating on companies' sustainability focuses with regards to economic, environmental, social and corporate governance pillars (referred to as the \textit{ASSET4's} pillar). In particular, the ESG score is a measure from 0 to 100. A low score suggests that a given company behaves poorly with regards to sustainability, and vice versa. The higher the company score, the more sustainable it is with regards to the three pillars.\footnote{The interested readers can find a detailed description on how Thomson Retuers determines their ESG scores \href{http://www.esade.edu/itemsweb/biblioteca/bbdd/inbbdd/archivos/Thomson_Reuters_ESG_Scores.pdf}{here}.} We merge the return data from CRSP with the ESG data according to their CUSIP codes. As they differ in time instances, ESG data points are the same throughout the every month of a single year and are updated only once after each year. ESG scores are available from 2002 until today (2017), which therefore defines our sample period.]
-
-\subsubsection*{Market Model}
-To get the abnormal return, I control for the expected return using the market model. The market return and the risk-free rate are gathered from \href{https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}{Ken French's website}.
-
-\subsection{Summary Statistics}
-
-We begin by investigating the ESG data set in greater detail. Table~\ref{tab:descriptive} exhibits distribution statistics and developments in ESG scores over time. In the first year of the sample period, 2002, a total number of 573 firms in the sample list an ESG score. This number significantly increases to 2,701 firms in the final year of the sample, 2016. The distribution of ESG scores remains relatively stable over time with a mean score in between approximately 40 to 60. Scores on the very low end as well as on the high end are found.
-
-Figure~\ref{fig:esg_distribution} in Appendix~\ref{app:esgscores} plots ESG scores over all scores available and across companies' yearly averages. It is striking many scores are found in the upper and lower score distribution. This suggests that a company would rather exhibit a low score than not having one at all despite the fact that a low score implies low sustainability.
-
-\begin{table}[!htbp] \centering 
-	\caption{ESG descriptive data}
-	\fnote{The table covers the descriptive statistics of the ESG data set used in the analysis. The minimum, quartiles, maximum and standard deviations are calculated (equally-weighted) over all companies exhibiting an ESG score for a given year. It ranges from 573 companies that excibit an ESG score in 2002 up to 2,701 in 2016. The distribution estimates remain relatively stable across the years except for the last two years of 2015 and 2016.}
-	\label{tab:descriptive} 
-	\begin{tabular*}{\textwidth}{@{\extracolsep{5pt}} ccccccccc} 
-		\\[-1.8ex]\hline 
-		\hline \\[-1.8ex] 
-		& \# of firms & Min & 1. Quartile & Median & Mean & 3. Quartile & Max & Std \\ 
-		\hline \\[-1.8ex] 
-		2002 & $573$ & $3.26$ & $21.15$ & $42.29$ & $48.78$ & $79$ & $98.72$ & $30.73$ \\ 
-		2003 & $583$ & $3.80$ & $20.54$ & $42.95$ & $48.89$ & $78.60$ & $98.68$ & $30.54$ \\ 
-		2004 & $805$ & $3.74$ & $31.21$ & $55.46$ & $56.33$ & $84.40$ & $98.38$ & $28.17$ \\ 
-		2005 & $924$ & $5.44$ & $33.01$ & $56.55$ & $58.05$ & $86.25$ & $98.49$ & $28.36$ \\ 
-		2006 & $917$ & $4.25$ & $32.82$ & $56.59$ & $57.81$ & $86.71$ & $98.25$ & $28.45$ \\ 
-		2007 & $948$ & $3.88$ & $31.54$ & $59.73$ & $58.31$ & $86.72$ & $97.30$ & $28.38$ \\ 
-		2008 & $1,150$ & $4.32$ & $26.96$ & $51.69$ & $54.53$ & $85.76$ & $97.50$ & $29.55$ \\ 
-		2009 & $1,287$ & $3.54$ & $27.23$ & $49.84$ & $54$ & $84.89$ & $97.46$ & $29.69$ \\ 
-		2010 & $1,321$ & $4.40$ & $30.22$ & $54.80$ & $57.01$ & $86.90$ & $97.10$ & $28.63$ \\ 
-		2011 & $1,310$ & $4.73$ & $28.82$ & $58.55$ & $57.24$ & $86.98$ & $96.60$ & $29.01$ \\ 
-		2012 & $1,310$ & $4.28$ & $26.95$ & $54.91$ & $55.31$ & $85.88$ & $96.80$ & $29.51$ \\ 
-		2013 & $1,326$ & $4.50$ & $28.76$ & $55.39$ & $56.44$ & $86.74$ & $96.95$ & $29.32$ \\ 
-		2014 & $1,330$ & $3$ & $31.50$ & $58.69$ & $57.54$ & $86.04$ & $97.11$ & $28.69$ \\ 
-		2015 & $1,972$ & $4.59$ & $15.03$ & $44.07$ & $48.10$ & $81.95$ & $96.59$ & $32.26$ \\ 
-		2016 & $2,701$ & $4.84$ & $15.47$ & $27.25$ & $43.34$ & $78.37$ & $96.43$ & $31.97$ \\ 
-		\hline \\[-1.8ex] 
-	\end{tabular*} 
-\end{table} 
-
-Out of 57 firms that were part of the highest decile ESG scores in 2002, a significant number of 33 were also part of this portfolio in the end of the sample, suggesting that ESG scores are sticky in the top decile, see Table~\ref{tab:high_esg_companies} in Appendix~\ref{app:esgscores}. Interestingly, also firms that one would think are not part of that group, as for example British American Tobacco PLC or Occidental Petroleum Corporation, are members of the high profile ESG group. This suggests that not the objective of the firm matters but instead how well the criteria to obtain a high score are fulfilled. Though this procedure seems rather arbitrary, it proves to allow every firm to obtain a high score regardless of their business model.
-
-For the empirical analysis in the next chapter, only ESG score firms are taken into account. The total number of firms in every is thereby identical to the number of firms in Table~\ref{tab:descriptive}. This also implies that the cross-section's total number of firms in every portfolio rises significantly over time. Whereas there are only 57 firms in each decile portfolio in 2003, there is a total number of 270 firms in each decile portfolio in the year of 2017.
-
-
-\subsection{Risk-adjusting Returns}
-
-A bold comparison of cumulative returns exhibits first insights in how ESG scores impact return profiles. Secondly, we run the the capital asset pricing model (CAPM), Fama-French three-factor, the Carhart four-factor, and the Fama-French five factor model on the portfolios to risk-adjust returns \citep[see][]{Sharpe1964,Fama1992,Carhart1997,Fama2015}. We thereby follow the regression approach of
-
-
-\begin{equation}
-\label{eq:riskadjustment}
-r_{it} - r_t^f = \alpha_i + \sum_{j=1}^{n} \beta_{ij} f_{jt} + \epsilon_{it},
-\end{equation}
-%CHECK FORMULA!
-
-where $r_{it}$ depicts portfolio's $i$'s return at time $t$. Moreover, $r_t^f$, $\alpha_i$, and $n$ denote the risk-free rate, the abnormal return, and the number of factors. Finally, the $\beta_{j}$, $f_{jt}$ and $\epsilon_{it}$ are the factors, factor loadings and the error term. We run the regressions on both equally-weighted portfolios.
-
-Secondly, we are interested in whether high and low ESG portfolios react different under varying economic environments. We introduce the condition of good and bad times. We split $\alpha_i$ from equation~\eqref{eq:riskadjustment} into two abnormal return coefficients \{$\alpha^0$, $\alpha^B$\} by introducing a binary variable that indicates whether we are in good or bad times. We compute 
-
-\begin{equation}
-\label{eq:goodandbadtimes}
-r_{it} - r_t^f = 
-	\underbrace{\alpha_i^{G} G_t}_{\substack{Abnormal\\Return~in\\Good~Times}} + 
-	\underbrace{\alpha_i^{B} B_t}_{\substack{Abnormal\\Return~in\\Bad~Times}}  
-	+ \sum_{j=1}^{n} \beta_{ij} f_{jt} + \epsilon_{it},
-\end{equation}
-
-where $G_t$ equals 1 in good times and 0 otherwise. $B_t$, on the other hand, equals 1 in bad times and 0 otherwise. This means that the factor loadings of $\alpha_i^{G}$ and $\alpha_i^{B}$ capture the abnormal performance for every decile portfolio $i$ according to good and bad times. The conditional factor models imply that $\alpha^G = 0$ and $\alpha^B = 0$ \citep[see, for example,][for similar applications]{Ferson2009, Christopherson1998}.
-
-
-
-Finally, we are interested if there is a causality between fluctuations in ESG scores and equity returns. The hypothesis is that the ESG score is seen by investors as an additional source of risk and that volatility in that score is punished with lower cumulative abnormal returns. We follow an approach by \citet{Campbell1997}.
-
-First, we calculate changes in the ESG scores from one year to another, meaning that we define $\Delta ESG = ESG_{t-2} - ESG_{t-1}$, where $t$ is measured in years. We assume that investors do not know of the ESG score of the current year until the very last day of this particular year. If $\Delta ESG$ is larger (smaller) than the threshold of $X \in \{ -40, -35, ..., 35, 40\}$, it will be be part of the event study's sample. We assume that investors do not have knowledge of the ESG score in the current year but only when the year ends, so  we are interested in the returns after the change occurred. For example, assume that firm A has an ESG score of 80 in year 2010 and of 45 in year 2011. We assume that the score of 45 for year of 2011 was made public in December of 2011 and we are then then interested in the returns in the beginning of 2012 as investors do not know the ESG score of 2011 until the end of the year.
-
-We apply the CAPM model to estimate expected returns based on the factor loading 18 months prior to the new year. In prior the example this relates to an estimation period of July 2010 until December 2011. Our time line looks as follows.
-
-
-
-\begin{figure}[!htpb]
-	\centering
-	\begin{tikzpicture}
-	
-	\usetikzlibrary{arrows,decorations.pathreplacing}
-	
-	\tikzset{number line/.style={}}
-	
-	\tikzset{
-		brace_top/.style={
-			color=black,
-			decoration={brace},
-			decorate
-		},
-		brace_bottom/.style={
-			color=black,
-			decoration={brace, mirror},
-			decorate
-		}
-	}
-	
-	\draw (0,0) -- (15,0);
-	\foreach \x in {0.8, 3, 7.5, 8.5, 10.5, 14.2}
-	\draw(\x cm,3pt) -- (\x cm, -6pt);
-	\draw (0.8,0) node[above=3pt] {$T_0 = -18$};
-	\draw (3,0) node[above=3pt] {$T = -13$};
-	\draw (7.5,0) node[above=3pt] {$T_1 = -1$};
-	\draw (8.5,0) node[above=3pt] {$0$};
-	\draw (10.5,0) node[above=3pt] {$T_2 = 5$};
-	\draw (14.2,0) node[above=3pt] {$T_3 = 12$};
-	\draw (4,0) node[above=18pt, align=center] {
-		$\left(\mytab{estimation window}\right]$};
-	\draw (9,0) node[above=18pt, align=center] {
-		$\left(\mytab{event window}\right]$};
-	\draw (12.3,0) node[above=18pt, align=center] {
-		$\left(\mytab{post-event window}\right]$};
-	
-	\node (3,-0.5) at (3,-0.5) {};
-	\node (7.5,-0.5) at (7.5,-0.5) {};
-	\draw [brace_bottom] (3,-0.5) -- node [below=3pt, pos=0.5] {\mytab{$\Delta$ESG \\ above threshold}} (7.5,-0.5);
-	
-	\end{tikzpicture}
-\end{figure}
-
-
-We use the calculated expected returns and compare them to actually realized returns. We then compute the differences, measured by abnormal returns, and cumulate them over a time horizon of 5 months. As in in \citet{Campbell1997}, we assume the market model to hold true, meaning that for any security $i$, we expect a return of 
-
-\begin{equation}
-R_{it} = \alpha_i + \beta_i  R_{mt} + \epsilon_{it},
-\end{equation}
-
-where $R_{it}$ and $R_{mt}$ are the excess returns on firm $i$ and the markets excess return, both at time $t$. Furthermore, $E[\epsilon_{it}] = 0$ and $Var[\epsilon_{it}] = \sigma^2_{\epsilon_{i}}$. The difference between the expected and the actual return then depicts the abnormal return for a given month. We cumulate abnormal returns over a time horizon of 5 months and derive the relevant test statistics of $J_1$ and $J_2$.
-
-%Finally, we vary the event window to check for robustness.
-
-
-
-\section{Results}
-
-
-In this section, we empirically investigate the relationship between ESG scores and equity returns. The chapters exhibit results of computed portfolios in good and bad times. Furthermore, we adjust for risk through multi-factor models, and investigate volatility in ESG scores and its implications on returns.
-
-\subsection{Empirical Analysis}
-
-The empirical analysis consists of two major components. First, we risk-adjust returns of our ESG decile portfolios through the application of factor-models. We further condition on good and bad in the economy and thereby split abnormal returns in different economic environments. We then attempt to test return differences in high and low ESG portfolios against other explanatory variables. 
-
-Secondly, we review changes in ESG scores and what they mean for the performance of firms. Specifically, we apply an event-study approach to calculate cumulative abnormal returns after changes in scores.
-
-
-\subsubsection{Risk-adjusting returns}
-
-We construct 10 equally-weighted decile portfolios and risk-adjust through four risk-factor models to test for abnormal returns. The results are displayed in Table~\ref{tab:riskadjustments}. We report excess returns, alphas under the CAPM, 3-factor, 4-factor, 5-factor model as well as monthly volatility and Sharpe ratio estimates.
-
-The findings mostly suggest no significant relationship between sustainability as measured in ESG and returns. However, there is some evidence that portfolios to the extremes (high and low ESG firms) tend to outperform others. Also, the long-short portfolio (LS) exhibits a negative significant return under the 4- and 5-factor model, implying that it is unprofitable to invest (go long) in high ESG firms and short low ESG firms. Instead, the opposite would have earned positive abnormal returns in the investigated time horizon. Doing so would have yielded a significant abnormal monthly return of 0.244\% under the 4-factor model and 0.309\% under the 5-factor model. 
-
-\begin{table}[!htbp] \centering 
-	\caption{Risk-adjusted US Equity Returns}
-	\fnote{We construct equally-weighted decile portfolios based on previous year ESG scores and adjust them in the beginning of each calender year. P1 (P10) depicts the high (low) ESG score portfolio. LS is a time series of returns that goes long P1 and shorts P10. The returns of the equally-weighted ESG portfolios are risk-adjusted through the application of the CAPM, 3-factor, 4-factor, and 5-factor models. We further disclose monthly excess returns, volatility and Sharpe ratio estimates. $t-values$ test if the estimated returns are significantly different from zero and bold numbers signal significance to the 10\% level or less.} 
-	\label{tab:riskadjustments} 
-	\resizebox{\textwidth}{!}{\begin{tabular}{@{\extracolsep{5pt}} lccccccccccc} 
-			\\[-1.8ex]\hline 
-			\hline \\[-1.8ex] 
-			& P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & LS \\ 
-			\hline \\[-1.8ex] 
-			Excess Return & \textbf{1.004} & \textbf{1.126} & \textbf{ 1.105} & \textbf{1.102} & \textbf{1.014} & \textbf{0.947} & \textbf{0.938} & \textbf{1.166} & \textbf{1.128} & \textbf{1.318} & \textbf{-0.410} \\ 
-			t-value & 2.991 & 3.419 & 2.994 & 2.763 & 2.649 & 2.469 & 2.473 & 2.778 & 2.709 & 3.021 & -2.313 \\[2.5ex] 
-			
-			CAPM alpha & 0.103 & \textbf{0.256} & 0.140 & 0.049 & 0.003 & -0.060 & -0.060 & 0.085 & 0.056 & 0.203 & -0.198 \\ 
-			t-value & 1.192 & 2.489 & 1.111 & 0.391 & 0.027 & -0.480 & -0.495 & 0.533 & 0.354 & 1.172 & -1.211 \\[2.5ex] 
-			
-			3-factor alpha & 0.108 & \textbf{0.263} & 0.154 & 0.054 & 0.010 & -0.057 & -0.055 & 0.095 & 0.062 & 0.210 & -0.202 \\ 
-			t-value & 1.247 & 2.563 & 1.267 & 0.466 & 0.093 & -0.512 & -0.526 & 0.707 & 0.450 & 1.355 & -1.431 \\[2.5ex]  
-			
-			4-factor alpha & 0.126 & \textbf{0.289} & \textbf{0.200 }& 0.097 & 0.053 & -0.014 & -0.016 & 0.156 & 0.110 & \textbf{0.272} & \textbf{-0.244} \\ 
-			t-value & 1.517 & 2.965 & 1.895 & 0.951 & 0.584 & -0.145 & -0.177 & 1.421 & 0.895 & 2.029 & -1.869 \\[2.5ex]  
-			
-			5-factor alpha & 0.126 & \textbf{0.247} & 0.132 & 0.073 & 0.043 & -0.066 & -0.044 & 0.123 & 0.131 &\textbf{0.335} & \textbf{-0.309} \\ 
-			t-value & 1.410 & 2.320 & 1.051 & 0.602 & 0.389 & -0.569 & -0.415 & 0.882 & 0.933 & 2.138 & -2.170 \\[2.5ex] 
-			
-			Volatility & 4.502 & 4.416 & 4.948 & 5.347 & 5.129 & 5.140 & 5.079 & 5.624 & 5.582 & 5.845 & 2.386 \\ 
-			Sharpe Ratio & 0.223 & 0.255 & 0.223 & 0.206 & 0.198 & 0.184 & 0.185 & 0.207 & 0.202 & 0.225 & -0.172 \\ 
-			\hline \\[-1.8ex] 
-	\end{tabular}}
-\end{table} 
-
-As mentioned, it seems as if portfolios to the extremes tend to outperform others. Though not significant in most cases, alphas  across decile portfolios are U-shaped. 
-
-Volatility rises almost monotonically from the lowest to the highest ESG portfolio, suggesting that low ESG firms are more risky. An explanation could root in the value composition of portfolios. As shown in Figure~\ref{fig:sizedistr} in Appendix~\ref{app:ESGportfolios} the total market value of high-ESG portfolios is significantly larger than low-ESG portfolios, suggesting that it is rather large firms having high scores. As large firms are typically less volatile than small firms, the increase from high- to low-ESG portfolios is reasonable.
-
-Sharpe ratios are also U-Shaped; comparing volatility estimates with Sharpe ratios implies that expected returns for low ESG firms are higher. We know that, on average, small firms have higher expected returns than large firms. As just mentioned, it is rather small firms that belong to low-ESG portfolios and therefore it is plausible that these portfolios also exhibit higher expected returns. 
-
-\subsection{Robustness Checks}
-
-We conduct two test to check if our results are robust. First we subdivide in only five equally-weighted portfolios. Second, we additionally download information on the number of shares and the share prices from CRSP allowing us to value-weight our portfolios. In particular, we value-weight the portfolio in month $t$ based on market values in month $t-1$. 
-
-When sorting our portfolios into only five portfolios instead of ten, we obtain similar results, see Appendix~\ref{app:robustness}. Portfolios P1 and P5 have a tendency to outperform others. However, significance for the long-short portfolio LS decreases. We see a similar picture when we condition on good and bad times. In bad times, ESG-constructed portfolios on the high and low end outperform others. In good times, however, ESG-sorted portfolios tend under-perform, which holds especially true to a significant level for the third quintile portfolio. 
-
-Considering value-weighted ESG-sorted portfolios, we cannot confirm our previous findings. Except for a few exceptions, significance evaporates. We see this happening when looking at the entire time horizon as well as when conditioning on good and bad times. This suggests that our previous results are predominantly driven by small firms. We thereby conclude that ESG scores only have performance implications on small firms but are irrelevant for large firms.
-
-\subsection{Further Implications}
-
-\section{Conclusion}
-This paper shows that ESG has become a factor that influences asset returns in good times i.e. investors do well, before they do good. Furthermore large drops in ESG, leads to an initial price drop and future increases in return. In the future it would be interesting to get more precise announcement times of the ESG scores to more cleanly isolate the ESG effects, from other correlated factors. It would also be interesting to look at whether the effects generally increased over time, as there has become more public interest. Looking at bonds and other markets would also be of interest, to see if this is an affect that holds there too.
-
-
-\clearpage
-\bibliographystyle{apa}
-\bibliography{MyCollection}
-%\bibliography{TheESGBenefitFactor}
-
+\subsection{Checklist}
 \newpage
-\begin{appendices}
+CHECKLIST
 
+\begin{itemize}
+\item Definition 1: \textbf{Regulatory cliff effect.} Formally let a regulatory cliff effect be an exogenous change at time t in the capital requirement $\theta$ of $\Delta \theta_t$. 
+
+\item Definition 2: \textbf{Systemic risk.} Formally let systemic risk be the likelyhood of a state characterised by the holdings of the banks being zero ($x^B = 0$). Or more generally, by a state of the world with low intermediary wealth $W^I$ and high risk-premia $\lambda_t$.
+
+\item Proposition 1. Systemic risk is decreasing in the size of the buffer.
+
+\item Proposition 2. The (optimal) buffer size is determined in equilibrium by the likelihood and size of the regulatory cliff effect and the volatility of the asset and .... 
+(Prob fire sale and/or size of optimal buffer)
+
+\item Lemma 1. For systemic risk to arise condition 1 and 2 needs to be satisfied.
+
+\item Condition 1. Explosive fire sale condition. (Unstable equilibrium condition). Formally $\frac{\delta x}{p} > \frac{\delta z-y}{p}$.(Write this out explicitly).
+
+\item Condition 2. Inadequate buffer condition. absorbtion capacity $<$ dx or dy.
+
+\item Corollary 1. When volatility falls, systemic risk rises. (counter-intuitively).
+
+\item Definition 3. Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
+
+\item Corollary 2. There is a trade-off between lowering systemic risk and market efficiency (alternatively economic growth). This is seen if you regulate/introduce a counter-cyclical buffer in period 0 that you can remove in period 1.
+
+\item Assumption 1/Lemma 2. Banks cannot convince the market (other agents) that they will buy something they cannot a priori afford or are allowed to by capital requirements. (Corollary: If this is violated, we can get self-fulfilling asset prices ie get to an equilibrium with higher prices from the lower, just by having the intention to buy (ie being confident). Perhaps by households/the economy having confidence in banks, can lead to this higher equilibrium (makes it possible, and since it is beneficial for the intermediaries, will lead to it).). 
+
+\item Testable prediction 1. When the buffer is low, systemic risk is high.
+
+\item Testable prediction 2. When volatility is low, systemic risk is high. Ie Gormsen and Skov (2018, wp). Higher moment risk.
+
+\item Contribution 1. I formalise regulatory cliff effects.
+
+\item Contribution 2. I identify them in current Basel III regulation. 
+
+\item Contribution 3. I formalise the conditions for systemic risk and show that these may be satisfied for several economies, such as the Danish financial system.
+
+\item Contribution 4. I formalise the role of counter-cyclical buffers in the prevention of systemic risk. 
+
+\item Contribution 5. I empircally show a relationship between buffers and systemic risk.
+
+\end{itemize}
 
 \end{appendices}
 
