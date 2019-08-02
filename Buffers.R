@@ -584,8 +584,8 @@ noEventdatafitted <- left_join(noEventdata,betas,by = "eventid") %>%
 ## 3.1 Make plot data
 #NB these defined earlier if choosing very large might be larger than current
 # data and hence need to remake it
-L_pre_record <- 10
-L_post_record <- 10
+L_pre_record <- 5
+L_post_record <- 5
 
 plotdata <- eventdatafitted %>%
   filter(eventdate >= -L_pre_record & eventdate <= L_post_record) %>%
@@ -690,6 +690,7 @@ plotdatasuperNoEventCDS <- #left_join(plotdataNoEvent,
 
 ## Step 3 Now plot and save ##################################################
 #test tikzDevice
+#tikz("testTikzD2.tex")
 
 ggplot(data = plotdata) +
   geom_smooth(mapping = aes(x = eventdate, y = returns ),
@@ -710,7 +711,7 @@ ggplot(data = plotdataCDS) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread3y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill = NA))
-#ggsave("figures/spreadCDS.pdf", width = 5.86, height = 5.86)
+ggsave("figures/spreadCDS.pdf", width = 5.86, height = 5.86)
 
 # with no events
 ggplot(data = plotdataNoEvent) +
@@ -732,7 +733,7 @@ ggplot(data = plotdataNoEventCDS) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread3y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill = NA))
-#ggsave("figures/spreadCDS.pdf", width = 5.86, height = 5.86)
+ggsave("figures/spreadCDSNoEvent.pdf", width = 5.86, height = 5.86)
 
 
 # with excess returns
@@ -829,6 +830,7 @@ ggplot(data = filter(plotdatasuperCDS)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
+ggsave("figures/spreadSplitCDSwMat.pdf", width = 5.86, height = 5.86)
 # cds minus materials
 ggplot(data = filter(plotdatasuperCDS, sector != "Basic Materials")) +
   geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = sector,
@@ -862,7 +864,7 @@ ggplot(data = plotdatasuperNoEventCDS) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
-ggsave("figures/spreadSplitNoEvent.pdf", width = 5.86, height = 5.86)
+ggsave("figures/spreadSplitNoEventCDS.pdf", width = 5.86, height = 5.86)
 
 
 # with excess return cump
@@ -953,7 +955,7 @@ ggplot(data = plotdatasuperCDS) +
   geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = finance,
                             linetype = finance, color = finance),
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
-  ylab("spread") + xlab("event time") + theme_classic() +
+  ylab("2 year spread") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
@@ -975,7 +977,7 @@ ggplot(data = plotdatasuperNoEventCDS) +
   geom_smooth(mapping = aes(x = eventdate, y = spread2y, group = finance,
                             linetype = finance, color = finance),
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
-  ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
+  ylab("2 year spreads") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
