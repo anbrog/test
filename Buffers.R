@@ -33,6 +33,11 @@ library(lubridate) #for function ymd
 library(eventstudies)
 library(broom) #for tidy lm
 library(tidyquant) #for tq_mutate
+library(scales) # for prettier breaks
+library(extrafont)
+library(stargazer)
+library(plm)
+loadfonts(device = "win", quiet = TRUE) # for fonts with extrafont package
 #library(tikzDevice) # try to make tikz graphs
 ## Initiate functions
 # Getting Fama factors
@@ -540,7 +545,8 @@ write.csv(eventdata, file)
 file <- "output_to_input/eventStudyDataRaw.csv"
 eventdata <- read.csv(file)
 file <- "output_to_input/eventStudyNoChangeDataRaw.csv"
-noEventdata  <- read.csv(file)
+noEventdata  <- read.csv(file) %>% filter(eventid != 723)
+#NB eventid 723 shows a return of %5000 on day 1! So remove this
 file <- "output_to_input/eventStudyDataRawCDS.csv"
 eventdataCDS <- read.csv(file)
 file <- "output_to_input/eventStudyNoChangeDataRawCDS.csv"
@@ -548,8 +554,8 @@ noEventdataCDS  <- read.csv(file)
 #NB these defined earlier if choosing very large might be larger than current
 # data and hence need to remake it
 # these are original settings
-L_pre_record = 5#100
-L_post_record = 10#100 #NB eventwindow is 1 longer than this
+L_pre_record = 30#100
+L_post_record = 30#100 #NB eventwindow is 1 longer than this
 L_Estimation = 365
 
 # change here if you want
@@ -584,8 +590,8 @@ noEventdatafitted <- left_join(noEventdata,betas,by = "eventid") %>%
 ## 3.1 Make plot data
 #NB these defined earlier if choosing very large might be larger than current
 # data and hence need to remake it
-L_pre_record <- 5
-L_post_record <- 5
+L_pre_record <- 0
+L_post_record <- 30
 
 plotdata <- eventdatafitted %>%
   filter(eventdate >= -L_pre_record & eventdate <= L_post_record) %>%
@@ -687,19 +693,21 @@ plotdatasuperNoEventCDS <- #left_join(plotdataNoEvent,
   group_by(sector)
 
 
-
-## Step 3 Now plot and save ##################################################
+###############################################################################
+## Step 3 Now plot and save ###################################################
 #test tikzDevice
 #tikz("testTikzD2.tex")
-
 ggplot(data = plotdata) +
   geom_smooth(mapping = aes(x = eventdate, y = returns ),
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
-  ylab("individual raw returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-  stat_summary(aes(x = eventdate, y = returns), geom = "point", fun.y = mean, shape = 17, size = 3)+
-  theme(panel.border = element_rect(colour = "black", fill = NA))
+  stat_summary(aes(x = eventdate, y = returns), geom = "point", fun.y = mean, shape = 17, size = 3) +
+  theme_classic()+ #theme_bw() +
+  theme(panel.border = element_rect(colour = "black", fill = NA)) +
+  theme(text = element_text(family = "CM Roman")) +
+  ylab("individual raw returns") + xlab("event time")
 ggsave("figures/retraw.pdf", width = 5.86, height = 5.86)
 
 #cds spread
@@ -709,6 +717,7 @@ ggplot(data = plotdataCDS) +
   ylab("2 year spread") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = spread3y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill = NA))
 ggsave("figures/spreadCDS.pdf", width = 5.86, height = 5.86)
@@ -720,6 +729,7 @@ ggplot(data = plotdataNoEvent) +
   ylab("individual raw returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = returns), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retrawNoEvent.pdf", width = 5.86, height = 5.86)
@@ -731,6 +741,7 @@ ggplot(data = plotdataNoEventCDS) +
   ylab("2 year spread") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = spread3y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill = NA))
 ggsave("figures/spreadCDSNoEvent.pdf", width = 5.86, height = 5.86)
@@ -743,6 +754,7 @@ ggplot(data = plotdata) +
   ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabn.pdf", width = 5.86, height = 5.86)
@@ -755,6 +767,7 @@ ggplot(data = plotdataNoEvent) +
   ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabnNoEvent.pdf", width = 5.86, height = 5.86)
@@ -767,6 +780,7 @@ ggplot(data = plotdata) +
   ylab("cumulative sum of abnormal returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabncum.pdf", width = 5.86, height = 5.86)
@@ -779,6 +793,7 @@ ggplot(data = plotdataNoEvent) +
   ylab("cumulative sum of abnormal returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 # no event loess method
@@ -788,6 +803,7 @@ ggplot(data = plotdataNoEvent) +
   ylab("cumulative sum of abnormal returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabncumNoEvent.pdf", width = 5.86, height = 5.86)
@@ -799,6 +815,7 @@ ggplot(data = plotdata) +
   ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = cumpabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabncump.pdf", width = 5.86, height = 5.86)
@@ -817,6 +834,7 @@ ggplot(data = plotdatasuper) +
   ylab("individual abnormal returns") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabnSplit.pdf", width = 5.86, height = 5.86)
@@ -827,6 +845,7 @@ ggplot(data = filter(plotdatasuperCDS)) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess", se = FALSE) +
   ylab("2 year spread") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -838,6 +857,7 @@ ggplot(data = filter(plotdatasuperCDS, sector != "Basic Materials")) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess", se = FALSE) +
   ylab("2 year spread") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -850,6 +870,7 @@ ggplot(data = plotdatasuperNoEvent) +
               na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
   ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = retabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -861,6 +882,7 @@ ggplot(data = plotdatasuperNoEventCDS) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess", se = FALSE) +
   ylab("2 year spread ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -874,6 +896,7 @@ ggplot(data = plotdatasuper) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -885,6 +908,7 @@ ggplot(data = plotdatasuperNoEvent) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -899,6 +923,7 @@ ggplot(data = plotdatasuper) +
               na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -910,6 +935,7 @@ ggplot(data = plotdatasuperNoEvent) +
               na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -923,6 +949,7 @@ ggplot(data = plotdatasuper) +
               na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -934,6 +961,7 @@ ggplot(data = plotdatasuperNoEvent) +
               na.rm = TRUE, level = 0.9, formula = "y~x", se = FALSE) +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -946,6 +974,7 @@ ggplot(data = plotdatasuper) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -957,6 +986,7 @@ ggplot(data = plotdatasuperCDS) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("2 year spread") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -968,6 +998,7 @@ ggplot(data = plotdatasuperNoEvent) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("cumulative product of abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -979,10 +1010,12 @@ ggplot(data = plotdatasuperNoEventCDS) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("2 year spreads") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = spread2y, group = finance), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/spreadFinNoEventCDS.pdf", width = 5.86, height = 5.86)
+
 
 # try finance non-bank vs finance bank
 ggplot(data = plotdatasuper) +
@@ -991,10 +1024,76 @@ ggplot(data = plotdatasuper) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn, group = type), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabncumType.pdf", width = 5.86, height = 5.86)
+
+# try with just a line instead of smoothing
+### statistics: calculate means and confidence interval ####
+statistics <- plotdatasuper %>% group_by(type, eventdate) %>% summarise(cumsabn_m = mean(cumsabn, na.rm = TRUE),
+                                                                   cumsabn_sd = sd(cumsabn, na.rm = TRUE),
+                                                                   cumsabn_n = n()) %>%
+            mutate(cumsabn_se = cumsabn_sd / sqrt(cumsabn_n),
+               cumsabn_ci_lower = cumsabn_m - qt(1 - (0.05 / 2), cumsabn_n-1)*cumsabn_se,
+               cumsabn_ci_higher = cumsabn_m +qt(1 - (0.05 / 2), cumsabn_n-1)*cumsabn_se)
+ggplot(data = statistics, aes(x = eventdate, y = cumsabn_m, group = type, color = type)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = cumsabn_ci_lower,ymax = cumsabn_ci_higher),
+                alpha = .2, na.rm = TRUE) +
+  geom_point() +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+#without split on types
+statistics <- plotdatasuper %>% filter(eventdate<10) %>% group_by(eventdate) %>% summarise(cumsabn_m = mean(cumsabn, na.rm = TRUE),
+                                                                        cumsabn_sd = sd(cumsabn, na.rm = TRUE),
+                                                                        cumsabn_n = n()) %>%
+  mutate(cumsabn_se = cumsabn_sd / sqrt(cumsabn_n),
+         cumsabn_ci_lower = cumsabn_m - qt(1 - (0.10 / 2), cumsabn_n-1)*cumsabn_se,
+         cumsabn_ci_higher = cumsabn_m +qt(1 - (0.10 / 2), cumsabn_n-1)*cumsabn_se)
+ggplot(data = statistics, aes(x = eventdate, y = cumsabn_m)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = cumsabn_ci_lower,ymax = cumsabn_ci_higher),
+              alpha = .2, na.rm = TRUE) +
+  geom_point() +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+#same for noevent
+statistics <- plotdatasuperNoEvent %>% filter(eventdate<10)  %>% group_by(eventdate) %>% summarise(cumsabn_m = mean(cumsabn, na.rm = TRUE),
+                                                                  cumsabn_sd = sd(cumsabn, na.rm = TRUE),
+                                                                  cumsabn_n = n()) %>%
+  mutate(cumsabn_se = cumsabn_sd / sqrt(cumsabn_n),
+         cumsabn_ci_lower = cumsabn_m - qt(1 - (0.10 / 2), cumsabn_n-1)*cumsabn_se,
+         cumsabn_ci_higher = cumsabn_m +qt(1 - (0.10 / 2), cumsabn_n-1)*cumsabn_se)
+ggplot(data = statistics, aes(x = eventdate, y = cumsabn_m)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = cumsabn_ci_lower,ymax = cumsabn_ci_higher),
+              alpha = .2, na.rm = TRUE) +
+  geom_point() +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+
+
+
+
+ggplot(data = plotdatasuper) +
+  geom_line(mapping = aes(x = eventdate, y = cumsabn, group = type),
+              na.rm = TRUE) +
+  ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  theme(panel.border = element_rect(colour = "black", fill=NA))
 # no event cums
 ggplot(data = plotdatasuperNoEvent) +
   geom_smooth(mapping = aes(x = eventdate, y = cumsabn, group = type,
@@ -1002,6 +1101,7 @@ ggplot(data = plotdatasuperNoEvent) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn, group = type), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -1015,6 +1115,7 @@ ggplot(data = plotdatasuper) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn, group = bank), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -1030,6 +1131,7 @@ ggplot(data = plotdatasuper) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn, group = bank), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
@@ -1042,7 +1144,73 @@ ggplot(data = plotdatasuperNoEvent) +
               na.rm = TRUE, level = 0.9, formula = "y~x", method = "loess") +
   ylab("individual abnormal returns ") + xlab("event time") + theme_classic() +
   scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
   geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
   stat_summary(aes(x = eventdate, y = cumsabn, group = bank), geom = "point", fun.y = mean, shape = 17, size = 3)+
   theme(panel.border = element_rect(colour = "black", fill=NA))
 ggsave("figures/retabncumBankNoEvent.pdf", width = 5.86, height = 5.86)
+
+
+### Explore where high return on day 1 for no events comes form ################
+test <- filter(noEventdata,eventdate == 1) %>% arrange(desc(returns))
+test2 <- filter(noEventdata,eventid == 723)
+testRet = test$returns
+mean(testRet)
+hist(testRet)
+summary(testRet)
+sort(testRet,decreasing = TRUE)
+
+
+### summary statistics
+test <- summary(plotdata)
+#NB Too many digits!
+stargazer(plotdata[1:10,], summary = FALSE, rownames = FALSE, digits = 4, digits.extra = 4)
+
+### Do panel regressions ####
+paneldata <- bind_rows(plotdatasuper %>% mutate(jump = TRUE),
+                       plotdatasuperNoEvent %>% mutate(jump = FALSE)) %>%
+              distinct(date,gvkey,.keep_all = TRUE)
+lm( data = paneldata %>% filter(eventdate == 0), retabn ~ jump ) %>% summary()
+lm( data = paneldata %>% filter(eventdate == 1), retabn ~ jump ) %>% summary()
+
+#good!
+plm( data = paneldata %>% filter(eventdate == 1),
+     index = c("gvkey","date"), retabn ~ jump ) %>% summary()
+
+t <- -5
+T <- 10
+model <- retabn ~ jump
+betas <- lapply(t:T, function(x){
+           plm( data = paneldata %>% filter(eventdate == x),
+             index = c("gvkey","date"), model ) %>%
+           broom::tidy(. ,conf.int =  TRUE, conf.level = 0.90) }) %>%
+         bind_rows() %>% add_column(eventdate = t:T)
+ggplot(data = betas, aes(x = eventdate, y = estimate)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = conf.low,ymax = conf.high),
+              alpha = .2, na.rm = TRUE) +
+  geom_point() +
+  ylab("cumulated abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  theme(panel.border = element_rect(colour = "black", fill=NA))
+
+t <- 0
+T <- 10
+model <- cumsabn ~ jump + loc
+betas <- lapply(t:T, function(x){
+  plm( data = paneldata %>% filter(eventdate == x),
+       index = c("gvkey","date"), model ) %>%
+    broom::tidy(. ,conf.int =  TRUE, conf.level = 0.90) }) %>%
+  bind_rows() %>% add_column(eventdate = t:T)
+ggplot(data = betas, aes(x = eventdate, y = estimate)) +
+  geom_line(color = "blue") +
+  geom_ribbon(aes(ymin = conf.low,ymax = conf.high),
+              alpha = .3, na.rm = TRUE) +
+  geom_point(color = "black") +
+  ylab("cumulated abnormal returns ") + xlab("event time") + theme_classic() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = .1)) +
+  scale_x_continuous(breaks = pretty_breaks() ) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+  theme(panel.border = element_rect(colour = "black", fill=NA))
