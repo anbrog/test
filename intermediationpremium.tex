@@ -1,0 +1,1556 @@
+% NB uses figures from ../figures folder
+\documentclass[11pt]{article}
+\usepackage{setspace}
+\doublespacing
+\usepackage{geometry}
+\geometry{left=3cm,top=3cm,right=3cm,bottom=3cm}
+\usepackage[round, comma, authoryear, sort&compress]{natbib}
+\bibliographystyle{apa}
+\setlength{\bibsep}{5pt}
+\usepackage{amsmath, amsthm, amssymb,}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{rotating} 
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage{soul}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref} %[hidelinks]
+\hypersetup{
+	colorlinks,
+	linkcolor={blue}, %{blue!80!black},
+	citecolor={blue}, %{blue!80!black},
+	urlcolor={blue}   %{blue!80!black},
+}
+\usepackage[toc,page]{appendix}
+\usepackage{placeins} %for FloatBarrier ie graphs stay in section
+\captionsetup[table]{labelfont={small, bf}, font={small, bf}}
+\captionsetup[figure]{labelfont={small, bf}, font={small, bf}}
+\captionsetup[subfigure]{font={small, bf}, textfont=normalfont,singlelinecheck=off, justification=centering}
+
+%Additional Packages
+\newcommand\fnote[1]{\captionsetup{font=small}\caption*{#1}}
+\usepackage{color, colortbl}
+\definecolor{Gray}{gray}{0.9}
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+\renewcommand{\floatpagefraction}{.8}
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+\usetikzlibrary{decorations.pathreplacing}
+\tikzset{>=latex}
+
+% new macros
+\newcommand{\mytab}[1]{
+	\begin{tabular}{@{}c@{}}
+		#1
+	\end{tabular}
+}
+\usepackage{titlesec} % for editing title sizes
+\titleformat*{\section}{\LARGE \bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+\usepackage{abraces}
+\usepackage{upgreek} % for upright greek letters
+\usepackage{enumitem} %to change enumerate types with options such 
+\usepackage{bm} %bold math (?)
+%\usepackage{apacite} %for apa bib style
+
+% Change sizes of stuff
+% ie footnote to small
+% title to Huge
+% author to Large
+
+%% DEFINITIONS
+% make theorem titles bold
+\makeatletter
+\def\th@plain{%
+  \thm@notefont{}% same as heading font
+  \itshape % body font
+}
+\def\th@definition{%
+  \thm@notefont{}% same as heading font
+  \normalfont % body font
+}
+\renewcommand\qedsymbol{$\blacksquare$}
+\DeclareMathOperator{\E}{\mathbb{E}} % for expectation symbol
+\global\delimitershortfall=-1pt %sets so that brackets increase in size
+\makeatother
+% Change numbering to be part of section?? As it was with Lasses original template
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{assumption}{Assumption}%[section]
+\newtheorem{proposition}{Proposition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{lemma}{Lemma}%[section]
+\newtheorem{corollary}{Corollary}
+\newtheorem{condition}{Condition}
+\newtheorem{definition}{Definition}%[section]
+\DeclareMathOperator*{\argmax}{arg\,max} % argmax 
+\setlength{\footskip}{50pt} % Defines how high/low the page number is placed
+\let\cite=\citet
+\def\thetable{\arabic{table}}
+\def\thesection{\arabic{section}}
+
+% title could be \huge too. More normal. But nice to be large when it is so short. Otherwise make smaller and title bold
+\title{\Huge The Intermediation Premium}
+
+\author{\Large Andreas Br\o gger\thanks{
+\small
+I am at Copenhagen Business School, Solbjerg Plads 3, 2000 Frederiksberg, Denmark.
+Please contact me at anbr.fi@cbs.dk.
+I thank Jens Dick-Nielsen and David Lando for helpful guidance and support.
+I thank Thomas Geelen, Nicola Giommetti, Niels Joachim Gormsen, Christian Skov Jensen, Matthijs Lof, Kristian Miltersen, Lasse Heje Pedersen, Henrik Ramlau-Hansen, Jesper Rangvid, Daniel Streitz (discussant), Fabrice Tourre, Anders Vilhelmsson (discussant), Paul Whelan; and seminar participants at American Finance Association (AFA) 2019 Annual Meeting, Copenhagen Business School, PhD Nordic Finance Workshop 2019 for helpful suggestions and comments. I gratefully acknowledge support from the FRIC Center for Financial Frictions (Grant no. DNRF102).}
+}
+\date{\Large First version: January 4, 2019\\This version: \today}
+
+\begin{document}
+
+\maketitle
+%\thispagestyle{empty} % removes page number for first page
+
+\begin{abstract}
+\noindent I document asset pricing effects from macroprudential buffers. As macroprudential buffers are announced the intermediation premium increases. I define the intermediation premium as the contribution to the risk premium, solely due to intermediaries financial constraints. Theoretically, I develop a model that predicts that as buffers are announced 1) The intermediation premium increases, 2) Systemic risk falls, and 3) Assets shifts away from banks to other agents with higher risk aversion. Empirically, I find evidence consistent with the first and third prediction.
+\end{abstract}
+% I study the asset pricing and systemic risk implications of macroprudential buffers. I estimate that increasing the macroprudential buffers by 1 percentage point lowers equity prices by [2-3]\%, consistent with a higher price of risk.
+
+\noindent \textit{Keywords}: Macroprudential Policy, Reserve Requirements, Systemic Risk, Financial Crisis.\\
+\noindent \textit{JEL classification}: G01, G21, G28, G12.
+
+\clearpage
+%\setcounter{footnote}{0}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+%\setcounter{page}{1}
+
+
+\section*{Introduction}
+The financial crisis demonstrated that the conditions of financial intermediaries has a significant effect on asset prices. Breaking with the assumption that intermediaries simply act as a veil in the realisation of equilibrium asset prices. The crises further showed that the shocks to the financial intermediaries spill over to the rest of the economy, creating real effects. Since then, it has been an international priority to implement regulation, to help reduce the probability of such an event reoccurring. This new regulation remain to a large extend untested. I help fill this gap by considering regulatory effects theoretically and empirically.
+
+My main question in this paper will be how the counter-cyclical buffer affects equilibrium asset prices. The counter-cyclical buffer, also called the macroprudential buffer, is one of the new regulations to be implemented after the financial crises. To answer this question I develop a theoretical model, which will show that as buffers are announced 1) The intermediation premium increases, 2) Systemic risk falls, and 3) Assets shifts away from banks to other agents with higher risk aversion. Empirically, I find evidence consistent with the first and third prediction. These findings shed light on the new effects of the new financial regulation agreed upon after the financial crises, which is currently being implemented.
+
+I add to the work by \citet{Brunnermeier2009}, \citet{He2013} and \citet{Brunnermeier2014}, who show theoretically that asset prices can be found by considering the financial intermediaries as the marginal investor, and hence that the wealth and capital ratio can be thought of as factors determining equilibrium asset prices. An immediate consequence of this is that as intermediaries experience a negative wealth shock, the equilibrium asset prices will fall, increasing the expected return. I add to this by explicitly considering the asset pricing effects of an increase in their \emph{capital requirement}. This compliments current work by \cite{harris2018aggregate} who employ a micro-founded approach which includes borrower heterogeneity across multiple dimensions. \citet{Adrian2014} and \citet{He2017} find empirical evidence that is consistent with intermediaries being the marginal investor in wide range of asset markets, but they do not consider that the capital requirement might work as an additional pricing factor, in addition to the wealth and capital ratio of financial intermediaries.
+
+One of the challenges is isolating the effect purely from the increase in capital requirements. This worry arises as asset prices are noisy, and there are a lot of reasons why prices might adjust on a given day. To alleviate this worry I exploit that the local countries systemic risk board announces the coming counter-cyclical buffer level at distinct events. By considering the change in the price-level from before compared to after the announcement, I avoid noise that arise in long-term asset pricing studies, and I isolate the effects coming from the counter-cyclical buffer. Another worry, could be that the announcement also signals news about the health of the economy, and therefore expected future cash flows, which would also affect asset prices. I argue however, that since the counter-cyclical buffer, by its very definition, is a tool conducted in \emph{good} pro-cyclical times, the information content would have to be a positive signal, which would boost asset prices. However, as I observe a drop in asset prices, I conclude that this can not be the main driver, and if anything my results are an underestimate of the actual effect purely from the counter-cycalical buffers. A third worry could be that the announcement could be a signal of coming monetary policy, however here the same argument applies as well as the fact that most of the countries in my study do not have an independent monetary policy, as they are part of the Eurozone. This experiment is therefore a good laboratory to consider the effects of capital requirements on asset prices.
+
+The United States introduced the macroprudential buffer into regulation in 2016, after which it has remained at zero percent. However, the central bank is now considering activating the buffer, essentially to create an insurance against downside risks to the financial sector, as it could be released in this scenario to provide additional lending power. But as the Wall Street Journal writes, there is uncertainty to how investors would react to such a move. This paper would serve to illustrate how investors have acted when the macroprudential buffer has been activated in various European Countries. \footnote{
+\url{https://www.wsj.com/articles/fed-considers-new-tool-for-a-downturn-11565614800}} \footnote{
+\url{https://www.wsj.com/articles/the-fed-should-raise-countercyclical-capital-buffer-rates-1534874559}}
+
+Macroprudential buffers has been implemented in Europe for the first time over the last 6 years, and the effects are still largely unexplored. Luigi Federico Signorini, Deputy Governor of the Central Bank of Italy opened the forth annual Macroprudential Policy Group workshop by saying "Microprudential capital requirements, for instance, have been substantially increased after the crisis. In the short run, the contractionary effects on the credit cycle associated with such an increase were, directionally and qualitatively, of the same nature as those associated with the activation of a cyclical buffer. This of course does not mean that it was wrong to do it; an increase in the quantity and quality of bank capital was required to strengthen the banking system, in light of all the shortcomings of the old supervisory rules that the crisis had exposed. However, it was clear to all that there was a price to pay for this, in terms of tighter credit: at least temporarily, during the transition to the new standards.". And "The conceptual framework should also more explicitly capture the idea that one central aim of macroprudential policies is to limit the endogenous pro-cyclicality of the financial sector. Risks tend to be underestimated by market participants during booms and overestimated in busts, resulting in an amplification of cycles. To lean against this procyclical pattern in risk perceptions, the framework for the macroprudential stance should have a clear cyclical perspective.". As well as "ideally, the prudential stance should also account for the interaction of macroprudential policies across countries. Euro-area countries are deeply integrated. During stress periods, this may lead financial instability in one country to propagate to other countries, if an inaction bias prevails; the same holds, again symmetrically, for the effect of contractionary measures. How, and to what extent, this can be done is, I think, a matter for further potentially valuable reflection."\footnote{\url{https://www.bis.org/review/r191010a.htm}} It is one of the few policies euro countries still have independence about, and hence have been used at different times and at various levels across time and the cross-section. This paper will first explore what effects these macroprudential policy could theoretically have, and secondly empirically explore the effects on asset markets. Specifically in regards to the markets pricing of risk, and its perception thereof.
+
+Empirically, I find that the companies affected the most by the implementation of the macroprudential buffers are non-bank financials, then regular companies, and the least affected are the banks themselves. These findings are consistent with an increase in the intermediation premium (the risk premium charged by banks as a spread on lending relative to their funding costs), as a reaction to a higher macroprudential buffer. This higher intermediation premium puts pressure on non-bank financials, for whom a large fraction of their costs are financing costs from banks. Similarly for regular companies, for whom a small fraction of their costs arise from financing from banks.
+
+The European Systemic Risk Board stress the positive effects of such a buffer.
+
+\begin{quote}\textit{``
+The countercyclical capital buffer (CCyB) is designed to help counter pro-cyclicality in the financial system... [by] creating buffers that increase the resilience of the banking sector during periods of stress when losses materialise. This will help maintain the supply of credit and dampen the downswing of the financial cycle."}\\
+\hspace{1em}- {European Systemic Risk Board}
+\end{quote}
+
+However, there are also worries about prices in the economy, and hence growth, as the finance lobby organisation address.
+
+\begin{quote}\textit{``
+We notice the Risk Councils recommendation to increase the macroprudentiel buffer, even though the loan growth has been low for a while.\\ ...the increased buffer will also hit the small institutions in the country side, where the economy is not growing as much...
+"}
+- {Ulrik Nødgaard, CEO Finans Danmark}
+\end{quote}
+
+The exploration of the effects of introducing macroprudential buffers, in this European setting, relieves some worries of such a study. One worry might be that the announcements might be confounded by announcements about monetary policy, however as in most countries the macroprudential policy is set by a systemic risk board, possibly agreed by the government, and hence not by the central bank, this relieves. Another worry one could have is that the announcement of an implementation of the macroprudential buffer signals worries of the state of the economy, however as the buffer is designed to be implemented in \emph{good} times, this seems more likely that it would signal good times, rather than oncoming bad times. However, if the macroprudential authority consider tail risks to have increased, this may be a good policy to implement, to have some tools to help in a crisis, however this could also have the effect to reduce investors worry of a tail event, as they are now more robust, so it is not obvious which way this effect would be on asset prices. A third worry could be that they respond to the asset prices dropping, rather than the other way round, however as these decisions are usually taken over months time, and only gets implemented with a lag of a year, it seems unlikely that asset price changes within say a week would have any effect on the macroprudential policy decision.
+
+Studies such as Schwert (Forthcoming, JoF) [and...] have shown that there is a premium to lending through banks than through the market, an intermediation premium. So if there is such a premium - where does it arrive from and does it depend on the banks capital requirements such as the macroprudential buffer? So does increasing the buffer increase this bank credit premium? Our results way into this discussion as we show that banks equity prices are not particularly hurt by the introduction of the macroprudential buffers, but other firms, that rely on bank funding, are hurt to a larger extend, suggesting that there is now an increased cost to these companies, possibly from a larger intermediation premium. This highlights the importance of intermediaries and specifically in regards to the transmission of macroprudential and monetary policy.
+
+I further contribute by developing a theoretical model. In which, systemic risk might arise from explosive fire sales, and raising macroprudential buffers 1) lowers systemic risk and 2) increases the intermediation premium through an increase in the price of risk. I then go on to Evaluate effects empirically and find a price effect of increasing macroprudential buffers
+
+Macroprudential policy has arisen to address the fact, from the crisis of 2009, that even if banks individually seem robust, the system could become unstable.
+However Macroprudential policy remains a scarcely researched area. In this paper I address how macroprudential policy can be used to reduce systemic risk. The counter-cyclical buffer, also called the macroprudential buffer, was first activated by Norway in 2013. Since then 12 countries have announced an activation of this buffer. \footnote{Part of Basel III. Implemented in EU as Capital Requirements directive IV}. Macroprudential buffers increase the capital requirements of banks.
+
+
+\subsection*{}
+\vspace{-1.5cm}
+\textbf{Literature Review.} 
+This research adds to the literature on financial intermediation, and their affects on asset prices and firms in the economy.
+
+The work on the intermediation premium, contribute to the work by \citet{Marchuk2017}, who finds that companies borrowing from risky banks to command a risk premium; and work by \citet{Adrian2014} who shows that the wealth of intermediaries matter for the size of the asset premiums of other factors. As well as \citet{Adrian2010} who show that financial intermediaries in addition to affecting asset prices also affects the real economy such as inflation and economic activity.
+
+General equilibrium asset pricing with financial frictions is an active research field, some contributions include early work by \citet{Geanakoplos1997, geanakoplos2003}, and post crisis work by \citet{Brunnermeier2009}, \citet{He2013}, and \citet{Brunnermeier2014}. For a survey of the field see \citet{Brunnermeier2013}.
+
+Empirical work of the the effects of financial intermediation on asset prices include \citet{Adrian2010}, \citet{Adrian2014} and \citet{Marchuk2017}.
+
+\subsection*{Outline}
+
+[Update later]
+
+%Write more on concept of ESG scores.
+
+
+
+\section{Model} \label{sec:model}
+
+\subsection*{Setup}
+
+Let there in our economy exist a continuum of two agent types. Intermediaries $I$ and households $H$. Intermediaries are risk neutral and maximise final wealth $W^I_T$. Like intermediaries, households also like wealth but additionally dislike risk such that their absolute risk aversion is $\gamma$\footnote{[Write as negative exponential utility instead? Same outcome, but maybe more fancy. Use objective function word? Solved by dynamic programming]}. Thus they maximise $W^H_T - \frac{\gamma}{2}\sigma^2$.
+
+Without loss of generality let the risk-free interest rate be normalised to 0. Additionally, a [single] risky asset exists[is endowed to the households\footnote{[mention that this is done for simplicity, but not important. Maybe as a footnote]} which gives its owner a claim to a [random and] normally distributed dividend $\delta$ at time $T$. Let the dividend $\delta$ be characterised by its expectation $\mu$ and volatility $\sigma$, such that $\E[\delta] = \mu$ and $Var[\delta] = \sigma^2$ [ALT $\sigma[\delta] = \sigma$]. Furthermore let the expectation follow an AR(1) process such that it is updated at each intermediary period, making it time dependent ($\mu_t$).
+
+Intermediaries are given the privilege to apply leverage (ability to borrow at the risk-free rate), as long as a fraction $\theta$ of their investments are financed by their own wealth, such that $\theta_t = \frac{W^I_t}{max(x^{I}_t)}$. The capital requirement $\theta$ is subject to a regulatory cliff effect\footnote{[Delete rest of sentence as to not repeat?]}, which means that it is time varying and in the intermediary periods\footnote{[make singular?]} follows a jump process. 
+
+\begin{definition}[Regulatory cliff effect] Formally let a regulatory cliff effect be an exogenous random change at time $t \in (1,T-1)$ in the capital requirement $\theta$ of $\Delta \theta_t$ ($\Delta \theta_t =  \theta^H-\theta_0$), such that $\theta_t \in \{\theta_0,\theta^H\}$. Where $\theta^H$ is realised with a probability $\lambda$.\footnote{[Write up properly with exponential and lambda?]}
+\end{definition}
+
+Additionally, a macroprudential authority exists, which can may introduce, and repeal, a macroprudential buffer.\footnote{[Introduce this later?]}
+
+\begin{definition}[Macroprudential buffer]
+Let a macroprudential buffer $\theta^C_t$ be defined at time $t$, as a regulatory requirement above the previous regulatory requirement $\theta_{t-}$, such that once introduced the requirement becomes $\theta_t = \theta_{t-} + \theta^C_t$.
+\end{definition}
+
+
+\footnote{[In the following analysis, it will be assumed that if the intermediary does not meet its capital requirement in period $T$, the intermediary will be closed (restructured) and any remaining wealth will be lost in the bankruptcy(/restructuring) process.]} The timing is as follows. In period 0 the model is realised, in period 1  the stochastic capital requirement is realised and the expectation for the dividend $\mu_t$ is updated, and in period 2 the random dividend is realised.
+
+Below first the equilibrium is characterised, and then the solution will be discussed.
+\footnote{WHAT WOULD HAPPEN IN THE MODEL IF VOL IS UPDATED TOO?]}
+\footnote{[Can think of a riskless bond $B$ existing in 0 net supply, such that households are indifferent about any position in $B$?]}
+
+%\subsubsection*{Equilibrium}
+
+\begin{definition}[Equilibrium] \label{d_eqm}
+\footnote{[Make as a equilibrium subsubsection again?]} Let an equilibrium be [characterised by] a price process $p_t$, such that markets clear in each period. I.e. for each time $t$, it will be the case that given the price, intermediary demand $x^I_t$ and household demand $x^H_t$ of the risky asset equals supply $z$. \footnote{(Demand is their optimal demand)} \footnote{[Make a bit more formal as in Zhiguo He?]}
+\end{definition}
+
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1,trim=6cm 15.5cm 1.7cm 5.5cm]{timeline.pdf}
+\caption{Timeline of model}
+\label{fig:timeline}
+\end{figure}
+
+
+\subsection*{Solving the model}
+The model is set up as a dynamic programming problem, and solved by backwards induction. In period 2 the price will trivially be $\delta$, as if it was not, an arbitrage opportunity would exist\footnote{(as a risk-less profit could be achieved)}.
+
+\subsubsection*{Period 1}
+In period 1 the households demand is given as the solution to their maximisation problem\footnote{[REF here?]}, such that
+\begin{equation} \label{e_xH}
+x^{H}_1 = \argmax_{x^H}\left[\E_1[W^I_2] - \gamma/2\sigma^2\right]
+= \frac{\mu - p_1}{\gamma\sigma^2}.
+\end{equation}
+($\sigma_W$ first ?)
+\footnote{[Show in appendix?. NB Not needed. Skip?]}
+
+
+As intermediaries are risk neutral, their demand $x^I$ is simply given by
+\begin{equation}  \label{e_xI}
+x^I_1 = \begin{cases}
+ W^I_1/\theta_1, &\text{for $p \leq \mu$}\\
+ 0, &\text{otherwise [or for $p > \mu$],\footnotemark}
+\end{cases}
+\end{equation}
+\footnotetext{Notice that shorting is not allowed (Else $-x^I_1 = \frac{W^I_1}{\theta_1}, for p \geq \mu$). WRITE THIS OUT EXPLICITLY.} \footnote{make top less or equal. Else change later that price becomes infinitisimally close to fundamental price}
+\noindent as these positions will maximise $\E_1[W^I_2]$ subject to the capital requirement and no shorting constraint.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.75]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+\node at (5,5) [circle,fill,inner sep=1.5pt]{};
+
+\draw(3,1)--(7,9) node[right]{$x_1^I$};
+
+\draw(1,2)--(9,8) node[right]{$z-x_1^H$};
+
+\draw[dashed](0,5)--(5,5)--(5,0);
+
+\draw[gray,snake=zigzag,->](8,8)-- (5.1,5.1);
+
+\draw[gray,snake=zigzag,->](2,2) -- (4.9,4.9);
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. General case}
+\label{fig:t1pricediscovery}
+\end{figure}
+
+The following propositions describe the equilibrium price under different circumstances.
+
+\begin{proposition} \label{p_explosiveFiresales}
+If conditions \ref{c_unstable} and \ref{c_inadequateBuffers} below [and lemma/assumption 1?] are fulfilled, there will be:
+
+\begin{enumerate}[label = \roman*)]
+\item[\textnormal{i)}] \textnormal{\textbf{(Explosive fire sales)}} For negative shocks, there will be explosive fire sales. The price will be the lowest possible and given by
+\begin{equation}
+p_1 = \mu - z\gamma\sigma^2.
+\end{equation}
+\item[\textnormal{ii)}]  For positive shocks, the price will be equal to its fundamental value.\footnote{[Give this a name?]}
+[Name this prop explosive fire sales and not condition? Condition is more like unstable equilibrium. See prob 5 in BP. Name just the first case. Name this? Full price reflection?]
+\begin{equation}
+p_1 =  \mu.
+\end{equation}
+\end{enumerate}
+
+
+\footnote{[have it be max 0,X? Or mention parameters are set so that never zero and is a normal feature of models with normally distributed returns or fundamental values (ok with negative return, just not price).]}
+\footnote{[the risk of this is called systemic risk). Mention later or now?]}
+\end{proposition}
+\begin{proof}
+See appendix.
+\end{proof}
+
+\footnote{[is a proof here needed? Seems like not used in BP2009]} To see why this is the case consider the intermediaries in period 1, who have experienced a negative shock, either from a loss in equity (from a lower expectation of the fundamental value of the risky asset), or an increase in the capital requirement. Condition \ref{c_inadequateBuffers} means that the shock is larger than their buffer, and they are therefore now in breach of their capital requirement, and if they do not act, they will be closed, and the equity wiped. Furthermore given condition \ref{c_unstable}, they know that if they sell the price will drop, leading again to a loss in equity for the firm. Given this condition this feedback effect is so strong (explosive) that they will have to sell their total position\footnote{and they will still be closed?!}. Given assumption \ref{l_noBluffing} if they start insolvent, they cannot make purchases, as they cannot leverage further to make this purchase, as they cannot persuade others the purchase in itself, and price appreciation, will be enough to actually make them solvent, with this larger position. Notice that if this assumption is violated we get \textit{self fulfilling asset prices}. Hence the equilibrium price, will be the price, at which, the households are willing to hold all of the risky asset(s). Now instead consider a positive shock. Now the intermediaries are in excess of their capital requirement, and are free to make asset purchases. And when they do so, they will become even more solvent as condition \ref{c_unstable} gives these explosively strong feedback effects through the price. The optimal strategy in this case is for the intermediaries to purchase all of the risky assets as long as the price is below the fundamental value. Hence the only clearing price will be where the price is equal to the fundamental value. \footnote{Here household would want to hold none of the asset, and the intermediaries are indifferent to holding any amount, ie it is an optimal choice for them to hold all of the risky asset.}
+
+\begin{proposition} \label{p_pricewoExplosive}
+If condition 1 is not satisfied, the price will be given as 
+\begin{equation}
+p_1 = \mu - \gamma\sigma^2 \left(z-\frac{W^I_1}{\theta_1}\right).
+\end{equation}
+\end{proposition}
+Written out this is $p_1 = \left[\mu - \gamma\sigma^2 \left(z - \frac{W_0^I - p_0 x_0}{\theta_1}\right)\right]/(1+\frac{\gamma\sigma^2}{\theta_1}) $. With $\gamma\sigma^2$ being the price impact and $z-\frac{W^I_1}{\theta_1}$, or $z - \frac{W_0^I - p_0 x_0}{\theta_1}$, being the purchasing ability (intermediation capacity) of the intermediary, and $\frac{1}{1 + \gamma\sigma^2/\theta_1}$ is the price-wealth/solvency feedback multiplier. This price is always higher than the fire sale price as $W^I_1/\theta_1$ is positive. And will be less than or equal to $\mu$ when intermediaries cannot afford to buy all of asset.
+\begin{proof}
+See appendix.\footnote{Have this proposition first, as it is the standard (interior solution)?}
+\end{proof}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.75]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+\node at (4.5,5) [blue, circle,fill,inner sep=1.5pt]{};
+
+\draw[blue](0,4)--(9,6) node[right]{$x_1^I$};
+
+%\draw(0,4) -- (18,2/9*18+4);
+
+%\draw(0,8) -- (18,8);
+
+\draw(0,2)--(9,8) node[right]{$z-x_1^H$};
+
+\draw(0,8) -- (9,8);
+
+
+\node [left] at (0,8) {$\bar{p}_1^* = \mu $};
+
+\node at (0,8) [circle,fill,inner sep=1.5pt]{};
+
+\node [left] at (0,2) {$\underline{p}_1^* = \mu - z\gamma\sigma^2$};
+
+\node at (0,2) [circle,fill,inner sep=1.5pt]{};
+
+\draw[dashed](0,5)--(4.5,5)--(4.5,0);
+
+\draw[gray,snake=zigzag,->](5.5,5.5) -- (9,8);
+
+\draw[gray,snake=zigzag,->](3.9,4.9) --(0.5,3);
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. Explosive fire sales.}
+\label{fig:t1explosiveFS}
+\end{figure}
+
+To see why this is the case consider again first a negative shock. The intermediaries are in breach of their capital requirement as condition \ref{c_inadequateBuffers} holds, and needs to liquidate some assets (Assumption \ref{l_noBluffing}). As condition \ref{c_unstable} does not hold, there will be a new sales amount, that when sold, they are not solvent again. (This may be their total position, at which they close). (there will (may?) be an interior solution). [Show exactly amount sold in proof?]. As this is the only optimal choice for the intermediaries, the equilibrium price will be the price at which the households are content to hold the remainder of the asset. Consider instead a positive shock. Now the intermediaries are able to purchase more, and as condition \ref{c_unstable} does not hold they can only purchase a finite amount, as this is the only optimal choice (as long as this amount is less or equal to the total amount of the risky asset) for the intermediaries, the equilibrium price will be the price, at which, the households are happy to hold the remainder of the asset. Proposition \ref{p_explosiveFiresales} is a special case of this proposition, where the intermediary can afford all ($W^I_1/\theta_1 = z$) or none ($W^I_1/\theta_1 = 0$) of the risky asset. [Write out proposition equation fully.]
+
+
+
+\begin{proposition} \label{p_pricewBuffer}
+If condition \ref{c_unstable} is satisfied, but not \ref{c_inadequateBuffers}, then 
+\begin{equation}
+p_1 = \mu
+\end{equation}
+\end{proposition}
+\begin{proof}
+See appendix.
+\footnote{[Prove using game theory / proof by contradiction. If intermediary responds to negative shock by reducing position, then price spirals out and becomes minimum and they have to unwind their total position at this price, hence cannot be optimal. And they cannot increase position as they are limited by regulatory contraint.]}
+\footnote{Notice that we do not allow for unsubstantiated purchase rumours (ie creating a bubble to make prices actually work.)}
+\end{proof}
+
+[Write corollary about sharpe ratios?] 
+\begin{corollary}[Sharpe ratios]
+Sharpe ratios will be $SR = ( \mu - p_1 ) / \sigma \in [0,z\gamma\sigma]$. When $z$ is normalised to one this becomes $SR \in [0,\gamma\sigma]$, where $\gamma\sigma$ is the price impact. Therefore the SR in crises are determined by the risky assets price impact (in bad times if time varying). The CHANGE in SR, ie the additional effect of the crises will be $\Delta SR = x^I_0\gamma\sigma$ ie this price impact times the proportion of the asset held by the intermediaries in period 0. So we can see already now that if the market is efficient (or growth is optimal/high) and the financial intermediaries are well capitalised, the SR is low in period 0 and $x^I_0$ is close to 1 and the SR is close to 0, the fire sale /crises effect will be bigger.
+
+[low SR in p0 may indicate that SR can rise by more in p1]
+
+\end{corollary}
+
+To see why this is the case consider again the intermediaries facing a shock. As their buffer is [more than] large enough, they are able to purchase an additional amount of the risky asset, and in doing so as condition \ref{c_unstable} is satisfied their solvency will improve, and they will actually be able to purchase all of the risky asset. Therefore, as they are risk neutral, the equilibrium price will be infinitesimally close to the fundamental value, as this is the only price where the demands equals the supply.
+
+The following describe the conditions, which are important to know if are fulfilled, to know which price outcome is achieved. Then an assumption is discussed, and the consequences if it is violated is considered. [Make less general. State conclusions].
+
+\begin{condition}[Unstable equilibrium] \label{c_unstable}
+[Unstable equilibrium condition]. There will be an unstable equilibrium if
+\begin{equation}
+x_0^I > \frac{\theta_1}{\gamma \sigma^2}
+\end{equation}
+\end{condition}
+\begin{proof}
+An unstable equilibrium means that the slope of the demand curve exceeds the slope of the supply curve
+\begin{equation*}
+\frac{d x^I}{dp} > \frac{ d (z-y)}{dp}.
+\end{equation*}
+Alternatively write that 
+\begin{equation*}
+\frac{d x^I_t}{dp_t} + \frac{d x^H_t}{dp_t} > \frac{dz_t}{dp_t} = 0.
+\end{equation*}
+We see from the households demand equation (Eqn. \ref{e_xH}) that 
+\begin{equation*}
+\frac{d x^H_1}{dp_1} = -\frac{1}{\gamma \sigma^2}
+\end{equation*}
+And from by substituting in the wealth dynamic equation
+\begin{equation}
+W_{t} = W_{t-1} + (p_{t}-p_{t-1})x_{t-1}
+\end{equation}
+into the intermediaries demand function (Eqn. \ref{e_xI}) that
+\begin{equation*}
+\frac{d x^I_1}{dp_1} = \frac{x_0}{\theta_1}.
+\end{equation*}
+Such that
+\begin{align*}
+\frac{d x^I_t}{dp_t} + \frac{d x^H_t}{dp_t} &> 0,\\
+\frac{x_0}{\theta_1} - \frac{1}{\gamma \sigma^2} &> 0,\\
+x_0 &> \frac{\theta_1}{\gamma \sigma^2},
+\end{align*}
+is the condition for an unstable equilibrium.
+\end{proof}
+
+To see why this is the case consider how a change in price affects the intermediaries demand capacity. If the price rises by one unit they will be able to purchase $x_0/\theta_1$ units of the risky asset. The same price increase will also decrease the demand of the households by $1/(\gamma \sigma^2)$. And if the demand increase by the intermediaries exceed the demand drop by the households, there will be excess demand, and the price has to adjust further upwards. Further increasing how much the intermediary can purchase. This increasing spiral will increase until the intermediary can purchase all of the asset and the household will want to buy none. A price decrease will also equally spiral out until the intermediary can only own zero of the asset, and the intermediary has to demand all of the asset (for the market to clear). 
+
+
+\begin{condition}[Inadequate buffers] \label{c_inadequateBuffers}
+The buffers will be inadequate (the intermediary will be capital constrained) if 
+\begin{equation}
+\phi^x < \frac{W_0}{\theta_1}\frac{d\theta}{\theta_0}+\frac{1}{\gamma\sigma^2}d\bar{\mu}.
+\end{equation}
+\end{condition}
+\begin{proof}
+For the buffer to be inadequate it must be the case that the intermediary cannot purchase as much of the risky asset in period 1 as he purchased in period 0 (without affecting the price).
+\begin{align*}
+x^I_1 < x^I_0, (\text{at } p_1 = p_0)\\
+\frac{W^I_1}{\theta_1} < x^I_0.
+\end{align*}
+Where $W^I_1 = W^I_0$ as $p_1 = p_0$. And if we define $\phi^x$ as the extra amount of risky asset the intermediaries could have purchased in period 0.
+\begin{align*}
+\frac{W^0_1}{\theta_1} &< \frac{W^I_0}{\theta_0} - \phi^x,\\
+\phi^x &< \frac{W^I_0}{\theta_0} - \frac{W^I_0}{\theta_1},\\
+&= W^I_0 \left(\frac{1}{\theta_0} - \frac{1}{\theta_1}\right),\\
+&= W^I_0 \left(\frac{\theta_1 - \theta_0}{\theta_0 \theta_1}\right),\\
+\phi^x &< \frac{W^I_0}{\theta_1} \frac{d\theta}{\theta_0}.\\
+\end{align*}
+And more generally if there can be a value shock and a regulation shock. We need for inadequate buffer that the demand in period 1 can not exceed the demand in period 0. ie.
+\begin{align*}
+x^H_1 + x^I_1 < x^H_0 + x^I_0,\\
+x^H_1 - x^H_0 + x^I_1 - x^I_0 < 0.\\
+\end{align*}
+Where $x^H_1 - x^H_0 = \frac{d\mu}{\gamma\sigma^2}$ [Do I need to show this? Probably...] and $x^I_1 - x^I_0 = \frac{W^I_0}{\theta_1} - \frac{W^I_0}{\theta_0} + \phi^x$ as before. Such that
+\begin{align*}
+x^H_1 - x^H_0 + x^I_1 - x^I_0 < 0,\\
+\frac{d\mu}{\gamma\sigma^2} + \frac{W^I_0}{\theta_1} - \frac{W^I_0}{\theta_0} + \phi^x < 0,\\
+\phi^x < \frac{W^I_0}{\theta_0} - \frac{W^I_0}{\theta_1} - \frac{d\mu}{\gamma\sigma^2},\\
+\phi^x < \frac{W^I_0}{\theta_1} \frac{d\theta}{\theta_0} - \frac{1}{\gamma\sigma^2}d\mu.
+\end{align*}
+And redefining a positive shock to be a negative value shock by introducing $d\bar{\mu} = -d\mu$ we finally get [maybe swap definitions?]
+\begin{equation}
+\phi^x < \frac{W^I_0}{\theta_1} \frac{d\theta}{\theta_0} + \frac{1}{\gamma\sigma^2}d\bar{\mu}.
+\end{equation} 
+\end{proof}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.75]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+%\node at (4.5,5) [circle,fill,inner sep=1.5pt]{};
+
+\draw[black](0,4)--(9,6) node[anchor = north west]{$x_1^I$};
+
+\draw(0,2)--(9,8) node[right]{$z-x_1^H$};
+
+%\draw(0,8) -- (9,8);
+
+
+%\node [left] at (0,8) {$\bar{p}_1^* = \mu $};
+
+%\node at (0,8) [circle,fill,inner sep=1.5pt]{};
+
+%\node [left] at (0,2) {$\underline{p}_1^*$};
+
+%\node at (0,2) [circle,fill,inner sep=1.5pt]{};
+
+\draw[dashed](0,5)--(4.5,5)--(4.5,0);
+
+\draw[gray](0,4)--(9,6) node[anchor = north west]{$x_1^I$};
+\draw(0,5)--(9,7) node[right]{$x_1^{I'}$};
+
+\draw[thick,decorate,decoration={brace,amplitude=3pt}] (4.5,5) -- (0,5) node[pos=0.5,below]{${ES_1}$};
+
+\draw[blue,thick,decorate,decoration={brace,amplitude=3pt}] (0,5) -- (3,5) node[pos=0.5,above]{$\bm{\phi^{x}}$};
+
+\draw(0,5)--(9,7) node[gray,right]{$x_1^{I'}$};
+\draw[gray](0,4)--(9,6) node[anchor = north west]{$x_1^I$};
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. Inadequate buffers.}
+\label{fig:t1unstableEqm}
+\end{figure}
+
+We see that if the buffer (in terms of how many additional units of the risky asset $x$ the intermediaries were able to purchase in period 0), is less than the relative regulatory shock times the amount of the asset owned from period 0 to period 1 ($W_0/\theta_1$) and the expectation shock ($d\bar{\mu}$, where shock is defined to be positive for a negative value shock so $d\bar{\mu} = -d\mu = -(\mu_1-\mu_0)$) times the households demand sensitivity [to the price] [price insensitivity] (the reciprocal of the price impact). So the first term is the change in intermediaries demand capacity from a change in the regulatory requirement and the second term is the change in households demand from the change in the expected dividend size. If the buffer is smaller than these two terms, then the buffers will be inadequate to absorb the shock, and the financial intermediaries will be capital constrained and will need to adjust their capital structure (sell assets) as to not be closed down by the regulator.
+
+
+
+\begin{assumption}[No bluffing] \label{l_noBluffing}
+ \footnote{[Maybe make lemma?]} Banks cannot convince the market (other agents) that they will buy something they cannot a priori afford or are allowed to by capital requirements. If this lemma is violated, we get self fulfilling asset prices (Corollary \ref{c_selfFulfilling}).
+\end{assumption}
+
+\begin{corollary}[Self fulfilling asset prices] \label{c_selfFulfilling}
+If lemma \ref{l_noBluffing} is violated, we can get self-fulfilling asset prices ie get to an equilibrium with higher prices from the lower, just by having the intention to buy (ie being confident). Perhaps by households/the economy having confidence in banks, can lead to this higher equilibrium (makes it possible, and since it is beneficial for the intermediaries, will lead to it).). [Maybe elaborate more on this] (Reference Alexander)
+\end{corollary}
+
+[Include price impact corollary?]
+
+[Likelihood of crises here?]
+
+
+
+
+\subsubsection*{Period 0}
+
+
+We now turn to the initial period. Here, we see the formation of endogenous buffers, are introduced to the definition of systemic risk as well the likelihood of such an event. We also see the usefulness of macroprudential buffers [Make more about conclusions]. Here in general there are not analytical closed form solutions, but comparative statics are given.
+
+\begin{lemma}
+The price in period 0 is found from the equilibrium conditions. [Just have stated as in period 0?]
+\end{lemma}
+\begin{proof}
+[Move to appendix.]
+The households demand is still given by
+\begin{equation}
+x^H_0 = \frac{\mu_0-p_0}{\gamma \sigma^2}.
+\end{equation}
+The intermediaries demand is also again found by the solution to their optimisation problem. Such that
+\begin{equation}
+x^{I}_1 = \underset{x^{I}_1}{\arg} J = \arg \max_{x^I}\left[\E_0[W^I_2] - \gamma/2\sigma^2\right].
+\end{equation}
+(For specific situations this can be solved analytically ? General solutions can be given?) Due to the feedback and non-linear effects in period 1, this needs to be solved numerically. In figures X-X this optimal demand is shown for different parameters.
+As in time 1, the price is then the value p for which $x^I+x^H = z$ (or$x^I= z - x^H $)  (as illustrated in figure X.) (Mention conditions for a solution?).
+\end{proof}
+
+[Show what price will be?] Having gotten the price we can also see
+
+\begin{proposition}[Prop of risk premium / sharpe ratios[finish this]
+The risk premium is increasing in buffer size (NB but not linearly).
+This is expected return over volatility $SR = (p_0 - \mu)/ \sigma$. $\lambda = f(p-\mu) = f((W^I)^{-1})$. Do I get a risk premia for regulatory cliff effect???
+\end{proposition}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{./figures/SR0vsTheta0.pdf}
+\caption{Price of risk (Sharpe Ratio) vs buffer size. Shown for $\sigma_x = 0.1, \gamma = 3$. }
+\label{f_probSRvsBuffer}
+\end{figure}
+
+
+\begin{proposition}[[Include something about assets moving from financial intermediaries to households?]]
+
+\end{proposition}
+
+Can I say anything about volatility? Maybe price in period 0 vs 1 vs 2?
+
+[The model is solved numerically backwards. So the intermediary maximises his objective function $\Gamma$ for a given price in period 0 by choosing $x_0$. As this is a maximation over an expected outcome. Monte carlo simulations (of outcomes) are done to achieve this expectation (mean of outcomes) for each parameter picks. This yields his demand curve. The pension funds demand curve is simply found from his optimality condition, plotting $y_0$ vs $p_0$. The intersection yields the clearing set (price, intermediary demand, and pension demand).]
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{./figures/20181017eqm_t0_seeded.pdf}
+\caption{price in period 0 $p_0$ vs supply $z-y_0$ and demand $x_0$. Fitted $x_0$ in yellow. Average of 1000 simulations. Differentiation is seeded. [Consider changing so that we have two demand lines and one fixed supply line at $z$?]}
+\end{figure}
+
+The clearing price of 0.8 and demands of 0.5 yields a significant buffer, as could have purchased 1 ie all of $z$.  We see that the intermediaries demand is [(almost) monotonically] decreasing in $p_0$ and as we would expect the households supply is increasing.
+
+[Proposition on expected return and risk premia? Also for period 1?]
+
+We now turn to the effects of the period 0 equilibrium on period 1 outcomes.
+
+[Call results from here?]
+
+
+
+
+
+\begin{figure}[h] 
+\centering
+\includegraphics[scale=.7]{./figures/20181017p1vsVolShock.pdf}
+\caption{$p_1$ vs realisation of expected asset value  $\nu_1$. For $p_0 = 90$. Volatility 0.2. [Consider plotting SR instead. More clear where crises are.]}
+\label{f_price1vsvolshock}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{./figures/20181017p1vsReqShock.pdf}
+\caption{$p_1$ vs realisation of capital requirement $\theta_1$. For $p_0 = 0.9$ and a probability of regulatory cliff effect $\theta = 0.1  \rightarrow 0.3$ of $q = 10\% $. Volatility shocks turned off. Seeded.}
+\label{f_price1vsRegShock}
+\end{figure}
+
+Fire sale pressure will result when the fundamental value $\nu_1$ (or $\mu_1)$ realises lower or if the regulatory cliff effect is realised. If the conditions for explosive fire sales are fulfilled, we will see a sudden drop in $p_1$ as no new equilibrum can be found, where financial intermediaries still keep some of the asset. This visualises as yielding a cut-off where the price suddently drops as can be seen in the following figure (It basically gets further from the fundamental value. An illiquidity shock).
+
+\begin{definition} (Systemic risk)
+Let systemic risk be defined by $P_0 (x^I=0)$. Here $P = P^{min}$.
+(\textbf{Systemic risk.} Formally let systemic risk be the likelyhood of a state characterised by the holdings of the banks being zero ($x^B = 0$). Or more generally, by a state of the world with low intermediary wealth $W^I$ and the highest possible risk-premia $\lambda_t$ and sharpe ratio SR. [Just define it from the max SR of $\gamma\sigma$?])
+\end{definition}
+
+The systemic risk is visible in figure \ref{f_price1vsvolshock} and \ref{f_price1vsRegShock} where we are in a state space where the price is further from the fundamental value. The probability of ending in this state is more likely the smaller the buffer is (figure \ref{f_probFSvsBuffer}). (There could be other factors outside model that makes intermediaries have another buffer than otherwise optimal such as tax relief on debt.)
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{./figures/probFiresale_vs_buffer_smoothed2.pdf}
+\caption{Probability of explosive fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size.\textsuperscript{\color{blue} a}}
+{\small\textsuperscript{{\color{blue} a}} Smoothed through fitting 4th degree polynomial aka Spline.}
+\label{f_probFSvsBuffer}
+\end{figure}
+
+
+\begin{proposition} (Probability of systemic risk/fire sales)
+The probability of systemic risk (explosive fire sales) is increasing in the size of the regulatory cliff effect and the likelihood. (...)
+\end{proposition}
+
+[Include figure of P(explosive fire sale) vs vol]
+
+Prop/corollary: The probability of systemic risk is increasing in the inverse of the volatility. Ie Systemic risk is high when volatility is low (Reference High moment risk) [merge with above?]
+Merge with below
+\begin{corollary}
+When volatility falls, systemic risk rises. (counter-intuitively).
+\end{corollary}
+
+Prop? Prob sys risk increases as buffer decreases. If there is introduced an exogenous benefit to debt it will make the intermediaries hold a smaller buffer than previously optimal, and it will increase the systemic risk. (ie sys risk increases when buffer decreases (ceteris peribus) [relevant for real world applications/macroprudential policy. Because it is society/households(?) that pays the debt benefit to the intermediary]
+
+\begin{corollary}
+All systemic risk stemming from the regulatory cliff effect can be eliminated by a counter-cyclical buffer of size X. [Make prop? Can make other lemma] 
+\end{corollary}
+
+[Make other corollary with that systemic risk stemming from the fundamental value vol can be eliminated to a VaR of 99.9\% by a counter cyclical buffer of size Y. Make this as second part of previous corollary]
+
+The required buffer size that would be needed to be released to stop fire sales can be seen in figure \ref{f_neededBuffervsRegSize} and is proportional to the size  of the regulatory cliff effect and the probability of the regulatory cliff effect.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.75,trim=7.5cm 10cm 7.5cm 10cm]{./figures/neededBuffervstheta1p100.pdf}
+\caption{Needed buffer $\phi$ vs realisation of capital requirement  $\theta_1$. For $p_0 = 100$ and $\sigma_x = 0, q = 10\%$}
+\label{f_neededBuffervsRegSize}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.75,trim=7.5cm 9cm 7.5cm 10cm]{./figures/neededBuffervsnu1p95.pdf}
+\caption{Needed buffer $\phi$ vs realisation of expected asset value  $\nu_1$. For $p_0 = 95$ and $\sigma_x = 0, q = 10\%$}
+\label{f_neededbufvfunShock}
+\end{figure}
+
+As the fundamental value is a normal variable there is no single buffer that can always avoid fire sales from this channel. However one can find the buffer size that eliminates the probability of explosive fire sales to a certain probability of cases (equivalent to a VaR method). Illustrated as the buffer size needed on the y-axis vs the likelihood along the x-axis in figure \ref{f_neededbufvfunShock} [Make this graph].
+
+\begin{corollary}
+There is a trade-off between lowering systemic risk and market efficiency/ risk premium / sharperatio (alternatively economic growth). This is seen if you regulate/introduce a counter-cyclical buffer in period 0 that you can remove in period 1.
+\end{corollary}
+
+Use this shadow price measure $\Lambda$ as Georgy also uses?
+
+Tradeoff with lower systemic risk and higher sharpe ratios.
+
+Introduce real economy here. Market for projects. Short run vs long run. Decreasing supply of projects in terms of return.
+
+In corollary 2? Systemic risk falls as we increase counter-cyclical buffer
+
+\begin{proposition} (Optimal buffer size)
+[Delet this prop? Not so important?... Move further down at least...]The optimal buffer size is increasing in vol, reg cliff effect, ....
+The (optimal) buffer size is determined in equilibrium by the likelihood and size of the regulatory cliff effect and the volatility of the asset and .... 
+\end{proposition}
+
+
+
+\section{Empirical Predictions}
+The model yields several testable empirical predictions.
+
+In the time-series, the model predicts that as the regulatory uncertainty increases (or the magnitude of the regulatory cliff effect increases) the banks will react with a larger buffer today.
+We can measure the regulatory uncertainty using the news-based measure developed by X and already used in several papers published in [American Economic Review...].
+
+In the cross-section, the model predicts that if an individual bank faces higher regulatory uncertainty (or the magnitude of the regulatory cliff effect increases), then they will equally respond with a higher buffer (to avoid having to fire-sell). This buffer increase should thus be larger than for other banks, ceteris peribus. This can be tested on Danish data as Nykredit was in such a situation in 2017, considering implementing a risk-weight floor for mortgage loans. In the US sample we can test this on banks that receive a high add-on requirement from the stress-test, and see if they increased their buffer before (this assumes that the bank suspects that they may receive this). (We can also look at banks that receive an operational-risk addon and see if they increase before). Has there been uncertainty of individual banks before?? How can we proxy this?
+
+Things we need to control for in time-series?: asset vol changes (banks assets, proxy with sp500?), fear(VIX)?,
+
+NB don't have to worry of reverse-casuality as increase in buffers in not likely to lead to regulatory uncertainty, if anything then loosening of contraints which is opposite effect. (We also partially control using lagged buffers to implementation of regulation).
+
+
+
+\section{Evidence on macroprudential policy effects on asset prices using an event study} \label{sec:empiricalAnalysis}
+
+\subsection{Data and Methodology}
+
+This section outlines how I use relevant data to empirically answer the relevant research questions of this paper. It is outlined as followed. First, we describe the data sample. Second, the event-study methodology is described.
+
+\subsubsection*{Macroprudential Policy}
+The ESRB has documented european countries announcements and implementations of the macroprudential buffer. Which is accessible on their website. The announcements are used in this analysis as they indicate the surprise to the market, the reaction to which is then observed. Additionally as market prices should incorporate expectations of future events, this makes it a sensible measure.
+
+\subsubsection*{Returns}
+
+Returns are calculated on adjusted returns taken from Compustat Global. Compustat global additionally supplies data on firms location, and sector, and even industry group, as according to their Global Industry Classification Standard (GICS). See \url{https://en.wikipedia.org/wiki/Global_Industry_Classification_Standard}. This is useful for our analysis.
+
+The objective of the analysis requires us to combine data on equity returns and macroprudential policy. First, we obtain daily stock returns from the Compustat. It is also possible to obtain daily data points on the number of stocks outstanding and their trading volume, as well as daily high and low prices.
+
+\subsubsection*{Risk-adjusting Returns using the Market Model} \label{sec:eventstudymethod}
+To get the abnormal return, I control for the expected return using the market model. The market return and the risk-free rate are gathered from \href{https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}{Ken French's website}.
+
+I apply the capital asset pricing model (CAPM) model to estimate expected returns based on the factor loading 350 days prior to the event.\footnote{\citep[see][]{Sharpe1964,Fama1967}} My time line looks as follows.
+\begin{figure}[!htpb]
+	\centering
+	\begin{tikzpicture}
+	
+	\usetikzlibrary{arrows,decorations.pathreplacing}
+	
+	\tikzset{number line/.style={}}
+	
+	\tikzset{
+		brace_top/.style={
+			color=black,
+			decoration={brace},
+			decorate
+		},
+		brace_bottom/.style={
+			color=black,
+			decoration={brace, mirror},
+			decorate
+		}
+	}
+	
+	\draw (0,0) -- (15,0);
+	\foreach \x in {0.8, 7.5, 8.5, 10.5, 14.2}
+	\draw(\x cm,3pt) -- (\x cm, -6pt);
+	\draw (0.8,0) node[above=3pt] {$T_0 = -350$};
+	\draw (7.5,0) node[above=3pt] {$T_1 = -1$};
+	\draw (8.5,0) node[above=3pt] {$0$};
+	\draw (10.5,0) node[above=3pt] {$T_2 = 5$};
+	\draw (14.2,0) node[above=3pt] {$T_3 = 12$};
+	\draw (4,0) node[above=18pt, align=center] {
+		$\left(\mytab{estimation window}\right]$};
+	\draw (9,0) node[above=18pt, align=center] {
+		$\left(\mytab{event window}\right]$};
+	\draw (12.3,0) node[above=18pt, align=center] {
+		$\left(\mytab{post-event window}\right]$};
+	
+	\node (3,-0.5) at (3,-0.5) {};
+	\node (7.5,-0.5) at (7.5,-0.5) {};
+	
+	\end{tikzpicture}
+\end{figure}
+
+I calculate expected returns and compare them to expected return from the market model. We then compute the differences, called abnormal returns, and cumulate them over the following days. As in in \citet{Campbell1997}, I assume the market model to hold true, meaning that for any security $i$, we expect a return of 
+
+\begin{equation}
+R_{it} = \alpha_i + \beta_i  R_{mt} + \epsilon_{it},
+\end{equation}
+
+where $R_{it}$ and $R_{mt}$ are the excess returns on firm $i$ and the markets excess return, both at time $t$. Furthermore, $E[\epsilon_{it}] = 0$ and $Var[\epsilon_{it}] = \sigma^2_{\epsilon_{i}}$. I cumulate abnormal returns over a time horizon of 5 days and derive the relevant test statistics of $J_1$ and $J_2$ [To come].
+
+%Finally, we vary the event window to check for robustness.
+
+
+
+\subsection{Summary Statistics}
+Tbd
+
+
+\subsection{Results (Evidence from event study on equity returns)}
+
+The results show that equity prices fall as an increase to the macroprudential buffer is announced (Figures \ref{fig:eventRaw} and \ref{fig:eventAbnCum}). However prices rise after an announcement of sustaining the macroprudential buffer at its current level (Figures \ref{fig:eventRawNoEvent} and \ref{fig:eventAbnNoEvent}). This is consistent with a pre-announcement risk-premium, as well as the price of risk increasing as macroprudential buffers are increased.
+
+When considering who is affected by an increase in the macroprudential buffer, we see from figure \ref{fig:eventAbnNoEvent} that non-bank finance firms are hit the hardest, followed by other firms, and banks are hit the least. This is in contrast with no-events where we now see banks having the smallest increase, followed by non-bank finance firms, and others having the largest increase. This is consistent with a theory where non-bank finance firms invest in equity by borrowing from banks. As banks have to raise their capital level, one way they can do so is to reduce lending to non-bank finance firms, and they hence have to reduce their balance sheets by selling stocks of "other" firms at a reduced price, to make up for the fact that new agents with a higher risk preference needs to be the new owners. 
+
+Further figures show splits by all industries and all sector groups, as well as bank vs non-bank, and finance vs non-finance, for events and no-events.
+
+[The empirical analysis consists of two major components. First, we risk-adjust returns of our ESG decile portfolios through the application of factor-models. We further condition on good and bad in the economy and thereby split abnormal returns in different economic environments. We then attempt to test return differences in high and low ESG portfolios against other explanatory variables. 
+
+Secondly, we review changes in ESG scores and what they mean for the performance of firms. Specifically, we apply an event-study approach to calculate cumulative abnormal returns after changes in scores.]
+
+[Look at longer 50-100 days. Are there drifts? Slow updating and extrapolative expectations]
+
+%these two are main figures
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncum.pdf}
+	\caption{Cumulative Abnormal Returns - Event}
+	\label{fig:eventAbnCum}
+	\fnote{Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - No Event}
+	\label{fig:eventAbnCumNoEvent}
+	\fnote{Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumType.pdf}
+	\caption{Cumulative Abnormal Returns - Bank and non-bank finance split - Event}
+	\label{fig:eventAbnType}
+	\fnote{True means in bank industry group, Non-bank fin means in an industry sector group, which is not banking according to the the Global Industry Classification Standard, and all else are in other. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumTypeNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Bank and non-bank finance split - No Event}
+	\label{fig:eventAbnNoEventSplit}
+	\fnote{True means in bank industry group, Non-bank fin means in an industry sector group, which is not banking according to the the Global Industry Classification Standard, and all else are in other. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+
+
+
+\subsection{Robustness Checks}
+
+
+Robust to computing CAR using cumulative product instead of cumulative sums, as the results look almost identical, as can be seen from figure \ref{fig:eventAbnCump}.
+
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncum.pdf}
+	\caption{Cumulative Abnormal Returns - Event}
+	\label{fig:eventAbnCump}
+	\fnote{Cumulated using products. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\section{Conclusion}
+This paper shows that announcing a macroprudential buffer leads a drop in the price of companies of the country. I notice that the companies mostly affected are non-bank financials, then regular companies and banks the least. This is consistent with the banks responding by increasing their intermediation premium (the risk premia on their lending). This increases the funding costs of companies that borrow from banks. And as non-bank financials do this to a large extend, and regular companies to a lesser extend, this is consistent with the results. It would be interesting to further look to see if the loan rates go up after the macroprudential buffer, and to consider cross-country effects. It would also be interesting to further explore the systemic risk aspect, maybe through more liquid CDS prices, or a longer time horizon.
+
+
+\section{Evidence from Credit Default Swap prices}
+We now look at credit default swap prices instead...
+
+[Do on country indeces instead. More traded(?)]
+
+[Think about if illiquidity in the prices. Can I use next traded price in stead? Exclude until there are prices and use a longer term test?]
+
+\subsection{Data and Methodology}
+Credit default swap (CDS) data is taken from markit which collects spreads on traded credit default swap contracts. They cover contracts on debt issued from all over the world [X different countries], including firms from various European Countries and are thus an interesting data source to test the empirical prediction 3, that systemic risk decreases as macroprudential buffers are increased. The dataset also includes a sector for each firm, and sector groups, such as whether the firm is a bank, could potentially be added in the future.
+
+We also use the event study methodology described in section \ref{sec:eventstudymethod}.
+
+\subsection{Results}
+The results from the credit default swap study, are less obvious. The risk seems to be higher when macroprudential buffers are announced to be increased (Figure \ref{fig:eventCDS}) versus no-change (Figure \ref{fig:eventCDSNoEvent}), and fall after the announcement, especially for financials (Figure \ref{fig:eventCDSFin}). Basic materials seems to be the most sensitive falling a lot at increases and almost straight for no-changes (Figure \ref{fig:eventCDSSplitwMat} and \ref{fig:eventCDSSplitNoEvent}). 
+
+When split into finance firms and no finance firms the risk for finance firms seems to fall when an increase is announced, and stay the same when no-changes are announced, as shown in figures \ref{fig:eventCDSFin} and \ref{fig:eventCDSNoEvent}.
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadCDS.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDS}
+	\fnote{Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadCDSNoEvent.pdf}
+	\caption{Credit default swap spreads - No Event}
+	\label{fig:eventCDSNoEvent}
+	\fnote{No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadFinCDS.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDSFin}
+	\fnote{Split whether firm is a financial firm according to Markit sectors. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadFinNoEventCDS.pdf}
+	\caption{Credit default swap spreads - No Event}
+	\label{fig:eventCDSFinNoEvent}
+	\fnote{Split whether firm is a financial firm according to Markit sectors. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadSplitCDS.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDSSplit}
+	\fnote{Split according to their Markit sector. Basic materials sector not included. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadSplitCDSwMat.pdf}
+	\caption{Credit default swap spreads - Event}
+	\label{fig:eventCDSSplitwMat}
+	\fnote{Split according to their Markit sector. Basic materials sector included. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics{./figures/spreadSplitNoEventCDS.pdf}
+	\caption{Credit default swap spreads - No Event}
+	\label{fig:eventCDSSplitNoEvent}
+	\fnote{Split according to their Markit sector. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\section{Evidence from Loan prices}
+To come...
+
+Use Reuters-Dealscan, Current facility pricing and facility and company datasets.
+
+Check if baserate changes (on new loans?)
+Check if new loans in country drops -> and if loans in neighbouring countries rise. !Can also check if these new loans come from the country being hit.
+But oculd affect fees or covenenants instead or also.
+But but floors binding in europe. So maybe look at fees and covenants insread like in Schwart and Roberts (2019, fric conference, first draft). Financial contracts and interest rates: Implications for risk-sharing and monetary policy transmission. 
+
+\section{Evidence from Bond prices}
+To come...
+[Using eurofidai]
+
+
+
+\clearpage
+\bibliography{bibliography}
+
+\newpage
+\begin{appendices}
+
+\section{Additional figures}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitSplit.pdf}
+	\caption{Cumulative Abnormal Returns - Split by industry group - Event}
+	\label{fig:eventAbnCumSplitSplit}
+	\fnote{Split by industry group according to the the Global Industry Classification Standard. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitSplitNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Split by industry group - No Event}
+	\label{fig:eventAbnCumSplitSplitNoEvent}
+	\fnote{Split by industry group according to the the Global Industry Classification Standard. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabnSplit.pdf}
+	\caption{Individual Abnormal Returns - Split by sector - Event}
+	\label{fig:eventAbnSplit}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabnSplitNoEvent.pdf}
+	\caption{Individual Abnormal Returns - Split by sector - No Event}
+	\label{fig:eventAbnSplitNoEvent}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplit.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - Event}
+	\label{fig:eventAbnCumSplit}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - No Event}
+	\label{fig:eventAbnCumSplitNoEvent}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line denotes fit using the Loess method. Triangles signify daily means.}
+\end{figure} 
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitShade.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - Event}
+	\label{fig:eventAbnCumSplitShade}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumSplitNoEventShade.pdf}
+	\caption{Cumulative Abnormal Returns - Split by sector - No Event}
+	\label{fig:eventAbnCumSplitShadeNoEvent}
+	\fnote{Split by sector according to the the Global Industry Classification Standard. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumBank.pdf}
+	\caption{Cumulative Abnormal Returns - Bank split - Event}
+	\label{fig:eventAbnCumBank}
+	\fnote{True means in bank industry group according to the the Global Industry Classification Standard, else false. Cumulated using sums. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumBankNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Bank split - No Event}
+	\label{fig:eventAbnCumBankNoEvent}
+	\fnote{True means in bank industry group according to the the Global Industry Classification Standard, else false. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumFin.pdf}
+	\caption{Cumulative Abnormal Returns - Finance split from rest - Event}
+	\label{fig:eventAbnCumFin}
+	\fnote{True means in finance sector according to the the Global Industry Classification Standard, else false. Cumulated using sums. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncumFinNoEvent.pdf}
+	\caption{Cumulative Abnormal Returns - Finance split from rest - No Event}
+	\label{fig:eventAbnCumFinNoEvent}
+	\fnote{True means in finance sector according to the the Global Industry Classification Standard, else false. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retraw.pdf}
+	\caption{Individual Raw Returns - Event}
+	\label{fig:eventRaw}
+	\fnote{Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retrawNoEvent.pdf}
+	\caption{Individual Raw Returns - No Event}
+	\label{fig:eventRawNoEvent}	
+	\fnote{No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabn.pdf}
+	\caption{Individual Abnormal Returns - Event}
+	\label{fig:eventAbn}
+	\fnote{Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabnNoEvent.pdf}
+	\caption{Individual Abnormal Returns - No Event}
+	\label{fig:eventAbnNoEvent}
+	\fnote{No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+
+
+\FloatBarrier
+
+\section{Brief Model Section} \label{sec:model}
+
+\subsection*{Setup}
+[Currently don't need feedback on the setup. Full model section is in the appendices. Now I mainly just show the two main results (proposition 1 and 2).]
+
+\subsubsection*{Results}
+
+\begin{lemma}
+The price in period 0 is found from the equilibrium conditions.
+\end{lemma}
+\begin{proof}
+The households demand is still given by
+\begin{equation}
+x^H_0 = \frac{\mu_0-p_0}{\gamma \sigma^2}.
+\end{equation}
+The intermediaries demand is also again found by the solution to their optimisation problem. Such that
+\begin{equation}
+x^{I}_1 = \underset{x^{I}_1}{\arg} J = \arg \max_{x^I}\left[\E_0[W^I_2] - \gamma/2\sigma^2\right].
+\end{equation}
+Due to the feedback and non-linear effects in period 1, this needs to be solved numerically. 
+The price is then the value p for which $x^I+x^H = z$.
+\end{proof}
+
+
+\begin{proposition}[Risk premia and buffers]
+The risk premium at time 0 $\zeta_0$ is increasing in buffer size.
+This is expected return over volatility $\zeta_0 = (p_0 - \mu)/ \sigma$.
+\end{proposition}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{./figures/SR0vsTheta0.pdf}
+\caption{Price of risk (Sharpe Ratio) vs buffer size. Shown for $\sigma_x = 0.1, \gamma = 3$. }
+\label{f_probSRvsBuffer}
+\end{figure}
+
+
+\begin{definition}[Systemic risk]
+Let systemic risk be defined by $P_0 (x^I=0)$. Here $P = P^{min}$.
+(\textbf{Systemic risk.} Formally let systemic risk be the likelyhood of a state characterised by the holdings of the banks being zero ($x^B = 0$). Or more generally, by a state of the world with low intermediary wealth $W^I$ and the highest possible risk-premia $\lambda_t$ and sharpe ratio SR. [Just define it from the max SR of $\gamma\sigma$?])
+\end{definition}
+
+
+\begin{proposition}[Systemic risk and buffers]
+The probability of systemic risk is decreasing in the size of the buffer
+\end{proposition}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{./figures/probFiresale_vs_buffer_smoothed2.pdf}
+\caption{Probability of explosive fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size.\textsuperscript{\color{blue} a}}
+{\small\textsuperscript{{\color{blue} a}} Smoothed through fitting 4th degree polynomial aka Spline.}
+\label{f_probFSvsBuffer}
+\end{figure}
+
+
+\iffalse
+\section{Figures}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{./figures/probFiresale_vs_buffer_smoothed.pdf}
+\caption{Probability of fire sale vs buffer size. Shown for $\sigma_x = \sqrt{0.1}, \gamma = 3$, prob capital requirement increase = 10\%. 100 simulations per buffer-size. Smoothed through fitting 4th degree polynomial.}
+\label{f_probFSvsBufferAppendix}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.4]
+
+\draw[thick,<->] (0,10) node[above]{$p_1$}--(0,0)--(10,0) node[right]{$Q$};
+
+\node [below left] at (0,0) {$0$};
+
+%\node [below] at (5,0) {$Q^*$};
+
+\node [left] at (0,5) {$p_1^*$};
+
+\node at (5,5) [circle,fill,inner sep=1.5pt]{};
+
+\draw(3,1)--(7,9) node[right]{$x_1^I$};
+
+\draw(1,2)--(9,8) node[right]{$z-x_1^H$};
+
+\end{tikzpicture}
+\caption{Price discovery at time 1. Clean version}
+\label{fig:t1pricediscClean}
+\end{figure}
+
+\newpage
+\subsection{Unused text}
+
+\begin{definition} (Regulatory cliff effect).
+Let a regulatory cliff effect be an exogenous change at time 1 in the capital requirement $\theta_0$ of $\Delta \theta$, such that $\theta_1 = \theta_0 + \Delta \theta$. 
+\end{definition}
+
+\begin{definition}
+Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
+\end{definition}
+
+\newpage
+
+CALIBRATION\\
+We set fundamental value and amount such that even if intermediaries sell everything, the price is positive.\\
+
+
+APPLICATION\\
+See Num analysis document for application to Denmark. Results: We have explosive fire sales, and we can get size of CCB needed.\\
+
+
+
+PROOFS
+\begin{proof}[Proof of proposition \ref{p_explosiveFiresales}, \ref{p_pricewoExplosive}, and \ref{p_pricewBuffer}.]
+Starting from definition \ref{d_eqm} (Equilibrium). We have for period 1 that
+\begin{align*}
+&x^H_1 + x^I_1 = z,\\
+&\text{And using the households demand (Eqn. \ref{e_xH}) and intermediaries demand (Eqn. \ref{e_xI}),}\\
+&\frac{\mu - p_1}{\gamma\sigma^2} + W^I_1/\theta_1 = z, \text{ for $p<\mu$},\\
+&p_1 = \mu - \gamma \sigma^2 \left(z - \frac{W_1}{\theta_1}\right).\\
+&\text{We now have proposition \ref{p_pricewoExplosive}. Propositions \ref{p_explosiveFiresales} and \ref{p_pricewBuffer} then follow as special cases of this.}\\
+&\text{Proposition \ref{p_explosiveFiresales} is the special case where $x^I_1 = 0$ for negative shocks and $x^I_1 = z$ for positive shocks.}\\
+&\text{For negative shocks we get}\\
+&\frac{\mu - p_1}{\gamma\sigma^2} + 0 = z,\\
+&p_1 = \mu - \gamma\sigma^2 z.\\
+&\text{For positive shocks we get}\\
+&\frac{\mu - p_1}{\gamma\sigma^2} + z = z, \text{ for $p\leq\mu$},\\
+&p_1 = \mu.\\
+&\text{Proposition \ref{p_pricewBuffer} is the special case where $x^I_1 = z$ always. So}\\
+&p_1 = \mu.\\
+&\text{NB Maybe say why these are those cases.}\\
+\end{align*}
+\end{proof}
+
+\begin{proof}[Proof of proposition \ref{p_explosiveFiresales}, extended.]
+\begin{align*}
+p_1 &= \mu - \gamma\sigma^2 \left(z-\frac{W^I_1}{\theta_1}\right).\\
+&\text{And as } W_1^I = (p_1 - p_0)x_0 + W_0,\\
+p_1 &= \mu - \gamma\sigma^2 \left(z-\frac{(p_1 - p_0)x_0 + W_0}{\theta_1}\right),\\
+ &= \mu - p_1\frac{\gamma\sigma^2}{\theta_1} - \gamma\sigma^2 \left(z-\frac{W_0 - p_0x_0}{\theta_1}\right),\\
+p_1(1+\frac{\gamma\sigma^2}{\theta_1}) &= \mu - \gamma\sigma^2 \left(z-\frac{W_0 - p_0x_0}{\theta_1}\right),\\
+p_1 &= \left[\mu - \gamma\sigma^2 \left(z-\frac{W_0 - p_0x_0}{\theta_1}\right)\right]/(1+\frac{\gamma\sigma^2}{\theta_1}).\\
+\end{align*}
+\end{proof}
+
+\newpage
+OLD AFTER THIS
+Corrolary 1. When are there explosive fire sales.
+
+Corollary 2. When is equilibrium safe and when is it not (NB pos shocks always to x=z?)
+
+\bigbreak
+
+NB Add jumpy margin requirement
+
+NB Try repeatable 3 period model. Check if when margin goes from good to bad, that an upward sloping equity premium arises. And when it is good it looks downward sloping. Can I get it without repeatable? Downward yes. Upward not possible without? Compare expected return in this iteration vs expected in next.
+
+The model has three periods, two agents, one risky asset and a riskless one.
+
+In the economy there exists financial intermediaries and pension firms, the two agents.
+
+Intermediaries maximise their final wealth $W_2$, but are subject to a capital requirement in each period which means that  their wealth needs to be above a certain fraction $\theta$ of their risky asset ownership $z + x$, where $z$ is their endowment and $x$ is their purchased amount. [NB should I define as x as being amount sold by intermediaries?] Else they are closed and their ownership is forced to be 0. Formally,
+\begin{equation}
+W_t \geq \theta (z + x_t), \text{ for } t \in (0,1,2).
+\end{equation} 
+
+Pension firms are exponential utility maximisers and thus maximise
+ $U_2 = -e^{-\gamma W_2^P}$, where $\gamma$ is a parameter describing their absolute risk aversion.
+
+The risky asset evolves as an AR(1)\footnote{Autoregressive process of order 1} process such that $\tilde{\nu}_{t+1} = \tilde{\nu}_t + \epsilon_{t+1}$, where $\epsilon$ is a zero mean iid variable with standard deviation $\sigma$. Thus $\E_t[\tilde{\nu}_{t+1}] = \tilde{\nu}_t$.
+
+The riskless asset is without loss of generality normalised to yield a return of 0.
+
+\section{Other title suggestions}
+Banking on buffers
+
+\section{Introduction Notes}
+
+
+[Have a summary as second last paragraph]
+
+NB Remember that start of paragraph should introduce. And last sentence should summarise.
+
+[One paragraph setting scene, then introduce contribution and what we do.]
+
+
+[Write why these methods are useful for this setup/problem]
+	
+[The results are robust to...]
+
+THE INTERMEDIATION PREMIUM (Interesting title, explore if this could be focus of paper, and title).
+
+Include Blattner when losses turn into loans Portugal
+
+[In general, banking regulations have been put in place to avert financial crises occurring by reducing liquidity and credit risks, i.e. the direct linkages channel of systemic risk. However, in cases of extreme financial distress, breaching the regulations might have drastic effects on the financial system \citep{CruzLopez2013}, so-called "cliff effects", whereby the regulatory consequences of a measure crossing a threshold causes a violent reaction in financial markets.  For example, price declines could be exacerbated by market participants seeking to sell assets to meet liquidity requirements \citep{Gorton2009}. Alternatively, the demand for collateral could cause an increase in premiums for high-quality assets, creating a cliff effect for borderline assets that might lose their high-quality status during financial downturns \citep{IMF2012}. Thus, while regulations might reduce the chance of a financial crisis, they can add to systemic risk in times when their requirements are breached, through these regulatory cliff effects.]
+
+The countercyclical capital buffer, or macroprudential buffer, was introduced in... and the benefits have been quoted to be... [references]. 
+
+[Explain where these worries come from.] [These seemingly contradictory effects, and more, are what we will look at in more depth, but theoretically and empirically]. 
+
+
+[We identify in the paper how a house price fall can trigger a regulatory cliff effect through three regulatory channels. The first is through an increase in risk weights that reduces the banks' solvency. The second channel is through the inclusion of more exposures to the issuing bank in calculations for large exposure regulations. The final channel is through the Liquidity Coverage Ratio (LCR), where the liquidity haircut attached to covered bonds might increase if their ratings decrease.] [The paper goes on to give a quantitative analysis on the risk-weight channel, but the same principle works equally for the other channels.]
+
+[Our model shows how regulatory cliff effects can cause banks to act in the same way, at the same time, leading to a fire sale with feedback effects. It further shows how an increased exposure to common liquid assets, increased leverage of the banks in the system, and less liquid assets all add to the vulnerability of the system. Finally we identify the conditions for which the fire sale has no stable solution, meaning an explosive scenario.]
+
+[Talk about importance of direct vs indirect effects, as motivation]
+[Take from my proposal, but shorten. Include quotes]
+It is clear that indirect effects played a key role in the global financial crisis in 2008. In October 2008, the IMF predicted a loss from mortgage backed securities of 500 bn USD. However, the IMF’s estimate of the total loss, taking into account the spillovers into other asset classes, sectors and countries, are a staggering 1400 bn USD (Hellwig 2009).
+
+[Using a novel dataset from Danmarks Nationalbank and the Danish FSA, we use the model to give quantitative consequences for a regulatory cliff effect in Denmark, and find that current market measures imply that the circumstances are satisfied for the Danish financial system.]
+
+\subsection*{Literature section notes}
+
+Say how my work is different.
+
+NEW: Optimal time-consistent macroprudential policy JPE 2018
+
+Portugal study
+
+\url{https://libertystreeteconomics.newyorkfed.org/2018/10/regulatory-changes-and-the-cost-of-capital-for-banks.html}
+
+\url{https://www.newyorkfed.org/research/staff_reports/sr854}
+
+[See https://medialib.cmcdn.dk/medialibrary/51432DDB-BBE3-4327-85F4-BE3493077470/89E3261E-FA88-E911-8436-00155D0B0940.pdf
+
+Equilibrium asset pricing with financial constraints is a very
+active research field; we do not aim to provide an exhaustive list here. Early theoretical
+contributions include Detemple and Murthy (1997) who study the role of short-sale limit,
+a constraint that is intrinsically linked to margin requirement or haircuts in equilibrium.
+For more recent analysis, see Chabakauri (2015). Garleanu and Pedersen (2011) consider
+a general equilibrium model with two assets that are with identical cash-flows but may differ in their margins/haircuts, and tie their equilibrium pricing differences (bases) to
+margin differences modulated by the shadow cost of capital. This provides the closest
+theoretical framework to our empirical study. Other equilibrium asset pricing models
+with financial constraints include Gromb and Vayanos (2002), Basak and Cuoco (1998),
+He and Krishnamurthy (2013), and Danielsson, Zigrand, and Shin (2002). Our paper is also more broadly related to macroeconomics literature where assets also serve the role
+of collateral (to name a few, Kiyotaki and Moore, 1997; Caballero and Krishnamurthy, 2001).
+]
+
+
+Within 1) He Krishnamurthy. Brunnermeier Sannikov. Pedersen Brunnermeier. 
+X also develops theory, but I do Y differently, hence adding Z.
+[Mention where we add to the literature. Add to literature of Financial Intermediation by developing a dynamic model that captures banks behaviour under regulatory requirements (risk weighted Basel II framework) to exogenous shocks. And I add to the literature of banking by identifying regulatory cliff effects, and their potential to trigger a systemic crises. Banking by X, to Financial Intermediation non-linear effects. Regulation(?) by using a risk weighted basel II framework? Systemic Risk? Financial Stability? Banking? SHOULD I JUST PICK ONE? BANKING OR FINANCIAL INTERMEDIATION? SHOULD I SPECIFY THEORY OR EMPIRICS? See Greenwood intro?]
+
+Following 1) Financial intermediation and assset prices we have 
+
+[Include Daniel literature from email "dates"]
+
+
+[Our fire sale model is similar in spirit to citet{greenwood2015} with the added feature that in our case the fire sales are initiated by a regulatory cliff effect. Therefore, the first price fall in our model is an endogenous fire sale effect rather than an exogenous shock to asset prices. Our model looks at solvency rather then leverage, which allows us more applicability as it matches the current financial framework better, and allows us to analyse regulatory cliff effects based on risk weights, which could otherwise not be analysed with a leverage based model. We further deviate from citet{greenwood2015} in allowing for further round sales, essentially including more feedback effects by solving for a new steady state.]
+
+[To do: Look at PhD awards and ESG paper for inspiration]
+
+
+
+\section{Additional results}
+\begin{itemize}
+\item DealScan looks promising. Has several loans every year even for Denmark! And not just dollar loans! Can use exchange rate to get in dollars!
+\item Can also get lendershares
+\item Can not? get pricing?
+\item Could use FRED Bank's net interest margin? Yearly for worldwide countries. Source is world bank.
+\item Can use EBA G-Siib data to see if banks cross-country liabilities increase when buffer is introduced.
+\item EBA transparancy exercise also potentially has bank to bank exposures.
+\item Re above. Click EU wide transparancy exercise, YEAR, results, Full database, Credit risk.
+\item WRDS Bereau Van Dijk BankFocus, Financials information has net interest on loans, loans etc etc.
+\item Use SNL financials?
+\item Check if interest rates of banks change after?
+\end{itemize}
+
+\section{Conclusion notes}
+[This paper shows that ESG has become a factor that influences asset returns in good times i.e. investors do well, before they do good. Furthermore large drops in ESG, leads to an initial price drop and future increases in return. In the future it would be interesting to get more precise announcement times of the ESG scores to more cleanly isolate the ESG effects, from other correlated factors. It would also be interesting to look at whether the effects generally increased over time, as there has become more public interest. Looking at bonds and other markets would also be of interest, to see if this is an affect that holds there too.]
+
+
+\section{test of TikzDevice in R to produce graphs in R in tikz for latex}
+It is not bad... But probably not necessary
+\begin{figure}%[!htbp]
+	\centering
+	%\label{fig:eventRaw}
+	%\vspace{-1cm}
+	%\input{testTikzDevice.tex}
+	\caption{redo in R if we want this}
+	\fnote{...}
+\end{figure}
+
+
+\section*{t = 2}
+
+In period 2, the price $p_2$ is trivially $\tilde{\nu}_2$ as if it was not a riskless profit could be made by either buying or selling the asset. Hence, in period 1 the pension firms final wealth is given by $W_2^P = W_1^P + (\tilde{\nu} - p_1)y_1$, where $y_t$ is the pension firms ownership at period $t$.\footnote{Here we have used the fact that $p_2 = \tilde{\nu}$}
+
+\section*{t = 1}
+
+In period 1, the utility maximising strategy for the pension firms is found by maximising their utility function with respect to $y_1$, yielding the following optimal portfolio choice,
+\begin{equation}
+y_1 = \frac{\tilde{\nu} - p_1}{\gamma \sigma^2}.
+\end{equation}
+The wealth optimising strategy for the intermediaries in period 1 is to maximise their wealth in period 2, which can be written as the wealth in period 1 $W_1$ times the return on that wealth, i.e. $\phi$ $\phi W_1$, where
+\begin{equation}
+\phi = 1 + \frac{(\tilde{\nu} - p_1)}{\theta}
+\end{equation}
+
+is the return on equity also known as the shadow cost of equity. Which will be the case whenever $\tilde{\nu} > p_1$, as it is in this case, in expectations, always wealth improving to buy as much as possible of the risky asset, ie. $z + x_1 = W_1/\theta$. If $\tilde{\nu} \leq p_1$ it is optimal to own no assets $z+x = 0 \implies x_1 = -z$. Additionally the intermediaries have a solvency constraint, which if they do not fulfil, they will have to liquidate all assets, $W_1 < \theta(z+x_0) \implies x_1 = -z$. So
+\begin{equation}
+x_1 =
+\begin{cases}
+\frac{W_1}{\theta} - z, &\text{ for } \tilde{\nu} > p_1 \text{ \& } W_1 \geq \theta(z+x_0)\\
+-z, &\text{ otherwise.}
+\end{cases}
+\end{equation}
+
+The price in period 1 $p_1$ is then determined in the market such that $y_1 = - x_1$, when disregarding the unrealistic case where $\tilde{\nu} \leq p_1$, this has two solutions depending on whether the intermediary can operate. So the price will be
+\begin{equation} \label{price1}
+p_1 =
+\begin{cases}
+\tilde{\nu} - \gamma \sigma^2(z - \frac{W_1}{\theta}), &\text{ for } \tilde{\nu} > p_1 \text{ \& } W_1 \geq \theta(z+x_0)\\
+\tilde{\nu} - \gamma \sigma^2 z, &\text{ otherwise}.
+\end{cases}
+\end{equation}
+
+\section*{t = 0}
+
+The optimal decisions in period 0 is a bit more tricky. It proceeds as follows. Pension demand are simply given by 
+\begin{equation}
+y_0 = \frac{\tilde{\nu} - p_0}{\gamma \sigma^2}.
+\end{equation}
+[NB skal sigma være anderledes da det er risiko over længere tid? ie skal der være to-tallet nedenunder? NEJ der er ikke mere risiko. risiko bliver bare realiseret i t=1, på samme måde]
+
+Intermediaries optimisation function is now
+\begin{equation}
+\begin{split}
+\max_{x_0} \E_0&[\phi W_1]\\
+\implies \max_{x_0} \E_0&\left[\left(1 + \frac{\tilde{\nu} - p_1}{\theta}\right)\bigg(W_0 + \left(z+x_0\right)\left(p_1 - p_0\right) \bigg)  \right]
+\end{split}
+\end{equation}
+where $p_1$ in the solvent case, $W_1 \geq \theta(z+x_0)$, is set from Eq. \ref{price1} and the wealth dynamic 
+
+\begin{equation}
+W_1 = W_0 + (p_1-p_0)(z+x_0).
+\end{equation}
+
+There emerges a positive feedback loop between the amount demanded and the price of the risky asset in period 1, as a higher price means that the intermediaries can afford more, leading in itself to an even higher price! This can be seen as plugging the wealth dynamic into Eq. \ref{price1}, and solving for $p_1$, we get the following, for the solvent case 
+\begin{equation}
+\begin{split}
+p_1 &= \tilde{\nu} - \gamma \sigma^2(z - \frac{W_1}{\theta})\\
+    &= \tilde{\nu} - \gamma \sigma^2(z - \frac{W_0+ (p_1-p_0)(z+x_0)}{\theta})\\
+    &= \tilde{\nu} + p_1\frac{\gamma\sigma^2(z+x_0)}{\theta} - \gamma \sigma^2(z - \frac{W_0 - p_0(z+x_0)}{\theta})\\
+p_1(1 - \frac{\gamma\sigma^2(z+x_0)}{\theta})    &= \tilde{\nu} - \gamma \sigma^2(z - \frac{W_0 - p_0(z+x_0)}{\theta})\\
+p_1   &= \frac{\tilde{\nu} - \gamma \sigma^2(z - \frac{W_0 - p_0(z+x_0)}{\theta})}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}}\\
+p_1   &= \frac{\tilde{\nu} + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) - \gamma \sigma^2z}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}}.\\
+\end{split}
+\end{equation}
+
+If we start with the solvent case. We get when substituting in $p_1$ into the banks maximisation problem in period 0 that
+\begin{equation}
+\max_{x_0} \E_0\left[\left(1 + \frac{\tilde{\nu} -\frac{\tilde{\nu} + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) - \gamma \sigma^2z}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}}}{\theta}\right)\bigg(\left(z+x_0\right)\left(\frac{\tilde{\nu} + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) - \gamma \sigma^2z}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}} - p_0\right) \bigg)  \right]
+\end{equation}
+\begin{equation}
+\max_{x_0} \E_0\left[\left(\frac{\theta + \tilde{\nu}}{\theta} - \frac{\tilde{\nu} - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) }{\theta - \gamma\sigma^2(z+x_0)}\right)\left(z+x_0\right)\left(\frac{\tilde{\nu} - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0)) }{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}} - p_0\right)  \right]
+\end{equation}
+Maximising this expression with respect to $x_0$ we get that 
+\begin{equation}
+\begin{split}
+\frac{\partial}{\partial x_0}\left(\frac{\theta + \tilde{\nu}}{\theta} - \frac{\tilde{\nu}  - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0))}{\theta - \gamma\sigma^2(z+x_0)}\right)\times \\
+\bigg(z+x_0\bigg)  \left(\frac{\tilde{\nu}  - \gamma \sigma^2z + \frac{\gamma \sigma^2}{\theta}(W_0 - p_0(z+x_0))}{1 - \frac{\gamma\sigma^2(z+x_0)}{\theta}} - p_0\right) \\
+=0
+\end{split}
+\end{equation}
+
+Now solve for $p_0$...
+
+And for the insolvent case we have that...
+
+\subsection{Checklist}
+\newpage
+CHECKLIST
+
+\begin{itemize}
+\item Definition 1: \textbf{Regulatory cliff effect.} Formally let a regulatory cliff effect be an exogenous change at time t in the capital requirement $\theta$ of $\Delta \theta_t$. 
+
+\item Definition 2: \textbf{Systemic risk.} Formally let systemic risk be the likelyhood of a state characterised by the holdings of the banks being zero ($x^B = 0$). Or more generally, by a state of the world with low intermediary wealth $W^I$ and high risk-premia $\lambda_t$.
+
+\item Proposition 1. Systemic risk is decreasing in the size of the buffer.
+
+\item Proposition 2. The (optimal) buffer size is determined in equilibrium by the likelihood and size of the regulatory cliff effect and the volatility of the asset and .... 
+(Prob fire sale and/or size of optimal buffer)
+
+\item Lemma 1. For systemic risk to arise condition 1 and 2 needs to be satisfied.
+
+\item Condition 1. Explosive fire sale condition. (Unstable equilibrium condition). Formally $\frac{\delta x}{p} > \frac{\delta z-y}{p}$.(Write this out explicitly).
+
+\item Condition 2. Inadequate buffer condition. absorbtion capacity $<$ dx or dy.
+
+\item Corollary 1. When volatility falls, systemic risk rises. (counter-intuitively).
+
+\item Definition 3. Let a counter-cyclical buffer $\theta^C_t$ be defined as regulatory requirement above the current regulatory requirement $\theta_t$.
+
+\item Corollary 2. There is a trade-off between lowering systemic risk and market efficiency (alternatively economic growth). This is seen if you regulate/introduce a counter-cyclical buffer in period 0 that you can remove in period 1.
+
+\item Assumption 1/Lemma 2. Banks cannot convince the market (other agents) that they will buy something they cannot a priori afford or are allowed to by capital requirements. (Corollary: If this is violated, we can get self-fulfilling asset prices ie get to an equilibrium with higher prices from the lower, just by having the intention to buy (ie being confident). Perhaps by households/the economy having confidence in banks, can lead to this higher equilibrium (makes it possible, and since it is beneficial for the intermediaries, will lead to it).). 
+
+\item Testable prediction 1. When the buffer is low, systemic risk is high.
+
+\item Testable prediction 2. When volatility is low, systemic risk is high. Ie Gormsen and Skov (2018, wp). Higher moment risk.
+
+\item Contribution 1. I formalise regulatory cliff effects.
+
+\item Contribution 2. I identify them in current Basel III regulation. 
+
+\item Contribution 3. I formalise the conditions for systemic risk and show that these may be satisfied for several economies, such as the Danish financial system.
+
+\item Contribution 4. I formalise the role of counter-cyclical buffers in the prevention of systemic risk. 
+
+\item Contribution 5. I empircally show a relationship between buffers and systemic risk.
+
+\end{itemize}
+
+\fi
+
+\end{appendices}
+
+\end{document}
