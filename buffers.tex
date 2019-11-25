@@ -113,8 +113,7 @@ I gratefully acknowledge support from the FRIC Center for Financial Frictions (G
 }
 
 
-\date{\Large First version: January 4, 2019\\This version: %\today
-November 18, 2019
+\date{\Large First version: January 4, 2019\\This version: \today
 }
 
 \begin{document}
@@ -139,7 +138,7 @@ November 18, 2019
 \section*{Introduction}
 Proper usage of macroprudential policy balances the risk capacity of financial intermediaries just right. The risk capacity of financial intermediaries is low enough, such that the risk of a systemic crisis is low. But it is not so low, that intermediaries are unable to fund positive net-present-value projects, driving up risk premia and decreasing growth.
 
-The financial crisis demonstrated the importance of the health of financial intermediaries. Up to the crisis, the increase in intermediaries risk exposure, made the intermediaries more vulnerable and increased the probability of a systemic crisis. During the crises the risk capacity of financial intermediaries declined and is associated with a strong decrease in asset prices, which is hard to explain using traditional explanations \citep*{He2013, Adrian2014, Brunnermeier2014}. The crisis further showed that the shocks to the financial intermediaries spill over to the rest of the economy, creating real effects.
+The financial crisis demonstrated the importance of the role of financial intermediaries. Up to the crisis, the increase in intermediaries risk exposure, made the intermediaries more vulnerable and increased the probability of a systemic crisis. During the crises the risk capacity of financial intermediaries declined and is associated with a strong decrease in asset prices, which is hard to explain using traditional explanations \citep*{He2013, Adrian2014, Brunnermeier2014}. The crisis further showed that the shocks to the financial intermediaries spill over to the rest of the economy, creating real effects.
 This is a strong departure from the assumption that intermediaries simply act as a veil in the realisation of equilibrium asset prices. 
 Since the crisis, it has been an international priority to implement regulation, to help reduce the probability of such a systemic crises reoccurring. As this new regulation remain to a large extend untested, I contribute by helping to fill this gap by considering regulatory effects theoretically and empirically.
 
@@ -223,19 +222,19 @@ the results, and section \ref{sec:conclusion} concludes.
 
 \section{Model} \label{sec:model}
 
-This section will describe the model. First the economy is introduced, then the solution method is described, and finally implications from the model are shown.
+This section will describe the model. We will see how having two distinct agent types, can lead to amplification of the price dynamics in the medium term, so called fire-sales. The risk of which is called systemic risk. Additionally we will see how introducing a macro-prudential buffer can help reduce the probability of fire-sales, at the cost of increasing the price of risk of the risky assets in the economy. First the economy is introduced, then the equilibrium is described, and finally implications from the model are shown. 
 
 \subsubsection*{Heterogenous agents preferences}
 
-Let there in our economy exist a continuum of two agent types. Intermediaries $I$ and households $H$. Intermediaries are risk neutral and maximise final wealth $W^I_T$. Like intermediaries, households also like wealth but additionally dislike the variance of their final wealth $\sigma^2[W^H_T]$ by the risk aversion factor $\gamma/2$\footnote{The $1/2$ has no influence on the results, and is there purely for notational simplicity.}. Thus they maximise $W^H_T - \frac{\gamma}{2}\sigma^2[W^H_T]$.
+In our economy there exists a continuum of two agent types. Intermediaries $I$ and households $H$. Intermediaries are risk neutral and maximise final wealth $W^I_T$. Like intermediaries, households also like wealth but additionally dislike the variance of their final wealth $\sigma^2[W^H_T]$ by the risk aversion factor $\gamma/2$\footnote{The $1/2$ has no influence on the results, and is there purely for notational simplicity.}. Thus they maximise $W^H_T - \frac{\gamma}{2}\sigma^2[W^H_T]$.
 
 \subsubsection*{Time}
-The model is set up to have 3 dates (0, 1, and 2), and hence has two periods. The important aspect of the dates are that at time 2, the long run, everything is revealed. At time 1, the medium run, expectations of the long run are updated, and hence there will be price dynamics here, and at time 0, the macroprudential authority can decide on the macroprudential buffer level of the intermediaries, such that they might be more robust for adverse developments at time 1.
+As systemic risk is the expectation of fire-sales occuring in the next period. And as fire-sales cannot occur once everything is realised, our model needs to at least have three dates. We denote these dates as (0, 1, and 2), and hence there are two periods. The important aspect of the dates are that at time 2, the long run, everything is revealed. At time 1, the medium run, expectations of the long run are updated, and hence there will be price dynamics here, and at time 0, the macroprudential authority can decide on the macroprudential buffer level of the intermediaries, such that they might be more robust for adverse developments at time 1.
 
 
 \subsubsection*{Assets}
 
-A risky asset exists in fixed positive net supply $z$, which gives its owner a claim to a random dividend $\delta$ at time $2$. This asset is tradable. Let the dividend $\delta$ be characterised by its conditional expectation $\mu_t$ and volatility $\sigma$, such that $\E_t[\delta_2] = \mu_t$ and $\sigma[\delta] = \sigma$, where $t\in\{0,1\}$. As we are interested in systemic risk, which by its nature is a medium horizon phenomenon, we introduce medium-term dynamics through an update of the expectation of the dividend at time 1, such that $\mu_1 = \mu_0 + \epsilon$, where $\epsilon$ is a random N($0,\sigma$) distributed variable. Hence the expectation at time 1 may be different to the expectation at time 0, but in expectation it is not.
+The agents trade a perfectly divisible risky asset, which exists in fixed positive net supply $z$. The asset gives its owner a claim to a random dividend $\delta$ at time $2$. Let the dividend $\delta$ be characterised by its conditional expectation $\mu_t$ and volatility $\sigma$, such that $\E_t[\delta_2] = \mu_t$ and $\sigma[\delta] = \sigma$, where $t\in\{0,1\}$. As we are interested in systemic risk, which by its nature is a medium horizon phenomenon, we introduce medium-term dynamics through an update of the expectation of the dividend at time 1, such that $\mu_1 = \mu_0 + \epsilon$, where $\epsilon$ is a random N($0,\sigma$) distributed variable. Hence the expectation at time 1 may be different to the expectation at time 0, but in expectation it is not.
 
 Additionally, there is a risk-free asset in zero net supply, which, without loss of generality, can be normalised to have an interest rate of 0.
 
@@ -272,17 +271,17 @@ Below first the equilibrium is characterised, and then the solution will be disc
 
 
 \subsection*{Equilibrium}
-The model is set up as a dynamic programming problem, and solved by backwards induction. 
-In every period the households and intermediaries optimise taking prices as given. This together with market clearing pins down the price.
-In period 2 the price will trivially be $\delta$, as if it was not, an arbitrage opportunity would exist.
+In every period the households and intermediaries optimise over how much of the risky asset to purchase. As there is perfect competition, they do this taking prices as given. The model is set up as a dynamic programming problem, and solved by backwards induction. 
+Optimisation together with market clearing pins down the price.
+In period 2 the price will trivially be $\delta$, as if it was not, an arbitrage opportunity would exist. This is summarised in the following definition.
 
 
 \begin{definition}[Equilibrium] \label{d_eqm}
-Let an equilibrium be characterised by a price process $p_t$ of the risky asset, such that markets clear in each period. Hence for each time $t\in\{0,1,2\}$, it will be the case that given the price, intermediary demand $x^I_t$ and household demand $x^H_t$ of the risky asset equals supply $z$.
+Let an equilibrium be characterised by a price process $p_t$ of the risky asset, such that markets clear in each period. Hence for each time $t\in\{0,1,2\}$, it will be the case that given the price, intermediary demand $x^I_t$ and household demand $x^H_t$ of the risky asset equals supply $z$. The market for the risk-free asset will clear through Walras' law.
 \end{definition}
 
 \subsubsection*{Period 1}
-In period 1 the households optimal demand is given as the solution to their maximisation problem as
+In period 1 the expectation of the risky asset is updated. The two agent types react to this by updating their optimal demands, which may lead to amplified price movements, so called fire-sales. To see this first notice that the households optimal demand is given as the solution to their maximisation problem as
 \begin{equation} \label{e_xH}
 x^{H}_1 = \argmax_{x^H_1}\left[\E_1[W^I_2] - \gamma/2\sigma^2\right]
 = \frac{\mu_1 - p_1}{\gamma\sigma^2}.\footnotemark
@@ -372,7 +371,7 @@ We can also now consider systemic risk, which we define in the following definit
 Let systemic risk be the likelihood of a state characterised by the probability at time 0 of a bad outcome at period 1. Specifically let systemic risk be $P_0 (x^I=0)$. Here $p_1 = p_1^{min}$ as the holdings of the banks are zero ($x^B = 0$).\footnote{Or more generally, by a state of the world with fire sales i.e. where drops in asset prices are amplified by the intermediary wealth effects, low intermediary wealth $W^I_1$ and the highest possible risk premia $\lambda_1$ and price of risk $\varsigma_1$.}
 \end{definition}
 
-We are now able to consider how systemic risk is affected by macroprudential buffers. Macroprudential buffers are a safeguard against adverse outcomes in period 1. We have seen that as $W^I_1$ is a function of $p_1$ the market clearing price $p_1$ might experience a negative pricing spiral. With a buffer of 0, this would happen if the updated expected dividend is less than previously expected. This can be seen as the asset at the old price has too low a return for the households to be compensated for the risk they take by having their old position. Hence they will attempt to sell off the asset, lowering prices. This drop in prices in return lowers the intermediaries wealth, lowering his ability to hold his asset, hence leading to a negative spiral. However, if the intermediary held a buffer at period 0, which is now released, as was the purpose of the macroprudential buffer, he may now be able to purchase what the household needs to sell to get back to their optimum holding size at the old price. If the buffer is large enough for this to be the case, it will avoid the fire sales.\footnote{Please see Appendix \ref{proof:p1eqm} %and \ref{proof:p0eqm} 
+We are now able to consider how systemic risk is affected by macroprudential buffers. Macroprudential buffers are a safeguard against adverse outcomes in period 1. We have seen that as $W^I_1$ is a function of $p_1$, the market clearing price $p_1$ might experience a negative pricing spiral. Without a buffer, this would happen if the updated expected dividend is less than previously expected. This can be seen as the asset at the old price has too low a return for the households to be compensated for the risk they take by having their old position. Hence they will attempt to sell off the asset, lowering prices. This drop in prices in return lowers the intermediaries wealth, lowering his ability to hold his asset, hence leading to a negative spiral. However, if the intermediary held a buffer at period 0, which is now released, as was the purpose of the macroprudential buffer, he may now be able to purchase what the household needs to sell to get back to their optimum holding size at the old price. If the buffer is large enough for this to be the case, it will avoid the fire sales.\footnote{Please see Appendix \ref{proof:p1eqm} %and \ref{proof:p0eqm} 
 for a more rigorous derivation.}
 
 We can formalise the dynamic between this systemic risk and macro-prudential buffers in the following proposition. 
@@ -400,19 +399,17 @@ and then results are shown.
 
 \subsection{Data and Methodology}
 
-This section outlines how I use data to empirically answer the relevant research questions of this paper. It is outlined as followed. First, we describe the data sample. Second, the event-study methodology is described.
+This section outlines how I use data to empirically answer the relevant research questions of this paper. It is outlined as followed. First, we describe the events and then the equity prices used in our analysis. Second, the event-study methodology is described.
 
 \subsubsection*{Macroprudential Policy}
-The ESRB has documented european countries announcements and implementations of the macroprudential buffer. Which is accessible on their website. The announcements are used in this analysis as they indicate the surprise to the market, the reaction to which is then observed. Additionally as market prices should incorporate expectations of future events, this makes it a sensible measure.
+Event dates are gained from the European Systemic Risk Board as they have documented European countries announcements and implementations of the macroprudential buffer. Which is accessible on their website. The announcements are used in this analysis as they indicate the surprise to the market, the reaction to which is then observed. Additionally as market prices should incorporate expectations of future events, this makes it a sensible measure.
 
 \subsubsection*{Returns}
 
-Returns are calculated on adjusted returns taken from Compustat Global. Compustat global additionally supplies data on firms location, and sector, and even industry group, as according to their Global Industry Classification Standard (GICS). See \url{https://en.wikipedia.org/wiki/Global_Industry_Classification_Standard}. This is useful for our analysis.
-
-The objective of the analysis requires us to combine data on equity returns and macroprudential policy. First, we obtain daily stock returns from the Compustat. It is also possible to obtain daily data points on the number of stocks outstanding and their trading volume, as well as daily high and low prices.
+In my analysis I consider how equity returns of publicly traded companies react to the announcement of macroprudential buffers. I use the adjusted returns from Compustat Global. Compustat global additionally supplies data on firms location, and sector, and even industry group, as according to their Global Industry Classification Standard (GICS). See \url{https://en.wikipedia.org/wiki/Global_Industry_Classification_Standard}. This is useful for considering what type of firms drive our result.
 
 \subsubsection*{Event study: Risk-adjusting returns using the market model} \label{sec:eventstudymethod}
-To get the abnormal return, I control for the expected return using the market model. The market return and the risk-free rate are gathered from \href{https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}{Ken French's website}.
+To get the abnormal return, I control for the expected return using the market model. The market return and the risk-free rate are gathered from \href{https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}{Ken French's website's} Fama/French European 3 Factors.
 
 I apply the capital asset pricing model (CAPM) model to estimate expected returns based on the factor loading 350 days prior to the event.\footnote{See \citet{Sharpe1964,Fama1967}} My time line looks as follows.
 \begin{figure}[!htpb]
@@ -475,7 +472,7 @@ where $R_{it}$ and $R_{mt}$ are the excess returns on firm $i$ and the markets e
 
 \subsection{Results}
 
-Results show that equity prices fall as an increase to the macroprudential buffer is announced (Figure \ref{fig:eventAbnCum} and Table \ref{tbl:abn}). However prices rise after an announcement of sustaining the macroprudential buffer at its current level (Figures \ref{fig:eventAbnCumNoEvent}). This is consistent with a pre-announcement risk-premium, as well as the price of risk increasing as macroprudential buffers are increased.
+Results show that equity prices of companies fall as an increase to the macroprudential buffer is announced for the companies country (Figure \ref{fig:eventAbnCum} and Table \ref{tbl:abn}). However prices rise after an announcement of sustaining the macroprudential buffer at its current level (Figures \ref{fig:eventAbnCumNoEvent}). This is consistent with a pre-announcement risk-premium, as well as the price of risk increasing as macroprudential buffers are increased. In future research this would be interesting to explore using loan-level data.
 
 When considering who is affected by an increase in the macroprudential buffer, we see from figure \ref{fig:eventAbnType} that non-bank finance firms are hit the hardest, followed by other firms, and banks are hit the least. This is consistent with a theory where non-bank finance firms invest in equity by borrowing from banks. As banks have to raise their capital level, one way they can do so is to reduce lending to non-bank finance firms, and they hence have to reduce their balance sheets by selling stocks of "other" firms at a reduced price, to make up for the fact that new agents with a higher risk preference needs to be the new owners. 
 
