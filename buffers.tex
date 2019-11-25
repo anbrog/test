@@ -170,34 +170,9 @@ The United States introduced the macroprudential buffer into regulation in 2016,
 \url{https://www.wsj.com/articles/fed-considers-new-tool-for-a-downturn-11565614800}}$^,$\footnote{
 \url{https://www.wsj.com/articles/the-fed-should-raise-countercyclical-capital-buffer-rates-1534874559}}
 
-Macroprudential buffers have been implemented in Europe for the first time over the last six years, and the effects are still largely unexplored. Luigi Federico Signorini, Deputy Governor of the Central Bank of Italy, opened the forth annual Macroprudential Policy Group workshop by saying
+Macroprudential buffers have already been implemented in Europe. The first country to activate its buffer was Norway in 2013. Since then 12 countries have announced an activation of this buffer.\footnote{Part of Basel III. Implemented in EU as Capital Requirements directive IV} for the first time over the last six years, yet remains a scarcely researched area. 
 
-\begin{quote}\textit{``Microprudential capital requirements, for instance, have been substantially increased after the crisis. In the short run, the contractionary effects on the credit cycle associated with such an increase were, directionally and qualitatively, of the same nature as those associated with the activation of a cyclical buffer. This of course does not mean that it was wrong to do it; an increase in the quantity and quality of bank capital was required to strengthen the banking system, in light of all the shortcomings of the old supervisory rules that the crisis had exposed. However, it was clear to all that there was a price to pay for this, in terms of tighter credit: at least temporarily, during the transition to the new standards... The conceptual framework should also more explicitly capture the idea that one central aim of macroprudential policies is to limit the endogenous pro-cyclicality of the financial sector. Risks tend to be underestimated by market participants during booms and overestimated in busts, resulting in an amplification of cycles. To lean against this procyclical pattern in risk perceptions, the framework for the macroprudential stance should have a clear cyclical perspective... ideally, the prudential stance should also account for the interaction of macroprudential policies across countries. Euro-area countries are deeply integrated. During stress periods, this may lead financial instability in one country to propagate to other countries, if an inaction bias prevails; the same holds, again symmetrically, for the effect of contractionary measures. How, and to what extent, this can be done is, I think, a matter for further potentially valuable reflection.\footnote{\url{https://www.bis.org/review/r191010a.htm}}"}
-\end{quote}
-
-
-The European Systemic Risk Board stress the positive effects of such a buffer.
-
-\begin{quote}\textit{``
-The countercyclical capital buffer (CCyB) is designed to help counter pro-cyclicality in the financial system... [by] creating buffers that increase the resilience of the banking sector during periods of stress when losses materialise. This will help maintain the supply of credit and dampen the downswing of the financial cycle."}\\
-\hspace{1em}- {European Systemic Risk Board}
-\end{quote}
-
-However, there are also worries about prices in the economy, and hence growth, as the finance lobby organisation address.
-
-\begin{quote}\textit{``
-We notice the Risk Councils recommendation to increase the macroprudentiel buffer, even though the loan growth has been low for a while.\\ ...the increased buffer will also hit the small institutions in the country side, where the economy is not growing as much...
-"}
-- {Ulrik Nødgaard, CEO Finans Danmark}
-\end{quote}
-
-
-
-It is one of the few policies euro countries still have independence about, and hence have been used at different times and at various levels across time and the cross-section. This paper will first explore what effects these macroprudential policy could theoretically have, and secondly empirically explore the effects on asset markets. Specifically in regards to the markets pricing of risk, and its perception thereof.
-
-Macroprudential policy has arisen to address the fact, from the crisis of 2009, that even if banks individually seem robust, the system could become unstable.
-However Macroprudential policy remains a scarcely researched area. In this paper I address how macroprudential policy can be used to reduce systemic risk. The counter-cyclical buffer, also called the macroprudential buffer, was first activated by Norway in 2013. Since then 12 countries have announced an activation of this buffer.\footnote{Part of Basel III. Implemented in EU as Capital Requirements directive IV} Macroprudential buffers increase the capital requirements of banks.
-
+It is one of the few policies European countries individually still have independence about, and hence have been used at different times and at various levels across time and the cross-section. This paper will first explore what effects these macroprudential policy could theoretically have, and secondly empirically explore the effects on asset markets. Specifically in regards to the markets pricing of risk, and its perception thereof.
 
 \subsection*{}
 \vspace{-1.5cm}
@@ -478,6 +453,33 @@ When considering who is affected by an increase in the macroprudential buffer, w
 Further figures show splits by all industries and all sector groups, as well as bank vs non-bank, and finance vs non-finance, for events and no-events.
 
 
+\iffalse
+\subsection{Robustness Checks}
+
+Robust to computing CAR using cumulative product instead of cumulative sums, as the results look almost identical, as can be seen from figure \ref{fig:eventAbnCump}.
+
+
+
+\begin{figure}%[!htbp]
+	\centering
+	%\vspace{-1cm}
+	\includegraphics%[width=0.9\linewidth]
+	{./figures/retabncum.pdf}
+	\caption{Cumulative Abnormal Returns - Event}
+	\label{fig:eventAbnCump}
+	\fnote{Cumulated using products. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
+\end{figure}
+\fi
+
+\section{Conclusion} \label{sec:conclusion}
+This paper shows that announcing a macroprudential buffer leads a drop in the price of companies of the country. I notice that the companies mostly affected are non-bank financials, then regular companies and banks the least. This is consistent with the banks responding by increasing their intermediation premium (the risk premia on their lending). This increases the funding costs of companies that borrow from banks. And as non-bank financials do this to a large extend, and regular companies to a lesser extend, this is consistent with the results. It would be interesting to further look to see if the loan rates go up after the macroprudential buffer, and to consider cross-country effects. It would also be interesting to further explore the systemic risk aspect, maybe through more liquid CDS prices, or a longer time horizon.
+
+
+%%%% MAIN FIGURE SECTION!!%%%%
+\iffalse
+\section*{MAIN FIGURE SECTION}
+\fi
+
 %these two are main figures
 \begin{figure}[!htbp]
 	\centering
@@ -534,29 +536,13 @@ Further figures show splits by all industries and all sector groups, as well as 
 	\fnote{True means in bank industry group, Non-bank fin means in an industry sector group, which is not banking according to the the Global Industry Classification Standard, and all else are in other. Cumulated using sums. No event means an announcement of no change to the macroprudential buffer. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
 \end{figure}
 \fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
+%%% MAIN TABLES SECTION%%%%
 \iffalse
-\subsection{Robustness Checks}
-
-Robust to computing CAR using cumulative product instead of cumulative sums, as the results look almost identical, as can be seen from figure \ref{fig:eventAbnCump}.
-
-
-
-\begin{figure}%[!htbp]
-	\centering
-	%\vspace{-1cm}
-	\includegraphics%[width=0.9\linewidth]
-	{./figures/retabncum.pdf}
-	\caption{Cumulative Abnormal Returns - Event}
-	\label{fig:eventAbnCump}
-	\fnote{Cumulated using products. Event means an increase in the macroprudential buffer of 0.5 percentage point or higher. Blue line and grey area denotes fit and 90\% confidence bands using the Loess method. Triangles signify daily means.}
-\end{figure}
+\section*{MAIN TABLE SECTION}
 \fi
-
-\section{Conclusion} \label{sec:conclusion}
-This paper shows that announcing a macroprudential buffer leads a drop in the price of companies of the country. I notice that the companies mostly affected are non-bank financials, then regular companies and banks the least. This is consistent with the banks responding by increasing their intermediation premium (the risk premia on their lending). This increases the funding costs of companies that borrow from banks. And as non-bank financials do this to a large extend, and regular companies to a lesser extend, this is consistent with the results. It would be interesting to further look to see if the loan rates go up after the macroprudential buffer, and to consider cross-country effects. It would also be interesting to further explore the systemic risk aspect, maybe through more liquid CDS prices, or a longer time horizon.
 
 \begin{table}[!htbp] \centering 
   \caption{Buffer increases and price drops\\
@@ -581,6 +567,7 @@ R$^{2}$ & 0.003 \\
 \end{tabular} 
 \end{table} 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \iffalse
 \section{Evidence from Credit Default Swap prices}
